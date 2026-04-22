@@ -9,6 +9,13 @@ import { stagger, fadeUp } from '@lib/motion'
 export default function FeaturedProjects() {
   const [activeProject, setActiveProject] = useState<Project | null>(null)
 
+  const rest = projects.slice(1)
+  // Pair up remaining projects for row dividers
+  const rows: Project[][] = []
+  for (let i = 0; i < rest.length; i += 2) {
+    rows.push(rest.slice(i, i + 2))
+  }
+
   return (
     <>
       <section id="projects" className="section-gap container-x">
@@ -46,31 +53,40 @@ export default function FeaturedProjects() {
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0"
+          viewport={{ once: true, amount: 0.05 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-x-6"
         >
-          {/* Project 1 — full width */}
+          {/* Project 0 — full width hero card */}
           <div className="md:col-span-2 mb-2">
             <ProjectCard project={projects[0]} index={0} onClick={setActiveProject} />
           </div>
 
+          {/* Divider after hero */}
           <motion.div
             variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
             className="md:col-span-2 h-px bg-[var(--color-border)] mb-2 origin-left"
           />
 
-          {/* Projects 2 and 3 */}
-          <ProjectCard project={projects[1]} index={1} onClick={setActiveProject} />
-          <ProjectCard project={projects[2]} index={2} onClick={setActiveProject} />
-
-          <motion.div
-            variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
-            className="md:col-span-2 h-px bg-[var(--color-border)] mt-2 mb-2 origin-left"
-          />
-
-          {/* Projects 4 and 5 */}
-          <ProjectCard project={projects[3]} index={3} onClick={setActiveProject} />
-          <ProjectCard project={projects[4]} index={4} onClick={setActiveProject} />
+          {/* Remaining projects in rows of 2 */}
+          {rows.map((row, rowIndex) => (
+            <>
+              {row.map((project, colIndex) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  index={rowIndex * 2 + colIndex + 1}
+                  onClick={setActiveProject}
+                />
+              ))}
+              {rowIndex < rows.length - 1 && (
+                <motion.div
+                  key={`divider-${rowIndex}`}
+                  variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+                  className="md:col-span-2 h-px bg-[var(--color-border)] mt-2 mb-2 origin-left"
+                />
+              )}
+            </>
+          ))}
         </motion.div>
       </section>
 
