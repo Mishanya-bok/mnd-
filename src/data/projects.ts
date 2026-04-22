@@ -11,6 +11,17 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'showreel',
+    title: 'Шоурил студии',
+    category: 'Шоурил',
+    year: '2025',
+    description:
+      'Лучшие работы студии mnd. в одном ролике — коммерческие проекты, спек-реклама и кинематографические визуалы.',
+    videoSrc: '/videos/showreel.webm',
+    tags: ['Шоурил', 'AI Продакшен', 'mnd.team'],
+    featured: true,
+  },
+  {
     id: 'rolf-banners',
     title: 'Rolf — Баннеры Москвы',
     category: 'Коммерческий',
