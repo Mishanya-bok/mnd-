@@ -73,30 +73,28 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
             </div>
 
             {/* Meta */}
-            <div className="pt-5 pb-2 flex flex-col md:flex-row md:items-start md:justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-3 mb-1">
-                  <span className="label">{project.category}</span>
-                  <span className="label text-[var(--color-dim)]">·</span>
-                  <span className="label text-[var(--color-dim)]">{project.year}</span>
-                </div>
-                <h2 className="font-display text-[1.6rem] font-semibold">{project.title}</h2>
+            <div className="pt-5 pb-4 bg-black/60 px-5 rounded-b-xl">
+              <div className="flex items-center gap-3 mb-2">
+                <span className="label text-[var(--color-accent)]">{project.category}</span>
+                <span className="label text-white/20">·</span>
+                <span className="label text-white/35">{project.year}</span>
               </div>
-              <p className="text-[var(--text-sm)] text-[var(--color-muted)] font-light leading-relaxed max-w-md">
+              <h2 className="font-display text-[1.6rem] font-semibold text-[var(--color-white)] mb-3">{project.title}</h2>
+              <p className="text-sm text-white/60 font-light leading-relaxed max-w-2xl">
                 {project.description}
               </p>
-            </div>
 
-            {/* Tags */}
-            <div className="flex flex-wrap gap-2 pt-3 border-t border-[var(--color-border)]">
-              {project.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="label border border-[var(--color-border)] px-3 py-1 text-[var(--color-dim)]"
-                >
-                  {tag}
-                </span>
-              ))}
+              {/* Tags */}
+              <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/08">
+                {project.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="label border border-white/12 px-3 py-1 rounded-full text-white/40"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </motion.div>
         </motion.div>

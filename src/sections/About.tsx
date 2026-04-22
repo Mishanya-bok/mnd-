@@ -32,9 +32,10 @@ function TeamCard({ member, index }: { member: typeof team[0]; index: number }) 
       onMouseLeave={() => setHovered(false)}
       animate={{
         y: hovered ? -6 : 0,
+        scale: hovered ? 1.02 : 1,
         boxShadow: hovered
-          ? '0 20px 50px rgba(0,0,0,0.1), 0 0 0 1px rgba(201,168,108,0.3)'
-          : '0 2px 12px rgba(0,0,0,0.05), 0 0 0 1px rgba(0,0,0,0.06)',
+          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.3)'
+          : '0 2px 12px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)',
       }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       className="glass rounded-2xl p-8 cursor-default relative overflow-hidden"

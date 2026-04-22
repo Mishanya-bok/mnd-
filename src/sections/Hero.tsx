@@ -134,10 +134,10 @@ export default function Hero() {
         />
       </motion.div>
 
-      {/* Gradient fade to light background */}
+      {/* Gradient fade to dark background */}
       <div
         className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-20"
-        style={{ background: 'linear-gradient(to bottom, transparent, #f6f7f9)' }}
+        style={{ background: 'linear-gradient(to bottom, transparent, #080808)' }}
       />
     </section>
   )
