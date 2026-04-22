@@ -58,7 +58,7 @@ export default function Showreel() {
           <div className="overflow-hidden">
             <motion.h2
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
-              className="font-display text-display italic font-light"
+              className="font-display text-display font-semibold"
             >
               mnd. — Фильм
             </motion.h2>

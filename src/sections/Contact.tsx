@@ -51,7 +51,7 @@ export default function Contact() {
           <div className="overflow-hidden mb-6">
             <motion.h2
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
-              className="font-display text-display italic font-light leading-[1.05]"
+              className="font-display text-display font-semibold leading-[1.05]"
             >
               Давайте создадим
               <br />
@@ -97,7 +97,7 @@ export default function Contact() {
                 exit={{ opacity: 0 }}
                 className="flex flex-col items-start justify-center h-full gap-4 py-12"
               >
-                <span className="font-display text-xl-fluid italic font-light text-[var(--color-accent)]">
+                <span className="font-display text-xl-fluid font-semibold text-[var(--color-accent)]">
                   Сообщение отправлено.
                 </span>
                 <p className="text-sm text-[var(--color-muted)] font-light">

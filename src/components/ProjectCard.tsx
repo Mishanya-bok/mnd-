@@ -1,6 +1,5 @@
-import { useRef, useState } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { scaleIn } from '@lib/motion'
 import type { Project } from '@data/projects'
 
 interface ProjectCardProps {
@@ -10,15 +9,37 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, index, onClick }: ProjectCardProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [videoLoaded, setVideoLoaded] = useState(false)
-  const [hovered, setHovered] = useState(false)
+  const videoRef     = useRef<HTMLVideoElement>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [videoReady, setVideoReady] = useState(false)
+  const [hovered, setHovered]       = useState(false)
+  const isWide = index === 0
+
+  // Inject src when card enters viewport → loads first frame as thumbnail
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          const v = videoRef.current
+          if (v && !v.src) {
+            v.preload = 'metadata'
+            v.src = project.videoSrc
+          }
+          observer.disconnect()
+        }
+      },
+      { threshold: 0.05 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [project.videoSrc])
 
   const handleMouseEnter = () => {
     setHovered(true)
     const v = videoRef.current
     if (!v) return
-    if (!v.src) v.src = project.videoSrc
     v.muted = true
     v.play().catch(() => {})
   }
@@ -31,100 +52,108 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
   const handleTouchStart = () => {
     const v = videoRef.current
     if (!v) return
-    if (!v.src) v.src = project.videoSrc
     v.muted = true
     v.play().catch(() => {})
   }
 
-  const isWide = index === 0
-
   return (
     <motion.div
-      variants={scaleIn}
+      ref={containerRef}
       className="group cursor-pointer"
       onClick={() => onClick(project)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
-      {/* Video container — shows video fully (object-contain), no crop */}
-      <div
-        className="relative overflow-hidden border border-[var(--color-border)] transition-colors duration-500"
-        style={{
-          aspectRatio: isWide ? '16/9' : '4/5',
-          borderColor: hovered ? 'rgba(201,168,108,0.4)' : undefined,
+      <motion.div
+        className="relative overflow-hidden rounded-2xl"
+        style={{ aspectRatio: isWide ? '16/9' : '4/5' }}
+        animate={{
+          boxShadow: hovered
+            ? '0 24px 60px rgba(0,0,0,0.14), 0 0 0 1px rgba(201,168,108,0.35)'
+            : '0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.06)',
         }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* Static gradient background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#222] to-[#111]" />
+        {/* Dark video bg */}
+        <div className="absolute inset-0 bg-[#0d0d0d]" />
 
-        {/* Video — object-contain so it's fully visible */}
+        {/* Video — thumbnail at 65% opacity, full on hover */}
         <video
           ref={videoRef}
           playsInline
           muted
           loop
-          preload="none"
-          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
-            videoLoaded && hovered ? 'opacity-100' : 'opacity-0'
-          }`}
-          style={{ objectFit: 'contain' }}
-          onCanPlay={() => setVideoLoaded(true)}
+          className="absolute inset-0 w-full h-full transition-opacity duration-500"
+          style={{
+            objectFit: 'contain',
+            opacity: videoReady ? (hovered ? 1 : 0.65) : 0,
+          }}
+          onLoadedMetadata={() => setVideoReady(true)}
+          onCanPlay={() => setVideoReady(true)}
         />
 
-        {/* Index number */}
-        <span
-          className="absolute top-5 left-5 font-display italic font-light leading-none select-none pointer-events-none transition-opacity duration-500"
+        {/* Vignette */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.3) 100%)' }}
+        />
+
+        {/* Bottom frosted title overlay */}
+        <div
+          className="absolute bottom-0 left-0 right-0 p-5 z-10 transition-all duration-400"
           style={{
-            fontSize: isWide ? '5rem' : '4rem',
-            color: hovered ? 'rgba(201,168,108,0.12)' : 'rgba(240,237,230,0.07)',
+            background: hovered
+              ? 'linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.35) 65%, transparent 100%)'
+              : 'linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.1) 70%, transparent 100%)',
           }}
         >
-          {String(index + 1).padStart(2, '0')}
-        </span>
-
-        {/* Title overlay — always visible at bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
-          <div className="flex items-center gap-3 mb-1.5">
-            <span
-              className="label transition-colors duration-300"
-              style={{ color: hovered ? 'rgba(201,168,108,0.9)' : 'rgba(240,237,230,0.5)' }}
-            >
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="label transition-colors duration-300" style={{ color: hovered ? '#c9a86c' : 'rgba(255,255,255,0.5)' }}>
               {project.category}
             </span>
-            <span className="label" style={{ color: 'rgba(240,237,230,0.25)' }}>
-              {project.year}
-            </span>
+            <span className="label" style={{ color: 'rgba(255,255,255,0.22)' }}>{project.year}</span>
           </div>
           <p
-            className="font-display italic font-light leading-tight transition-colors duration-300"
-            style={{
-              fontSize: isWide ? '1.7rem' : '1.3rem',
-              color: hovered ? '#c9a86c' : '#f0ede6',
-            }}
+            className="font-display font-semibold leading-tight transition-colors duration-300"
+            style={{ fontSize: isWide ? '1.6rem' : '1.25rem', color: hovered ? '#c9a86c' : '#fff' }}
           >
             {project.title}
           </p>
         </div>
 
         {/* Play indicator */}
-        <div
-          className={`absolute top-5 right-5 flex items-center gap-2 transition-all duration-300 ${
-            hovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'
-          }`}
+        <motion.div
+          className="absolute top-5 right-5 flex items-center gap-2 z-10"
+          animate={{ opacity: hovered ? 1 : 0, x: hovered ? 0 : 10 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="label text-[var(--color-white)]">Смотреть</span>
-          <span className="w-5 h-px bg-[var(--color-white)]" />
-        </div>
+          <span className="label text-white/80">Смотреть</span>
+          <span className="w-5 h-px bg-white/80" />
+        </motion.div>
 
-        {/* Thin accent left border */}
-        <div
-          className="absolute left-0 top-0 bottom-0 w-px transition-all duration-500"
-          style={{ background: hovered ? 'var(--color-accent)' : 'rgba(240,237,230,0.08)' }}
+        {/* Decorative index */}
+        <span
+          className="absolute top-5 left-5 font-display font-semibold leading-none select-none pointer-events-none transition-all duration-500"
+          style={{
+            fontSize: isWide ? '4.5rem' : '3.5rem',
+            color: hovered ? 'rgba(201,168,108,0.12)' : 'rgba(255,255,255,0.05)',
+          }}
+        >
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        {/* Gold accent left bar */}
+        <motion.div
+          className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
+          animate={{ opacity: hovered ? 1 : 0, scaleY: hovered ? 1 : 0.2 }}
+          style={{ backgroundColor: '#c9a86c', transformOrigin: 'center' }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         />
-      </div>
-
-      <div className="pb-2" />
+      </motion.div>
+      <div className="pb-1" />
     </motion.div>
   )
 }

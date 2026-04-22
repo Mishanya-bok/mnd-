@@ -57,7 +57,7 @@ export default function WhyUs() {
           <div className="overflow-hidden">
             <motion.h2
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
-              className="font-display text-display italic font-light"
+              className="font-display text-display font-semibold"
             >
               Чем мы отличаемся
             </motion.h2>
@@ -82,7 +82,7 @@ export default function WhyUs() {
               <span className="label text-[var(--color-dim)] w-8 shrink-0 group-hover:text-[var(--color-accent)] transition-colors duration-300">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <h3 className="font-display text-xl-fluid italic font-light text-[var(--color-white)] md:w-[55%] leading-snug group-hover:text-[var(--color-accent)] transition-colors duration-400">
+              <h3 className="font-display text-xl-fluid font-semibold text-[var(--color-white)] md:w-[55%] leading-snug group-hover:text-[var(--color-accent)] transition-colors duration-400">
                 {reason.statement}
               </h3>
               <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed md:flex-1">

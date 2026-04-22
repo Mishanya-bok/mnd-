@@ -80,7 +80,7 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
                   <span className="label text-[var(--color-dim)]">·</span>
                   <span className="label text-[var(--color-dim)]">{project.year}</span>
                 </div>
-                <h2 className="font-display text-[1.6rem] italic font-light">{project.title}</h2>
+                <h2 className="font-display text-[1.6rem] font-semibold">{project.title}</h2>
               </div>
               <p className="text-[var(--text-sm)] text-[var(--color-muted)] font-light leading-relaxed max-w-md">
                 {project.description}
