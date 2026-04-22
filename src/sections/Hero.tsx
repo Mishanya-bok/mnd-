@@ -3,10 +3,10 @@ import { motion } from 'framer-motion'
 import { stagger, fadeUp, maskReveal } from '@lib/motion'
 
 const categories = [
-  'AI Commercials',
-  'Fashion Visuals',
-  'Branded Content',
-  'Cinematic Storytelling',
+  'AI Ролики',
+  'Фэшн-видео',
+  'Брендовый контент',
+  'Кино-нарративы',
 ]
 
 export default function Hero() {
@@ -25,7 +25,7 @@ export default function Hero() {
   }
 
   return (
-    <section className="relative h-screen min-h-[600px] flex flex-col justify-end overflow-hidden">
+    <section className="relative h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden">
       {/* Background video */}
       <video
         className="absolute inset-0 w-full h-full object-cover"
@@ -41,40 +41,44 @@ export default function Hero() {
       <div
         className="absolute inset-0"
         style={{
-          background: 'linear-gradient(to bottom, rgba(8,8,8,0.2) 0%, rgba(8,8,8,0.5) 50%, rgba(8,8,8,0.85) 100%)',
+          background:
+            'linear-gradient(to bottom, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.45) 50%, rgba(8,8,8,0.8) 100%)',
         }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 container-x pb-16 md:pb-20">
+      {/* Centered content */}
+      <div className="relative z-10 container-x w-full flex flex-col items-center text-center">
         <motion.div
           variants={stagger}
           initial="hidden"
           animate="visible"
           transition={{ delayChildren: 0.5 }}
+          className="flex flex-col items-center"
         >
           {/* Category tags */}
           <motion.div
             variants={fadeUp}
-            className="flex flex-wrap gap-3 md:gap-4 mb-8 md:mb-10"
+            className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-10"
           >
             {categories.map((cat) => (
-              <span
+              <motion.span
                 key={cat}
-                className="label border border-[rgba(240,237,230,0.2)] text-[var(--color-white)]/60 px-3 py-1"
+                whileHover={{ scale: 1.06, borderColor: 'rgba(201,168,108,0.8)', color: '#f0ede6' }}
+                transition={{ duration: 0.25 }}
+                className="label border border-[rgba(240,237,230,0.2)] text-[var(--color-white)]/60 px-3 py-1 cursor-default"
               >
                 {cat}
-              </span>
+              </motion.span>
             ))}
           </motion.div>
 
           {/* Headline */}
-          <div className="overflow-hidden mb-3">
+          <div className="overflow-hidden mb-2">
             <motion.h1
               variants={maskReveal}
               className="font-display text-hero italic font-light leading-[0.92] text-[var(--color-white)]"
             >
-              We build worlds
+              Мы создаём миры
             </motion.h1>
           </div>
           <div className="overflow-hidden mb-8 md:mb-10">
@@ -82,34 +86,37 @@ export default function Hero() {
               variants={maskReveal}
               className="font-display text-hero italic font-light leading-[0.92] text-[var(--color-white)]"
             >
-              frame by frame.
+              кадр за кадром.
             </motion.h1>
           </div>
 
           {/* Subheadline */}
           <motion.p
             variants={fadeUp}
-            className="text-[var(--text-sm)] md:text-base text-[var(--color-muted)] font-light tracking-wide mb-8 md:mb-10 max-w-sm"
+            className="text-[var(--text-sm)] md:text-base text-[var(--color-muted)] font-light tracking-wide mb-8 md:mb-10"
           >
-            AI-powered cinematic production studio.{' '}
-            <br className="hidden md:block" />
-            Sofia + Mikhail — mnd.team
+            Кинематографический AI-продакшен.{' '}
+            <span className="text-[var(--color-white)]/40">София + Михаил — mnd.team</span>
           </motion.p>
 
           {/* CTAs */}
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3">
-            <button
+            <motion.button
               onClick={scrollToProjects}
-              className="label border border-[var(--color-white)]/30 hover:border-[var(--color-white)] text-[var(--color-white)] px-8 py-3.5 transition-all duration-300 text-center"
+              whileHover={{ borderColor: 'rgba(240,237,230,1)', color: '#f0ede6' }}
+              transition={{ duration: 0.25 }}
+              className="label border border-[var(--color-white)]/30 text-[var(--color-white)] px-8 py-3.5 text-center"
             >
-              View Work
-            </button>
-            <button
+              Наши работы
+            </motion.button>
+            <motion.button
               onClick={scrollToContact}
-              className="label bg-[var(--color-accent)] hover:bg-[var(--color-white)] text-[var(--color-bg)] px-8 py-3.5 transition-all duration-300 text-center"
+              whileHover={{ backgroundColor: '#f0ede6', color: '#080808' }}
+              transition={{ duration: 0.25 }}
+              className="label bg-[var(--color-accent)] text-[var(--color-bg)] px-8 py-3.5 text-center"
             >
-              Discuss a Project
-            </button>
+              Обсудить проект
+            </motion.button>
           </motion.div>
         </motion.div>
       </div>
@@ -118,13 +125,13 @@ export default function Hero() {
       <motion.div
         animate={{ opacity: showArrow ? 1 : 0 }}
         transition={{ duration: 0.8 }}
-        className="absolute bottom-6 right-6 md:right-8 z-10 flex flex-col items-center gap-2"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
-        <span className="label text-[var(--color-white)]/40">Scroll</span>
+        <span className="label text-[var(--color-white)]/30">Скролл</span>
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-px h-8 bg-gradient-to-b from-[var(--color-white)]/40 to-transparent"
+          className="w-px h-8 bg-gradient-to-b from-[var(--color-white)]/30 to-transparent"
         />
       </motion.div>
     </section>

@@ -90,7 +90,7 @@ export default function Showreel() {
                   <path d="M1 1L17 11L1 21V1Z" fill="white" fillOpacity="0.9" />
                 </svg>
               </div>
-              <span className="label text-[var(--color-white)]/60">Play Showreel</span>
+              <span className="label text-[var(--color-white)]/60">Смотреть шоурил</span>
             </motion.button>
           )}
         </AnimatePresence>
@@ -98,7 +98,7 @@ export default function Showreel() {
         {/* Caption */}
         <div className="absolute bottom-8 left-0 right-0 container-x flex items-end justify-between z-10">
           <span className="label text-[var(--color-white)]/40">
-            mnd. — 2025 Reel
+            mnd. — Трейлер 2025
           </span>
           {playing && (
             <button
@@ -109,7 +109,7 @@ export default function Showreel() {
               }}
               className="label text-[var(--color-white)]/40 hover:text-[var(--color-white)] transition-colors duration-200"
             >
-              Stop
+              Стоп
             </button>
           )}
         </div>

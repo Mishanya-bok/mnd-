@@ -47,56 +47,43 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
       onMouseLeave={handleMouseLeave}
       onTouchStart={handleTouchStart}
     >
-      {/* Video / thumbnail container */}
+      {/* Video container — shows video fully (object-contain), no crop */}
       <div
-        className="relative overflow-hidden border border-[var(--color-border)] group-hover:border-[var(--color-accent)]/30 transition-colors duration-500"
-        style={{ aspectRatio: isWide ? '16/9' : '4/5' }}
+        className="relative overflow-hidden border border-[var(--color-border)] transition-colors duration-500"
+        style={{
+          aspectRatio: isWide ? '16/9' : '4/5',
+          borderColor: hovered ? 'rgba(201,168,108,0.4)' : undefined,
+        }}
       >
-        {/* Static gradient background — always visible */}
+        {/* Static gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#222] to-[#111]" />
 
-        {/* Subtle noise texture overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage:
-              'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 256 256\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")',
-            backgroundSize: '256px',
-          }}
-        />
-
-        {/* Video */}
+        {/* Video — object-contain so it's fully visible */}
         <video
           ref={videoRef}
           playsInline
           muted
           loop
           preload="none"
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${
+          className={`absolute inset-0 w-full h-full transition-opacity duration-700 ${
             videoLoaded && hovered ? 'opacity-100' : 'opacity-0'
           }`}
+          style={{ objectFit: 'contain' }}
           onCanPlay={() => setVideoLoaded(true)}
         />
 
-        {/* Dark scrim over video when playing */}
-        <div
-          className={`absolute inset-0 bg-[var(--color-bg)]/20 transition-opacity duration-500 ${
-            videoLoaded && hovered ? 'opacity-100' : 'opacity-0'
-          }`}
-        />
-
-        {/* Index number — always visible, large and dim */}
+        {/* Index number */}
         <span
           className="absolute top-5 left-5 font-display italic font-light leading-none select-none pointer-events-none transition-opacity duration-500"
           style={{
             fontSize: isWide ? '5rem' : '4rem',
-            color: hovered ? 'rgba(201,168,108,0.15)' : 'rgba(240,237,230,0.07)',
+            color: hovered ? 'rgba(201,168,108,0.12)' : 'rgba(240,237,230,0.07)',
           }}
         >
           {String(index + 1).padStart(2, '0')}
         </span>
 
-        {/* Project title + meta — always visible bottom */}
+        {/* Title overlay — always visible at bottom */}
         <div className="absolute bottom-0 left-0 right-0 p-5 bg-gradient-to-t from-black/80 via-black/20 to-transparent">
           <div className="flex items-center gap-3 mb-1.5">
             <span
@@ -120,28 +107,23 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
           </p>
         </div>
 
-        {/* Play indicator — appears on hover */}
+        {/* Play indicator */}
         <div
-          className={`absolute bottom-5 right-5 flex items-center gap-2 transition-all duration-400 ${
+          className={`absolute top-5 right-5 flex items-center gap-2 transition-all duration-300 ${
             hovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-2'
           }`}
         >
-          <span className="label text-[var(--color-white)]">Play</span>
+          <span className="label text-[var(--color-white)]">Смотреть</span>
           <span className="w-5 h-px bg-[var(--color-white)]" />
         </div>
 
         {/* Thin accent left border */}
         <div
           className="absolute left-0 top-0 bottom-0 w-px transition-all duration-500"
-          style={{
-            background: hovered
-              ? 'var(--color-accent)'
-              : 'rgba(240,237,230,0.08)',
-          }}
+          style={{ background: hovered ? 'var(--color-accent)' : 'rgba(240,237,230,0.08)' }}
         />
       </div>
 
-      {/* Bottom space */}
       <div className="pb-2" />
     </motion.div>
   )
