@@ -18,7 +18,7 @@ function AnimatedNumber({ value, inView }: { value: string; inView: boolean }) {
   return (
     <div className="overflow-hidden">
       <motion.span
-        className="font-display italic font-light text-[var(--color-accent)] leading-none block"
+        className="font-display font-semibold text-[var(--color-accent)] leading-none block"
         style={{ fontSize: 'clamp(4.5rem, 11vw, 9rem)' }}
         initial={{ y: '110%' }}
         animate={inView ? { y: '0%' } : { y: '110%' }}

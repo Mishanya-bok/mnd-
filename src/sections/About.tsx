@@ -23,7 +23,7 @@ export default function About() {
           <div className="overflow-hidden mb-6">
             <motion.h2
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
-              className="font-display text-display italic font-light leading-[1.05]"
+              className="font-display text-display font-semibold leading-[1.05]"
             >
               Два разума.
               <br />
@@ -102,7 +102,7 @@ export default function About() {
             />
           </div>
           <span
-            className="absolute -bottom-4 -right-2 font-display text-[8rem] italic font-light leading-none select-none pointer-events-none"
+            className="absolute -bottom-4 -right-2 font-display text-[8rem] font-semibold leading-none select-none pointer-events-none"
             style={{ color: 'rgba(240,237,230,0.04)' }}
           >
             02

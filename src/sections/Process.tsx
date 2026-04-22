@@ -18,7 +18,7 @@ export default function Process() {
         <div className="overflow-hidden">
           <motion.h2
             variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
-            className="font-display text-display italic font-light"
+            className="font-display text-display font-semibold"
           >
             Процесс
           </motion.h2>
@@ -52,7 +52,7 @@ export default function Process() {
             )}
 
             {/* Number */}
-            <span className="font-display text-[3rem] italic font-light text-[var(--color-accent)] leading-none block mb-4 group-hover:text-[var(--color-white)] transition-colors duration-300">
+            <span className="font-display text-[3rem] font-semibold text-[var(--color-accent)] leading-none block mb-4 group-hover:text-[var(--color-white)] transition-colors duration-300">
               {step.number}
             </span>
 

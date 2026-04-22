@@ -13,16 +13,19 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60)
+    const onScroll = () => setScrolled(window.scrollY > 80)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
   const handleNav = (href: string) => {
     setMenuOpen(false)
-    const el = document.querySelector(href)
-    if (el) el.scrollIntoView({ behavior: 'smooth' })
+    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const linkColor = scrolled ? 'text-[var(--color-muted)] hover:text-[var(--color-white)]' : 'text-white/60 hover:text-white'
+  const logoColor = scrolled ? 'text-[var(--color-white)]' : 'text-white'
+  const barColor  = scrolled ? 'bg-[var(--color-white)]' : 'bg-white'
 
   return (
     <>
@@ -32,7 +35,7 @@ export default function Navbar() {
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
-            ? 'bg-[var(--color-bg)]/95 backdrop-blur-sm border-b border-[var(--color-border)]'
+            ? 'bg-[rgba(246,247,249,0.92)] backdrop-blur-md border-b border-[var(--color-border)]'
             : 'bg-transparent'
         }`}
       >
@@ -40,11 +43,8 @@ export default function Navbar() {
           {/* Logo */}
           <a
             href="#"
-            onClick={(e) => {
-              e.preventDefault()
-              window.scrollTo({ top: 0, behavior: 'smooth' })
-            }}
-            className="font-display text-[1.4rem] italic font-light tracking-tight text-[var(--color-white)] hover:text-[var(--color-accent)] transition-colors duration-300"
+            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+            className={`font-display text-[1.4rem] font-semibold tracking-tight transition-colors duration-300 hover:text-[var(--color-accent)] ${logoColor}`}
           >
             mnd.
           </a>
@@ -55,44 +55,31 @@ export default function Navbar() {
               <button
                 key={link.href}
                 onClick={() => handleNav(link.href)}
-                className="group relative label text-[var(--color-muted)] hover:text-[var(--color-white)] transition-colors duration-300 py-1"
+                className={`group relative label transition-colors duration-300 py-1 ${linkColor}`}
               >
                 {link.label}
-                {/* Animated underline */}
                 <span className="absolute bottom-0 left-0 w-0 h-px bg-[var(--color-accent)] group-hover:w-full transition-all duration-300" />
               </button>
             ))}
             <motion.button
               onClick={() => handleNav('#contact')}
               whileHover={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
-              transition={{ duration: 0.25 }}
-              className="label border border-[var(--color-border)] text-[var(--color-muted)] px-5 py-2 transition-colors duration-300"
+              transition={{ duration: 0.22 }}
+              className={`label border px-5 py-2 rounded-full transition-colors duration-300 ${
+                scrolled
+                  ? 'border-[var(--color-border)] text-[var(--color-muted)]'
+                  : 'border-white/25 text-white/60'
+              }`}
             >
               Связаться
             </motion.button>
           </nav>
 
           {/* Mobile hamburger */}
-          <button
-            className="md:hidden flex flex-col gap-[5px] p-2"
-            onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Меню"
-          >
-            <span
-              className={`block w-6 h-px bg-[var(--color-white)] transition-all duration-300 ${
-                menuOpen ? 'rotate-45 translate-y-[6px]' : ''
-              }`}
-            />
-            <span
-              className={`block w-6 h-px bg-[var(--color-white)] transition-all duration-300 ${
-                menuOpen ? 'opacity-0' : ''
-              }`}
-            />
-            <span
-              className={`block w-6 h-px bg-[var(--color-white)] transition-all duration-300 ${
-                menuOpen ? '-rotate-45 -translate-y-[6px]' : ''
-              }`}
-            />
+          <button className="md:hidden flex flex-col gap-[5px] p-2" onClick={() => setMenuOpen(!menuOpen)} aria-label="Меню">
+            <span className={`block w-6 h-px transition-all duration-300 ${barColor} ${menuOpen ? 'rotate-45 translate-y-[6px]' : ''}`} />
+            <span className={`block w-6 h-px transition-all duration-300 ${barColor} ${menuOpen ? 'opacity-0' : ''}`} />
+            <span className={`block w-6 h-px transition-all duration-300 ${barColor} ${menuOpen ? '-rotate-45 -translate-y-[6px]' : ''}`} />
           </button>
         </div>
       </motion.header>
@@ -102,15 +89,13 @@ export default function Navbar() {
         initial={false}
         animate={menuOpen ? { opacity: 1, y: 0 } : { opacity: 0, y: -20 }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed inset-0 z-40 bg-[var(--color-bg)] flex flex-col items-center justify-center gap-8 ${
-          menuOpen ? 'pointer-events-auto' : 'pointer-events-none'
-        }`}
+        className={`fixed inset-0 z-40 bg-[var(--color-bg)] flex flex-col items-center justify-center gap-8 ${menuOpen ? 'pointer-events-auto' : 'pointer-events-none'}`}
       >
         {navLinks.map((link) => (
           <button
             key={link.href}
             onClick={() => handleNav(link.href)}
-            className="font-display text-[2rem] italic font-light text-[var(--color-white)] hover:text-[var(--color-accent)] transition-colors duration-300"
+            className="font-display text-[2.2rem] font-semibold text-[var(--color-white)] hover:text-[var(--color-accent)] transition-colors duration-300"
           >
             {link.label}
           </button>

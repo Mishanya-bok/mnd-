@@ -2,30 +2,20 @@ import { useEffect, useState, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { stagger, fadeUp, maskReveal } from '@lib/motion'
 
-const categories = [
-  'AI Ролики',
-  'Фэшн-видео',
-  'Брендовый контент',
-  'Кино-нарративы',
-]
+const categories = ['AI Ролики', 'Фэшн-видео', 'Брендовый контент', 'Кино-нарративы']
 
 export default function Hero() {
   const [showArrow, setShowArrow] = useState(true)
   const sectionRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowArrow(false), 4000)
-    return () => clearTimeout(timer)
+    const t = setTimeout(() => setShowArrow(false), 4000)
+    return () => clearTimeout(t)
   }, [])
 
-  const scrollToProjects = () => {
-    document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })
-  }
-  const scrollToContact = () => {
-    document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
-  }
+  const scrollToProjects = () => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })
+  const scrollToContact  = () => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })
 
-  // Mouse parallax
   const rawX = useMotionValue(0)
   const rawY = useMotionValue(0)
   const contentX = useSpring(rawX, { stiffness: 80, damping: 20 })
@@ -36,49 +26,34 @@ export default function Hero() {
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const rect = sectionRef.current?.getBoundingClientRect()
     if (!rect) return
-    const x = (e.clientX - rect.left - rect.width / 2) / rect.width
-    const y = (e.clientY - rect.top - rect.height / 2) / rect.height
-    rawX.set(x * 22)
-    rawY.set(y * 14)
-  }
-  const handleMouseLeave = () => {
-    rawX.set(0)
-    rawY.set(0)
+    rawX.set(((e.clientX - rect.left - rect.width / 2) / rect.width) * 22)
+    rawY.set(((e.clientY - rect.top - rect.height / 2) / rect.height) * 14)
   }
 
   return (
     <section
       ref={sectionRef}
       className="relative h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden"
+      style={{ backgroundColor: '#080808' }}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onMouseLeave={() => { rawX.set(0); rawY.set(0) }}
     >
-      {/* Background video — moves opposite to cursor */}
-      <motion.div
-        className="absolute inset-0"
-        style={{ x: bgX, y: bgY, scale: 1.04 }}
-      >
+      {/* Background video */}
+      <motion.div className="absolute inset-0" style={{ x: bgX, y: bgY, scale: 1.04 }}>
         <video
           className="absolute inset-0 w-full h-full object-cover"
           src="/videos/hero-loop.webm"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
+          autoPlay muted loop playsInline preload="auto"
         />
       </motion.div>
 
-      {/* Gradient overlay */}
+      {/* Dark overlay */}
       <div
         className="absolute inset-0"
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(8,8,8,0.15) 0%, rgba(8,8,8,0.45) 50%, rgba(8,8,8,0.8) 100%)',
-        }}
+        style={{ background: 'linear-gradient(to bottom, rgba(8,8,8,0.1) 0%, rgba(8,8,8,0.5) 60%, rgba(8,8,8,0.92) 100%)' }}
       />
 
-      {/* Centered content — moves toward cursor */}
+      {/* Content */}
       <motion.div
         className="relative z-10 container-x w-full flex flex-col items-center text-center"
         style={{ x: contentX, y: contentY }}
@@ -90,17 +65,14 @@ export default function Hero() {
           transition={{ delayChildren: 0.5 }}
           className="flex flex-col items-center"
         >
-          {/* Category tags */}
-          <motion.div
-            variants={fadeUp}
-            className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-10"
-          >
+          {/* Tags */}
+          <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-2 md:gap-3 mb-8 md:mb-10">
             {categories.map((cat) => (
               <motion.span
                 key={cat}
-                whileHover={{ scale: 1.08, borderColor: 'rgba(201,168,108,0.9)', color: '#f0ede6', backgroundColor: 'rgba(201,168,108,0.08)' }}
-                transition={{ duration: 0.22 }}
-                className="label border border-[rgba(240,237,230,0.2)] text-[var(--color-white)]/60 px-3 py-1 cursor-default"
+                whileHover={{ scale: 1.08, borderColor: 'rgba(201,168,108,0.9)', color: '#ffffff', backgroundColor: 'rgba(201,168,108,0.1)' }}
+                transition={{ duration: 0.2 }}
+                className="label border border-white/20 text-white/55 px-3 py-1.5 rounded-full cursor-default backdrop-blur-sm"
               >
                 {cat}
               </motion.span>
@@ -108,49 +80,39 @@ export default function Hero() {
           </motion.div>
 
           {/* Headline */}
-          <div className="overflow-hidden mb-2">
-            <motion.h1
-              variants={maskReveal}
-              className="font-display text-hero italic font-light leading-[0.92] text-[var(--color-white)]"
-            >
+          <div className="overflow-hidden mb-1">
+            <motion.h1 variants={maskReveal} className="font-display text-hero font-semibold leading-[0.92] text-white">
               Мы создаём миры
             </motion.h1>
           </div>
           <div className="overflow-hidden mb-8 md:mb-10">
-            <motion.h1
-              variants={maskReveal}
-              className="font-display text-hero italic font-light leading-[0.92] text-[var(--color-white)]"
-            >
+            <motion.h1 variants={maskReveal} className="font-display text-hero font-semibold leading-[0.92] text-white/80">
               кадр за кадром.
             </motion.h1>
           </div>
 
-          {/* Subheadline */}
-          <motion.p
-            variants={fadeUp}
-            className="text-[var(--text-sm)] md:text-base text-[var(--color-muted)] font-light tracking-wide mb-8 md:mb-10"
-          >
+          <motion.p variants={fadeUp} className="text-sm md:text-base text-white/45 font-light tracking-wide mb-8 md:mb-10">
             Кинематографический AI-продакшен.{' '}
-            <span className="text-[var(--color-white)]/40">София + Михаил — mnd.team</span>
+            <span className="text-white/30">София + Михаил — mnd.team</span>
           </motion.p>
 
           {/* CTAs */}
           <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-3">
             <motion.button
               onClick={scrollToProjects}
-              whileHover={{ borderColor: 'rgba(240,237,230,1)', color: '#f0ede6', scale: 1.03 }}
+              whileHover={{ borderColor: 'rgba(255,255,255,0.8)', color: '#fff', backgroundColor: 'rgba(255,255,255,0.08)', scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.22 }}
-              className="label border border-[var(--color-white)]/30 text-[var(--color-white)] px-8 py-3.5 text-center"
+              transition={{ duration: 0.2 }}
+              className="label border border-white/25 text-white/70 px-8 py-3.5 rounded-full backdrop-blur-sm"
             >
               Наши работы
             </motion.button>
             <motion.button
               onClick={scrollToContact}
-              whileHover={{ backgroundColor: '#f0ede6', color: '#080808', scale: 1.03 }}
+              whileHover={{ backgroundColor: '#fff', color: '#080808', scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              transition={{ duration: 0.22 }}
-              className="label bg-[var(--color-accent)] text-[var(--color-bg)] px-8 py-3.5 text-center"
+              transition={{ duration: 0.2 }}
+              className="label bg-[#c9a86c] text-[#080808] px-8 py-3.5 rounded-full"
             >
               Обсудить проект
             </motion.button>
@@ -162,15 +124,21 @@ export default function Hero() {
       <motion.div
         animate={{ opacity: showArrow ? 1 : 0 }}
         transition={{ duration: 0.8 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
       >
-        <span className="label text-[var(--color-white)]/30">Скролл</span>
+        <span className="label text-white/25">Скролл</span>
         <motion.div
           animate={{ y: [0, 6, 0] }}
           transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-          className="w-px h-8 bg-gradient-to-b from-[var(--color-white)]/30 to-transparent"
+          className="w-px h-8 bg-gradient-to-b from-white/25 to-transparent"
         />
       </motion.div>
+
+      {/* Gradient fade to light background */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none z-20"
+        style={{ background: 'linear-gradient(to bottom, transparent, #f6f7f9)' }}
+      />
     </section>
   )
 }
