@@ -7,32 +7,32 @@ export interface Service {
 export const services: Service[] = [
   {
     id: 'ai-commercials',
-    title: 'AI Commercials',
-    description: 'Brand films and product visuals built with AI generation and production-grade finishing.',
+    title: 'AI Ролики',
+    description: 'Брендовые фильмы и продуктовые визуалы с AI-генерацией и финишингом уровня продакшена.',
   },
   {
     id: 'fashion-beauty',
-    title: 'Fashion & Beauty',
-    description: 'Editorial and campaign visuals for fashion, beauty, and luxury brands.',
+    title: 'Фэшн и Бьюти',
+    description: 'Редакционные и кампейн-визуалы для фэшн, бьюти и люксовых брендов.',
   },
   {
     id: 'branded-social',
-    title: 'Branded Social Content',
-    description: 'Short-form visual content designed for performance across social platforms.',
+    title: 'Брендовый контент',
+    description: 'Короткометражный визуальный контент, оптимизированный для социальных платформ.',
   },
   {
     id: 'music-videos',
-    title: 'Music & Image Videos',
-    description: 'Artistic visuals for artists, labels, and personal brand campaigns.',
+    title: 'Клипы и имиджевое видео',
+    description: 'Авторские визуалы для артистов, лейблов и персональных брендовых кампаний.',
   },
   {
     id: 'concept-visuals',
-    title: 'Concept Visuals',
-    description: 'Generative and directorial concept pieces for pitches, launches, and campaigns.',
+    title: 'Концептуальные визуалы',
+    description: 'Генеративные и режиссёрские концепции для питчей, запусков и кампаний.',
   },
   {
     id: 'campaign-creative',
-    title: 'Campaign Creative',
-    description: 'Full visual direction and execution for multi-format campaign rollouts.',
+    title: 'Кампейн Криэйтив',
+    description: 'Полная визуальная режиссура и реализация мультиформатных рекламных кампаний.',
   },
 ]

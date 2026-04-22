@@ -7,22 +7,22 @@ export interface ProcessStep {
 export const processSteps: ProcessStep[] = [
   {
     number: '01',
-    title: 'Brief',
-    description: 'We align on vision, audience, format, and goals. No templates — every project starts from intent.',
+    title: 'Бриф',
+    description: 'Выясняем видение, аудиторию, формат и цели. Без шаблонов — каждый проект начинается с намерения.',
   },
   {
     number: '02',
-    title: 'Concept',
-    description: 'Visual references, mood direction, and narrative structure. The aesthetic is locked before production begins.',
+    title: 'Концепция',
+    description: 'Визуальные референсы, настроение и структура нарратива. Эстетика фиксируется до начала продакшена.',
   },
   {
     number: '03',
-    title: 'Scene Development',
-    description: 'AI generation, compositing, refinement. Each frame is reviewed against the visual brief.',
+    title: 'Разработка сцен',
+    description: 'AI-генерация, композитинг, доработка. Каждый кадр проверяется на соответствие визуальному брифу.',
   },
   {
     number: '04',
-    title: 'Edit & Delivery',
-    description: 'Final assembly, color, sound design, format-ready export. Polished output, on time.',
+    title: 'Монтаж и сдача',
+    description: 'Финальная сборка, грейд, звуковой дизайн, экспорт в нужных форматах. Полировка до результата.',
   },
 ]

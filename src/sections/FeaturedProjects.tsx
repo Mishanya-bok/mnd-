@@ -9,6 +9,13 @@ import { stagger, fadeUp } from '@lib/motion'
 export default function FeaturedProjects() {
   const [activeProject, setActiveProject] = useState<Project | null>(null)
 
+  const rest = projects.slice(1)
+  // Pair up remaining projects for row dividers
+  const rows: Project[][] = []
+  for (let i = 0; i < rest.length; i += 2) {
+    rows.push(rest.slice(i, i + 2))
+  }
+
   return (
     <>
       <section id="projects" className="section-gap container-x">
@@ -22,14 +29,14 @@ export default function FeaturedProjects() {
         >
           <div>
             <motion.p variants={fadeUp} className="label mb-3">
-              Selected Work
+              Избранное
             </motion.p>
             <div className="overflow-hidden">
               <motion.h2
                 variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
                 className="font-display text-display italic font-light"
               >
-                Featured Projects
+                Наши работы
               </motion.h2>
             </div>
           </div>
@@ -37,7 +44,7 @@ export default function FeaturedProjects() {
             variants={fadeUp}
             className="text-sm text-[var(--color-muted)] font-light max-w-xs leading-relaxed"
           >
-            Commercial work, concept pieces, and editorial visuals — each built to a precise aesthetic brief.
+            Коммерческие ролики, концептуальные и редакционные визуалы — каждый создан под точное визуальное задание.
           </motion.p>
         </motion.div>
 
@@ -46,63 +53,43 @@ export default function FeaturedProjects() {
           variants={stagger}
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.1 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0"
+          viewport={{ once: true, amount: 0.05 }}
+          className="grid grid-cols-1 md:grid-cols-2 gap-x-6"
         >
-          {/* First project — spans full width on its own row, wide format */}
+          {/* Project 0 — full width hero card */}
           <div className="md:col-span-2 mb-2">
-            <ProjectCard
-              project={projects[0]}
-              index={0}
-              onClick={setActiveProject}
-            />
+            <ProjectCard project={projects[0]} index={0} onClick={setActiveProject} />
           </div>
 
-          {/* Divider */}
+          {/* Divider after hero */}
           <motion.div
             variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
             className="md:col-span-2 h-px bg-[var(--color-border)] mb-2 origin-left"
           />
 
-          {/* Projects 2 and 3 — two columns */}
-          <ProjectCard
-            project={projects[1]}
-            index={1}
-            onClick={setActiveProject}
-          />
-          <ProjectCard
-            project={projects[2]}
-            index={2}
-            onClick={setActiveProject}
-          />
-
-          {/* Divider */}
-          <motion.div
-            variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
-            className="md:col-span-2 h-px bg-[var(--color-border)] mt-2 mb-2 origin-left"
-          />
-
-          {/* Project 4 — half width */}
-          <div>
-            <ProjectCard
-              project={projects[3]}
-              index={3}
-              onClick={setActiveProject}
-            />
-          </div>
-          {/* Decorative right panel */}
-          <div className="hidden md:flex items-end pb-6 pl-6">
-            <motion.p
-              variants={fadeUp}
-              className="font-display text-[3.5rem] italic font-light text-[rgba(240,237,230,0.04)] leading-none select-none"
-            >
-              mnd.
-            </motion.p>
-          </div>
+          {/* Remaining projects in rows of 2 */}
+          {rows.map((row, rowIndex) => (
+            <>
+              {row.map((project, colIndex) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  index={rowIndex * 2 + colIndex + 1}
+                  onClick={setActiveProject}
+                />
+              ))}
+              {rowIndex < rows.length - 1 && (
+                <motion.div
+                  key={`divider-${rowIndex}`}
+                  variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } } }}
+                  className="md:col-span-2 h-px bg-[var(--color-border)] mt-2 mb-2 origin-left"
+                />
+              )}
+            </>
+          ))}
         </motion.div>
       </section>
 
-      {/* Modal */}
       <VideoModal project={activeProject} onClose={() => setActiveProject(null)} />
     </>
   )
