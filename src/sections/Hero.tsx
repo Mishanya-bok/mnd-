@@ -91,7 +91,7 @@ export default function Hero() {
             variants={fadeUp}
             className="text-[var(--text-sm)] md:text-base text-[var(--color-muted)] font-light tracking-wide mb-8 md:mb-10 max-w-sm"
           >
-            AI-powered cinematic production studio.
+            AI-powered cinematic production studio.{' '}
             <br className="hidden md:block" />
             Sofia + Mikhail — mnd.team
           </motion.p>

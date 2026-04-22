@@ -72,7 +72,7 @@ export default function About() {
           >
             <video
               ref={ambientVideoRef}
-              src="/videos/ai-3.webm"
+              src="/videos/ai-1.webm"
               muted
               loop
               playsInline
