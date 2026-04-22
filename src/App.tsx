@@ -1,5 +1,6 @@
 import { lazy, Suspense } from 'react'
 import Navbar from '@components/Navbar'
+import Cursor from '@components/Cursor'
 import Hero from '@sections/Hero'
 import FeaturedProjects from '@sections/FeaturedProjects'
 import MobileCTA from '@components/MobileCTA'
@@ -15,6 +16,7 @@ const Footer      = lazy(() => import('@sections/Footer'))
 export default function App() {
   return (
     <main className="bg-[var(--color-bg)] text-[var(--color-white)] min-h-screen">
+      <Cursor />
       <Navbar />
       <Hero />
       <FeaturedProjects />

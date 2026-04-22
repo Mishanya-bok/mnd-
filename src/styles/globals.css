@@ -76,11 +76,18 @@
   }
 
   button {
-    cursor: pointer;
+    cursor: none;
     border: none;
     background: none;
     font-family: inherit;
     color: inherit;
+  }
+
+  /* Hide default cursor on pointer devices — replaced by custom Cursor component */
+  @media (pointer: fine) {
+    html, body, a, button, input, textarea, select, label, [role="button"] {
+      cursor: none !important;
+    }
   }
 
   input, textarea {
