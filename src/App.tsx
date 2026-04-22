@@ -9,7 +9,6 @@ const About       = lazy(() => import('@sections/About'))
 const Services    = lazy(() => import('@sections/Services'))
 const Process     = lazy(() => import('@sections/Process'))
 const WhyUs       = lazy(() => import('@sections/WhyUs'))
-const Stats       = lazy(() => import('@sections/Stats'))
 const Showreel    = lazy(() => import('@sections/Showreel'))
 const Pricing     = lazy(() => import('@sections/Pricing'))
 const Contact     = lazy(() => import('@sections/Contact'))
@@ -27,7 +26,6 @@ export default function App() {
         <Services />
         <Process />
         <WhyUs />
-        <Stats />
         <Showreel />
         <Pricing />
         <Contact />

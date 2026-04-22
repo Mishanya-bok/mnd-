@@ -122,6 +122,14 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
           >
             {project.title}
           </p>
+          <motion.p
+            className="text-xs text-white/65 font-light leading-relaxed mt-2"
+            style={{ maxWidth: '38ch' }}
+            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
+            {project.description}
+          </motion.p>
         </div>
 
         {/* Play indicator */}
