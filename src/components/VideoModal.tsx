@@ -40,10 +40,7 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
           exit="exit"
         >
           {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/85 backdrop-blur-sm"
-            onClick={onClose}
-          />
+          <div className="absolute inset-0 bg-black/85 backdrop-blur-sm" onClick={onClose} />
 
           {/* Panel */}
           <motion.div
@@ -57,21 +54,21 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
             <button
               onClick={onClose}
               className="absolute -top-12 right-0 text-[var(--color-muted)] hover:text-[var(--color-white)] transition-colors duration-200 flex items-center gap-2"
-              aria-label="Close"
+              aria-label="Закрыть"
             >
-              <span className="label">Close</span>
+              <span className="label">Закрыть</span>
               <X size={16} strokeWidth={1.5} />
             </button>
 
-            {/* Video */}
-            <div className="relative w-full bg-[var(--color-surface)] overflow-hidden">
+            {/* Video — full size, not cropped */}
+            <div className="relative w-full bg-black overflow-hidden">
               <video
                 ref={videoRef}
                 src={project.videoSrc}
                 controls
                 autoPlay
                 playsInline
-                className="w-full h-auto max-h-[70vh] object-contain"
+                className="w-full h-auto max-h-[72vh] object-contain"
               />
             </div>
 

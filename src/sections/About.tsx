@@ -17,7 +17,7 @@ export default function About() {
         {/* Text column */}
         <div>
           <motion.p variants={fadeUp} className="label mb-6">
-            About the Studio
+            О студии
           </motion.p>
 
           <div className="overflow-hidden mb-6">
@@ -25,9 +25,9 @@ export default function About() {
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
               className="font-display text-display italic font-light leading-[1.05]"
             >
-              Two minds.
+              Два разума.
               <br />
-              One vision.
+              Одно видение.
             </motion.h2>
           </div>
 
@@ -35,30 +35,50 @@ export default function About() {
             variants={fadeUp}
             className="text-[var(--color-muted)] font-light leading-relaxed mb-10 max-w-md"
           >
-            We create cinematic AI visuals for brands, artists, and campaigns — with the precision of a boutique studio and the fluency of a modern production team.
+            Мы создаём кинематографичные AI-визуалы для брендов, артистов и кампаний — с точностью бутиковой студии и гибкостью современной команды.
           </motion.p>
 
           {/* Team */}
           <div className="flex flex-col gap-8">
-            <motion.div variants={fadeUp}>
+            <motion.div
+              variants={fadeUp}
+              whileHover={{ x: 4 }}
+              transition={{ duration: 0.25 }}
+              className="cursor-default"
+            >
               <div className="flex items-center gap-3 mb-2">
-                <span className="w-6 h-px bg-[var(--color-accent)]" />
-                <span className="label text-[var(--color-accent)]">Sofia</span>
+                <motion.span
+                  className="h-px bg-[var(--color-accent)]"
+                  initial={{ width: '1.5rem' }}
+                  whileHover={{ width: '3rem' }}
+                  transition={{ duration: 0.3 }}
+                />
+                <span className="label text-[var(--color-accent)]">София</span>
               </div>
-              <p className="label text-[var(--color-white)] mb-1">AI Creator / Visual Director</p>
+              <p className="label text-[var(--color-white)] mb-1">AI-Креатор / Визуальный директор</p>
               <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
-                Responsible for visual concept, AI direction, and overall aesthetic. Brings the kind of taste that makes clients come back.
+                Отвечает за визуальную концепцию, AI-режиссуру и общую эстетику. Тот вкус, к которому возвращаются клиенты.
               </p>
             </motion.div>
 
-            <motion.div variants={fadeUp}>
+            <motion.div
+              variants={fadeUp}
+              whileHover={{ x: 4 }}
+              transition={{ duration: 0.25 }}
+              className="cursor-default"
+            >
               <div className="flex items-center gap-3 mb-2">
-                <span className="w-6 h-px bg-[var(--color-accent)]" />
-                <span className="label text-[var(--color-accent)]">Mikhail</span>
+                <motion.span
+                  className="h-px bg-[var(--color-accent)]"
+                  initial={{ width: '1.5rem' }}
+                  whileHover={{ width: '3rem' }}
+                  transition={{ duration: 0.3 }}
+                />
+                <span className="label text-[var(--color-accent)]">Михаил</span>
               </div>
-              <p className="label text-[var(--color-white)] mb-1">Editor / Production Lead</p>
+              <p className="label text-[var(--color-white)] mb-1">Монтажёр / Руководитель продакшена</p>
               <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
-                Handles editing, final assembly, and the commercial precision that separates rough visuals from polished deliverables.
+                Монтаж, финальная сборка и коммерческая точность — то, что отличает сырой материал от готового продукта.
               </p>
             </motion.div>
           </div>
@@ -66,28 +86,21 @@ export default function About() {
 
         {/* Ambient video column */}
         <motion.div variants={scaleIn} className="relative">
-          <div
-            className="relative overflow-hidden"
-            style={{ aspectRatio: '4/5' }}
-          >
+          <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
             <video
               ref={ambientVideoRef}
-              src="/videos/ai-3.webm"
+              src="/videos/ai-1.webm"
               muted
               loop
               playsInline
               preload="metadata"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#0d0d0d]"
             />
-            {/* Subtle vignette */}
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{
-                background: 'linear-gradient(to bottom, transparent 60%, rgba(8,8,8,0.6) 100%)',
-              }}
+              style={{ background: 'linear-gradient(to bottom, transparent 60%, rgba(8,8,8,0.6) 100%)' }}
             />
           </div>
-          {/* Decorative number */}
           <span
             className="absolute -bottom-4 -right-2 font-display text-[8rem] italic font-light leading-none select-none pointer-events-none"
             style={{ color: 'rgba(240,237,230,0.04)' }}

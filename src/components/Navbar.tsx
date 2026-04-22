@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 
 const navLinks = [
-  { label: 'Work', href: '#projects' },
-  { label: 'About', href: '#about' },
-  { label: 'Services', href: '#services' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Работы', href: '#projects' },
+  { label: 'О нас', href: '#about' },
+  { label: 'Услуги', href: '#services' },
+  { label: 'Контакт', href: '#contact' },
 ]
 
 export default function Navbar() {
@@ -40,7 +40,10 @@ export default function Navbar() {
           {/* Logo */}
           <a
             href="#"
-            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}
+            onClick={(e) => {
+              e.preventDefault()
+              window.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
             className="font-display text-[1.4rem] italic font-light tracking-tight text-[var(--color-white)] hover:text-[var(--color-accent)] transition-colors duration-300"
           >
             mnd.
@@ -52,24 +55,28 @@ export default function Navbar() {
               <button
                 key={link.href}
                 onClick={() => handleNav(link.href)}
-                className="label text-[var(--color-muted)] hover:text-[var(--color-white)] transition-colors duration-300"
+                className="group relative label text-[var(--color-muted)] hover:text-[var(--color-white)] transition-colors duration-300 py-1"
               >
                 {link.label}
+                {/* Animated underline */}
+                <span className="absolute bottom-0 left-0 w-0 h-px bg-[var(--color-accent)] group-hover:w-full transition-all duration-300" />
               </button>
             ))}
-            <button
+            <motion.button
               onClick={() => handleNav('#contact')}
-              className="label border border-[var(--color-border)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)] px-5 py-2 transition-all duration-300"
+              whileHover={{ borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
+              transition={{ duration: 0.25 }}
+              className="label border border-[var(--color-border)] text-[var(--color-muted)] px-5 py-2 transition-colors duration-300"
             >
-              Get in Touch
-            </button>
+              Связаться
+            </motion.button>
           </nav>
 
           {/* Mobile hamburger */}
           <button
             className="md:hidden flex flex-col gap-[5px] p-2"
             onClick={() => setMenuOpen(!menuOpen)}
-            aria-label="Toggle menu"
+            aria-label="Меню"
           >
             <span
               className={`block w-6 h-px bg-[var(--color-white)] transition-all duration-300 ${

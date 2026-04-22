@@ -4,20 +4,20 @@ import { stagger, fadeUp } from '@lib/motion'
 
 const reasons = [
   {
-    statement: 'Cinematic thinking, not template execution.',
-    detail: 'Every project starts with visual intent — the aesthetic is never accidental.',
+    statement: 'Кинематографическое мышление, а не шаблонное исполнение.',
+    detail: 'Каждый проект начинается с визуального намерения — эстетика никогда не случайна.',
   },
   {
-    statement: 'AI fluency + production discipline.',
-    detail: 'We know how to get the best from generative tools and how to finish the work properly.',
+    statement: 'AI-флюентность + продакшен-дисциплина.',
+    detail: 'Мы знаем, как выжать максимум из генеративных инструментов и как довести работу до конца.',
   },
   {
-    statement: 'Polished output, every time.',
-    detail: "Mikhail's production background means no rough edges, no 'good enough'.",
+    statement: 'Полировка на каждом шаге.',
+    detail: 'Продакшен-бэкграунд Михаила означает: никаких шероховатостей, никакого «и так сойдёт».',
   },
   {
-    statement: 'Faster where it counts.',
-    detail: 'For campaign content and concept visuals, we move at the speed modern brands need.',
+    statement: 'Быстро там, где это важно.',
+    detail: 'Для кампейн-контента и концептуальных визуалов мы движемся со скоростью, которая нужна современным брендам.',
   },
 ]
 
@@ -44,7 +44,6 @@ export default function WhyUs() {
       />
 
       <div className="relative z-10 container-x">
-        {/* Header */}
         <motion.div
           variants={stagger}
           initial="hidden"
@@ -53,19 +52,18 @@ export default function WhyUs() {
           className="mb-12 md:mb-16"
         >
           <motion.p variants={fadeUp} className="label mb-3">
-            Why mnd.team
+            Почему mnd.team
           </motion.p>
           <div className="overflow-hidden">
             <motion.h2
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
               className="font-display text-display italic font-light"
             >
-              What sets us apart
+              Чем мы отличаемся
             </motion.h2>
           </div>
         </motion.div>
 
-        {/* Reasons */}
         <motion.div
           variants={stagger}
           initial="hidden"
@@ -77,17 +75,16 @@ export default function WhyUs() {
             <motion.div
               key={i}
               variants={fadeUp}
-              className="group flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8 py-7 border-b border-[var(--color-border)] last:border-b-0"
+              whileHover={{ x: 6 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="group flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8 py-7 border-b border-[var(--color-border)] last:border-b-0 cursor-default"
             >
-              {/* Number */}
-              <span className="label text-[var(--color-dim)] w-8 shrink-0">
+              <span className="label text-[var(--color-dim)] w-8 shrink-0 group-hover:text-[var(--color-accent)] transition-colors duration-300">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              {/* Statement */}
-              <h3 className="font-display text-xl-fluid italic font-light text-[var(--color-white)] md:w-[55%] leading-snug">
+              <h3 className="font-display text-xl-fluid italic font-light text-[var(--color-white)] md:w-[55%] leading-snug group-hover:text-[var(--color-accent)] transition-colors duration-400">
                 {reason.statement}
               </h3>
-              {/* Detail */}
               <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed md:flex-1">
                 {reason.detail}
               </p>
