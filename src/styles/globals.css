@@ -1,0 +1,148 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Colors ─────────────────────────────────────── */
+  --color-bg:        #080808;
+  --color-surface:   #111111;
+  --color-surface-2: #161616;
+  --color-border:    #1e1e1e;
+  --color-white:     #f0ede6;
+  --color-muted:     #6b6b6b;
+  --color-dim:       #3a3a3a;
+  --color-accent:    #c9a86c;
+  --color-accent-dim:#7a6340;
+
+  /* ── Fonts ───────────────────────────────────────── */
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', system-ui, -apple-system, sans-serif;
+
+  /* ── Type Scale (fluid) ─────────────────────────── */
+  --text-hero:    clamp(3.2rem, 8vw, 7rem);
+  --text-display: clamp(2.4rem, 5.5vw, 4.5rem);
+  --text-xl:      clamp(1.8rem, 3.5vw, 2.8rem);
+  --text-lg:      clamp(1.2rem, 2.5vw, 1.6rem);
+  --text-base:    1rem;
+  --text-sm:      0.875rem;
+  --text-xs:      0.75rem;
+
+  /* ── Easing ─────────────────────────────────────── */
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-mask:      cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-out:       cubic-bezier(0.0, 0.0, 0.2, 1);
+
+  /* ── Spacing ─────────────────────────────────────── */
+  --section-gap: clamp(80px, 12vw, 160px);
+  --container-x: clamp(20px, 5vw, 80px);
+}
+
+/* ── Base Reset ──────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    background-color: var(--color-bg);
+    color: var(--color-white);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: 300;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overscroll-behavior-y: none;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: var(--color-bg);
+  }
+
+  img, video {
+    display: block;
+    max-width: 100%;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    color: inherit;
+  }
+
+  input, textarea {
+    font-family: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+  }
+
+  /* Accessibility: reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ── Utilities ───────────────────────────────────── */
+@layer utilities {
+  .container-x {
+    padding-left: var(--container-x);
+    padding-right: var(--container-x);
+  }
+
+  .section-gap {
+    padding-top: var(--section-gap);
+    padding-bottom: var(--section-gap);
+  }
+
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .text-hero {
+    font-size: var(--text-hero);
+  }
+
+  .text-display {
+    font-size: var(--text-display);
+  }
+
+  .text-xl-fluid {
+    font-size: var(--text-xl);
+  }
+
+  .text-lg-fluid {
+    font-size: var(--text-lg);
+  }
+
+  .label {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+
+  .border-subtle {
+    border-color: var(--color-border);
+  }
+}
