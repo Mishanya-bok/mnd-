@@ -12,8 +12,9 @@ function ProcessRow({ step, index }: { step: typeof processSteps[0]; index: numb
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       animate={{
-        backgroundColor: hovered ? 'rgba(255,255,255,0.72)' : 'transparent',
-        boxShadow: hovered ? '0 4px 24px rgba(0,0,0,0.06), 0 0 0 1px rgba(201,168,108,0.15)' : 'none',
+        backgroundColor: hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
+        boxShadow: hovered ? '0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.18)' : 'none',
+        scale: hovered ? 1.015 : 1,
       }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="group relative flex items-start gap-6 md:gap-10 py-7 px-4 md:px-6 rounded-xl cursor-default border-b border-[var(--color-border)] last:border-b-0"

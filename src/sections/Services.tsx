@@ -34,7 +34,7 @@ export default function Services() {
           <motion.div
             key={service.id}
             variants={fadeUp}
-            whileHover={{ y: -5, boxShadow: '0 20px 50px rgba(0,0,0,0.1), 0 0 0 1px rgba(201,168,108,0.25)' }}
+            whileHover={{ y: -5, scale: 1.02, boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.25)' }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="group glass-sm p-7 cursor-default"
           >

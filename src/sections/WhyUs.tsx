@@ -106,10 +106,10 @@ export default function WhyUs() {
         </motion.div>
       </div>
 
-      {/* Gradient fade to light at bottom */}
+      {/* Gradient fade to dark at bottom */}
       <div
         className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, #f6f7f9)' }}
+        style={{ background: 'linear-gradient(to bottom, transparent, #080808)' }}
       />
     </section>
   )
