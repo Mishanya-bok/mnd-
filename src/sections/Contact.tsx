@@ -1,39 +1,83 @@
-import { useForm } from 'react-hook-form'
-import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
-import { Send } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { stagger, fadeUp } from '@lib/motion'
 
-interface FormData {
-  name: string
-  contact: string
-  message: string
-}
-
-const quickContacts = [
-  { label: 'Telegram (София)', href: 'https://t.me/alienlale', handle: '@alienlale' },
-  { label: 'Telegram (Михаил)', href: 'https://t.me/mishanya_bok', handle: '@mishanya_bok' },
+const contacts = [
+  {
+    name: 'София',
+    role: 'AI-Креатор / Визуальный директор',
+    handle: '@alienlale',
+    href: 'https://t.me/alienlale',
+  },
+  {
+    name: 'Михаил',
+    role: 'Монтажёр / Руководитель продакшена',
+    handle: '@mishanya_bok',
+    href: 'https://t.me/mishanya_bok',
+  },
 ]
 
+function ContactCard({ c }: { c: typeof contacts[0] }) {
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <motion.a
+      href={c.href}
+      target="_blank"
+      rel="noopener noreferrer"
+      variants={fadeUp}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      animate={{
+        y: hovered ? -6 : 0,
+        scale: hovered ? 1.02 : 1,
+        boxShadow: hovered
+          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.3)'
+          : '0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)',
+      }}
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      className="group glass p-8 md:p-10 flex flex-col gap-4 relative overflow-hidden cursor-pointer"
+    >
+      {/* Gold accent bar */}
+      <motion.div
+        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
+        animate={{ scaleY: hovered ? 1 : 0.15, opacity: hovered ? 1 : 0 }}
+        style={{ backgroundColor: '#c9a86c', transformOrigin: 'center' }}
+        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+      />
+
+      <p className="label text-[var(--color-accent)]">{c.role}</p>
+
+      <h3
+        className="font-display font-semibold leading-none transition-colors duration-300"
+        style={{
+          fontSize: 'clamp(2rem, 4vw, 3rem)',
+          color: hovered ? '#c9a86c' : 'var(--color-white)',
+        }}
+      >
+        {c.name}
+      </h3>
+
+      <div className="flex items-center gap-3 mt-1">
+        <span className="w-6 h-px bg-[var(--color-accent)]" />
+        <motion.span
+          className="label transition-colors duration-300"
+          style={{ color: hovered ? '#c9a86c' : 'rgba(255,255,255,0.6)' }}
+        >
+          {c.handle}
+        </motion.span>
+        <span
+          className="ml-auto text-xl transition-colors duration-300"
+          style={{ color: hovered ? '#c9a86c' : 'rgba(255,255,255,0.2)' }}
+        >
+          ↗
+        </span>
+      </div>
+    </motion.a>
+  )
+}
+
 export default function Contact() {
-  const [submitted, setSubmitted] = useState(false)
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-    reset,
-  } = useForm<FormData>()
-
-  const onSubmit = async (data: FormData) => {
-    const mailtoUrl = `mailto:hello@mnd.team?subject=Project Inquiry from ${encodeURIComponent(data.name)}&body=${encodeURIComponent(
-      `Name: ${data.name}\nContact: ${data.contact}\n\n${data.message}`
-    )}`
-    window.location.href = mailtoUrl
-    setSubmitted(true)
-    reset()
-    setTimeout(() => setSubmitted(false), 5000)
-  }
-
   return (
     <section id="contact" className="section-gap container-x">
       <motion.div
@@ -41,13 +85,9 @@ export default function Contact() {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true, amount: 0.15 }}
-        className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20"
       >
-        {/* Left: headline + quick contacts */}
-        <div>
-          <motion.p variants={fadeUp} className="label mb-6">
-            Начать проект
-          </motion.p>
+        <div className="mb-12 md:mb-16 max-w-2xl">
+          <motion.p variants={fadeUp} className="label mb-4">Начать проект</motion.p>
           <div className="overflow-hidden mb-6">
             <motion.h2
               variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
@@ -58,110 +98,16 @@ export default function Contact() {
               что-то вместе.
             </motion.h2>
           </div>
-          <motion.p
-            variants={fadeUp}
-            className="text-sm text-[var(--color-muted)] font-light leading-relaxed mb-10 max-w-xs"
-          >
-            Расскажите о проекте — что нужно, что представляете, и мы возьмём её оттуда.
+          <motion.p variants={fadeUp} className="text-sm text-[var(--color-muted)] font-light leading-relaxed max-w-sm">
+            Напишите нам напрямую в Telegram — расскажите о проекте, и мы ответим в течение дня.
           </motion.p>
-
-          {/* Quick contacts */}
-          <motion.div variants={stagger} className="flex flex-col gap-4">
-            {quickContacts.map((c) => (
-              <motion.a
-                key={c.href}
-                variants={fadeUp}
-                href={c.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-4 border-b border-[var(--color-border)] pb-4 hover:border-[var(--color-accent)] transition-colors duration-300"
-              >
-                <span className="label text-[var(--color-muted)] group-hover:text-[var(--color-accent)] transition-colors duration-300 flex-1">
-                  {c.label}
-                </span>
-                <span className="label text-[var(--color-white)]">{c.handle}</span>
-                <span className="text-[var(--color-dim)] group-hover:text-[var(--color-accent)] transition-colors duration-300">↗</span>
-              </motion.a>
-            ))}
-          </motion.div>
         </div>
 
-        {/* Right: form */}
-        <motion.div variants={fadeUp}>
-          <AnimatePresence mode="wait">
-            {submitted ? (
-              <motion.div
-                key="success"
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="flex flex-col items-start justify-center h-full gap-4 py-12"
-              >
-                <span className="font-display text-xl-fluid font-semibold text-[var(--color-accent)]">
-                  Сообщение отправлено.
-                </span>
-                <p className="text-sm text-[var(--color-muted)] font-light">
-                  Мы свяжемся с вами в ближайшее время.
-                </p>
-              </motion.div>
-            ) : (
-              <motion.form
-                key="form"
-                onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col gap-8"
-              >
-                {/* Имя */}
-                <div className="relative">
-                  <label className="label block mb-2">Имя</label>
-                  <input
-                    {...register('name', { required: true })}
-                    type="text"
-                    placeholder="Ваше имя"
-                    className={`w-full pb-3 border-b text-[var(--color-white)] placeholder-[var(--color-dim)] font-light text-base focus:border-[var(--color-white)] transition-colors duration-300 bg-transparent ${
-                      errors.name ? 'border-red-500' : 'border-[var(--color-border)]'
-                    }`}
-                  />
-                </div>
-
-                {/* Контакт */}
-                <div className="relative">
-                  <label className="label block mb-2">Контакт</label>
-                  <input
-                    {...register('contact', { required: true })}
-                    type="text"
-                    placeholder="Email, Telegram или телефон"
-                    className={`w-full pb-3 border-b text-[var(--color-white)] placeholder-[var(--color-dim)] font-light text-base focus:border-[var(--color-white)] transition-colors duration-300 bg-transparent ${
-                      errors.contact ? 'border-red-500' : 'border-[var(--color-border)]'
-                    }`}
-                  />
-                </div>
-
-                {/* Сообщение */}
-                <div className="relative">
-                  <label className="label block mb-2">Сообщение</label>
-                  <textarea
-                    {...register('message', { required: true })}
-                    placeholder="Расскажите о вашем проекте"
-                    rows={4}
-                    className={`w-full pb-3 border-b text-[var(--color-white)] placeholder-[var(--color-dim)] font-light text-base focus:border-[var(--color-white)] transition-colors duration-300 bg-transparent resize-none ${
-                      errors.message ? 'border-red-500' : 'border-[var(--color-border)]'
-                    }`}
-                  />
-                </div>
-
-                {/* Отправить */}
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="group flex items-center gap-4 self-start bg-[var(--color-accent)] hover:bg-[var(--color-white)] text-[var(--color-bg)] label px-8 py-4 transition-all duration-300 disabled:opacity-50"
-                >
-                  <span>Отправить</span>
-                  <Send size={14} strokeWidth={2} className="group-hover:translate-x-1 transition-transform duration-300" />
-                </button>
-              </motion.form>
-            )}
-          </AnimatePresence>
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {contacts.map((c) => (
+            <ContactCard key={c.href} c={c} />
+          ))}
+        </div>
       </motion.div>
     </section>
   )
