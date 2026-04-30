@@ -33,7 +33,7 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="relative h-screen min-h-[600px] flex flex-col items-center justify-center overflow-hidden"
+      className="relative h-screen min-h-[600px] flex flex-col items-center justify-end md:justify-center overflow-hidden"
       style={{ backgroundColor: '#080808' }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => { rawX.set(0); rawY.set(0) }}
@@ -41,21 +41,26 @@ export default function Hero() {
       {/* Background video */}
       <motion.div className="absolute inset-0" style={{ x: bgX, y: bgY, scale: 1.04 }}>
         <video
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover object-center"
           src="/videos/hero-loop.webm"
           autoPlay muted loop playsInline preload="auto"
         />
       </motion.div>
 
-      {/* Dark overlay */}
+      {/* Mobile overlay — clear top so characters are visible, dark at bottom */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 md:hidden pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, rgba(8,8,8,0.0) 0%, rgba(8,8,8,0.05) 35%, rgba(8,8,8,0.88) 58%, rgba(8,8,8,0.97) 100%)' }}
+      />
+      {/* Desktop overlay */}
+      <div
+        className="absolute inset-0 hidden md:block pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, rgba(8,8,8,0.1) 0%, rgba(8,8,8,0.5) 60%, rgba(8,8,8,0.92) 100%)' }}
       />
 
       {/* Content */}
       <motion.div
-        className="relative z-10 container-x w-full flex flex-col items-center text-center"
+        className="relative z-10 container-x w-full flex flex-col items-center text-center pb-20 md:pb-0"
         style={{ x: contentX, y: contentY }}
       >
         <motion.div
