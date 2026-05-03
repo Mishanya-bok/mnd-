@@ -72,13 +72,13 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
         style={{ aspectRatio: isWide ? '16/9' : '4/5' }}
         animate={{
           boxShadow: hovered
-            ? '0 24px 60px rgba(0,0,0,0.14), 0 0 0 1px rgba(74,158,255,0.35)'
+            ? '0 24px 60px rgba(0,0,0,0.14), 0 0 0 1px rgba(0,209,255,0.35)'
             : '0 2px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.06)',
         }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Dark video bg */}
-        <div className="absolute inset-0 bg-[#06080f]" />
+        <div className="absolute inset-0 bg-[#02040A]" />
 
         {/* Video — thumbnail at 65% opacity, full on hover */}
         <video
@@ -111,14 +111,14 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
           }}
         >
           <div className="flex items-center gap-2 mb-1.5">
-            <span className="label transition-colors duration-300" style={{ color: hovered ? '#4a9eff' : 'rgba(255,255,255,0.5)' }}>
+            <span className="label transition-colors duration-300" style={{ color: hovered ? '#00D1FF' : 'rgba(255,255,255,0.5)' }}>
               {project.category}
             </span>
             <span className="label" style={{ color: 'rgba(255,255,255,0.22)' }}>{project.year}</span>
           </div>
           <p
             className="font-display font-semibold leading-tight transition-colors duration-300"
-            style={{ fontSize: isWide ? '1.6rem' : '1.25rem', color: hovered ? '#4a9eff' : '#fff' }}
+            style={{ fontSize: isWide ? '1.6rem' : '1.25rem', color: hovered ? '#00D1FF' : '#fff' }}
           >
             {project.title}
           </p>
@@ -147,7 +147,7 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
           className="absolute top-5 left-5 font-display font-semibold leading-none select-none pointer-events-none transition-all duration-500"
           style={{
             fontSize: isWide ? '4.5rem' : '3.5rem',
-            color: hovered ? 'rgba(74,158,255,0.12)' : 'rgba(255,255,255,0.05)',
+            color: hovered ? 'rgba(0,209,255,0.12)' : 'rgba(255,255,255,0.05)',
           }}
         >
           {String(index + 1).padStart(2, '0')}
@@ -157,7 +157,7 @@ export default function ProjectCard({ project, index, onClick }: ProjectCardProp
         <motion.div
           className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
           animate={{ opacity: hovered ? 1 : 0, scaleY: hovered ? 1 : 0.2 }}
-          style={{ backgroundColor: '#4a9eff', transformOrigin: 'center' }}
+          style={{ backgroundColor: '#00D1FF', transformOrigin: 'center' }}
           transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         />
       </motion.div>

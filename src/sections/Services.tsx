@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import { services } from '@data/services'
 import { stagger, fadeUp } from '@lib/motion'
+import TiltCard from '@components/TiltCard'
 
 export default function Services() {
   return (
@@ -31,26 +32,24 @@ export default function Services() {
         className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
       >
         {services.map((service, i) => (
-          <motion.div
-            key={service.id}
-            variants={fadeUp}
-            whileHover={{ y: -5, scale: 1.02, boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.25)' }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="group glass-sm p-7 cursor-default"
-          >
-            <p className="label mb-3 text-[var(--color-accent)]">
-              {String(i + 1).padStart(2, '0')}
-            </p>
-            <h3
-              className="font-body text-[var(--color-white)] font-semibold tracking-wide mb-3 group-hover:text-[var(--color-accent)] transition-colors duration-300"
-              style={{ fontSize: '0.85rem', letterSpacing: '0.07em' }}
-            >
-              {service.title.toUpperCase()}
-            </h3>
-            <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
-              {service.description}
-            </p>
-            <div className="mt-5 h-px w-0 group-hover:w-8 bg-[var(--color-accent)] transition-all duration-400" />
+          <motion.div key={service.id} variants={fadeUp}>
+            <TiltCard className="h-full group" intensity={5}>
+              <div className="glass-sm p-7 cursor-default h-full">
+                <p className="label mb-3 text-[var(--color-accent)]">
+                  {String(i + 1).padStart(2, '0')}
+                </p>
+                <h3
+                  className="font-body text-[var(--color-white)] font-semibold tracking-wide mb-3 group-hover:text-[var(--color-accent)] transition-colors duration-300"
+                  style={{ fontSize: '0.85rem', letterSpacing: '0.07em' }}
+                >
+                  {service.title.toUpperCase()}
+                </h3>
+                <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
+                  {service.description}
+                </p>
+                <div className="mt-5 h-px w-0 group-hover:w-8 bg-[var(--color-accent)] transition-all duration-400" />
+              </div>
+            </TiltCard>
           </motion.div>
         ))}
       </motion.div>

@@ -5,10 +5,10 @@ import { projects } from '@data/projects'
 import type { Project } from '@data/projects'
 
 const CATEGORIES = [
-  { id: 'Коммерция',  label: 'Коммерция',  num: '01' },
-  { id: 'Реализм',    label: 'Реализм',    num: '02' },
-  { id: 'Мультфильм', label: 'Мультфильм', num: '03' },
-  { id: 'Предметное', label: 'Предметное', num: '04' },
+  { id: 'Коммерция',   label: 'Коммерция',   num: '01' },
+  { id: 'Реализм',     label: 'Реализм',     num: '02' },
+  { id: 'Мультфильмы', label: 'Мультфильмы', num: '03' },
+  { id: 'Продукты',    label: 'Продукты',    num: '04' },
 ]
 
 // ── Video card ────────────────────────────────────────────────
@@ -64,14 +64,14 @@ function VideoCard({ project, onClick }: { project: Project; onClick: (p: Projec
         style={{ aspectRatio: '16/9' }}
         animate={{
           boxShadow: hovered
-            ? '0 0 0 1px rgba(74,158,255,0.5), 0 24px 48px rgba(0,0,0,0.7)'
-            : '0 0 0 1px rgba(74,158,255,0.1)',
+            ? '0 0 0 1px rgba(0,209,255,0.5), 0 24px 48px rgba(0,0,0,0.7)'
+            : '0 0 0 1px rgba(0,209,255,0.1)',
           scale: hovered ? 1.02 : 1,
         }}
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       >
         {/* Dark bg while video loads */}
-        <div className="absolute inset-0" style={{ backgroundColor: '#06080f' }} />
+        <div className="absolute inset-0" style={{ backgroundColor: '#02040A' }} />
 
         <video
           ref={videoRef}
@@ -87,7 +87,7 @@ function VideoCard({ project, onClick }: { project: Project; onClick: (p: Projec
           className="absolute inset-0"
           animate={{ opacity: hovered ? 1 : 0 }}
           transition={{ duration: 0.3 }}
-          style={{ background: 'linear-gradient(to top, rgba(6,8,15,0.75) 0%, transparent 55%)' }}
+          style={{ background: 'linear-gradient(to top, rgba(2,4,10,0.85) 0%, transparent 55%)' }}
         />
 
         {/* Play / watch indicator */}
@@ -103,7 +103,7 @@ function VideoCard({ project, onClick }: { project: Project; onClick: (p: Projec
         <motion.div
           className="absolute bottom-0 left-0 right-0 h-[2px]"
           animate={{ scaleX: hovered ? 1 : 0 }}
-          style={{ backgroundColor: '#4a9eff', transformOrigin: 'left', boxShadow: '0 0 10px rgba(74,158,255,0.7)' }}
+          style={{ backgroundColor: '#00D1FF', transformOrigin: 'left', boxShadow: '0 0 10px rgba(0,209,255,0.7)' }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
         />
       </motion.div>
@@ -113,7 +113,7 @@ function VideoCard({ project, onClick }: { project: Project; onClick: (p: Projec
         <p className="label text-[10px] text-[var(--color-dim)] mb-1">{project.category} · {project.year}</p>
         <h3
           className="font-display font-semibold leading-tight transition-colors duration-300"
-          style={{ fontSize: 'clamp(0.9rem, 1.6vw, 1.15rem)', color: hovered ? '#4a9eff' : 'var(--color-white)' }}
+          style={{ fontSize: 'clamp(0.9rem, 1.6vw, 1.15rem)', color: hovered ? '#00D1FF' : 'var(--color-white)' }}
         >
           {project.title}
         </h3>
@@ -211,14 +211,14 @@ function CategoryReel({
 
         {/* Scroll progress indicator */}
         <div className="container-x">
-          <div className="h-px w-full bg-[rgba(74,158,255,0.1)] relative overflow-hidden">
+          <div className="h-px w-full bg-[rgba(0,209,255,0.1)] relative overflow-hidden">
             <motion.div
               className="absolute top-0 left-0 h-full"
               style={{
                 scaleX: scrollYProgress,
                 transformOrigin: 'left',
-                backgroundColor: '#4a9eff',
-                boxShadow: '0 0 6px rgba(74,158,255,0.6)',
+                backgroundColor: '#00D1FF',
+                boxShadow: '0 0 6px rgba(0,209,255,0.6)',
               }}
             />
           </div>

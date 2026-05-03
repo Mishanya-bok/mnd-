@@ -78,10 +78,10 @@ export default function Showreel() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.15 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        className="group relative overflow-hidden border border-[var(--color-border)] hover:border-[rgba(74,158,255,0.3)] transition-colors duration-500"
+        className="group relative overflow-hidden border border-[var(--color-border)] hover:border-[rgba(0,209,255,0.3)] transition-colors duration-500"
         style={{ aspectRatio: '16/9' }}
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0c1220] to-[#06080f]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#071B2B] to-[#02040A]" />
 
         <video
           ref={videoRef}
@@ -111,7 +111,7 @@ export default function Showreel() {
               className="absolute inset-0 flex flex-col items-center justify-center gap-5 z-10"
             >
               <motion.div
-                whileHover={{ scale: 1.1, borderColor: 'rgba(74,158,255,0.9)' }}
+                whileHover={{ scale: 1.1, borderColor: 'rgba(0,209,255,0.9)' }}
                 transition={{ duration: 0.25 }}
                 className="w-20 h-20 md:w-24 md:h-24 rounded-full border border-[var(--color-white)]/40 flex items-center justify-center"
               >
