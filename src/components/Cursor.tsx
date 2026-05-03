@@ -1,22 +1,20 @@
 import { useEffect } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
-const BLUE = '1.5px solid rgba(74,158,255,0.85)'
-
 export default function Cursor() {
   const mx = useMotionValue(-200)
   const my = useMotionValue(-200)
 
   // Dot: near-instant
-  const dotX = useSpring(mx, { stiffness: 1200, damping: 60 })
-  const dotY = useSpring(my, { stiffness: 1200, damping: 60 })
+  const dotX = useSpring(mx, { stiffness: 2000, damping: 120 })
+  const dotY = useSpring(my, { stiffness: 2000, damping: 120 })
 
-  // Viewfinder frame: lags behind
-  const fX = useSpring(mx, { stiffness: 120, damping: 16 })
-  const fY = useSpring(my, { stiffness: 120, damping: 16 })
-  const fScale = useSpring(1, { stiffness: 300, damping: 24 })
-  const fOpacity = useSpring(0.45, { stiffness: 300, damping: 24 })
-  const fRotate = useSpring(0, { stiffness: 200, damping: 20 })
+  // Ring: lags behind
+  const ringX   = useSpring(mx, { stiffness: 160, damping: 18 })
+  const ringY   = useSpring(my, { stiffness: 160, damping: 18 })
+  const ringSize   = useSpring(28, { stiffness: 380, damping: 26 })
+  const ringOp     = useSpring(0.45, { stiffness: 300, damping: 24 })
+  const ringBorder = useSpring(0.5, { stiffness: 300, damping: 24 })
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => { mx.set(e.clientX); my.set(e.clientY) }
@@ -27,16 +25,16 @@ export default function Cursor() {
   useEffect(() => {
     const onOver = (e: MouseEvent) => {
       if ((e.target as Element).closest('a, button, .group, [data-cursor]')) {
-        fScale.set(1.9)
-        fOpacity.set(1)
-        fRotate.set(45)
+        ringSize.set(52)
+        ringOp.set(0.9)
+        ringBorder.set(1)
       }
     }
     const onOut = (e: MouseEvent) => {
       if ((e.target as Element).closest('a, button, .group, [data-cursor]')) {
-        fScale.set(1)
-        fOpacity.set(0.45)
-        fRotate.set(0)
+        ringSize.set(28)
+        ringOp.set(0.45)
+        ringBorder.set(0.5)
       }
     }
     document.addEventListener('mouseover', onOver)
@@ -45,43 +43,35 @@ export default function Cursor() {
       document.removeEventListener('mouseover', onOver)
       document.removeEventListener('mouseout', onOut)
     }
-  }, [fScale, fOpacity, fRotate])
+  }, [ringSize, ringOp, ringBorder])
 
   return (
     <>
-      {/* Center dot — inverts colors */}
+      {/* Center dot */}
       <motion.div
-        className="fixed top-0 left-0 pointer-events-none z-[9999] mix-blend-difference"
+        className="fixed top-0 left-0 pointer-events-none z-[9999]"
         style={{
           x: dotX, y: dotY,
           translateX: '-50%', translateY: '-50%',
-          width: 5, height: 5,
+          width: 4, height: 4,
           borderRadius: '50%',
-          backgroundColor: 'white',
+          backgroundColor: '#fff',
         }}
       />
 
-      {/* Camera viewfinder — 4 corner brackets */}
+      {/* Ring */}
       <motion.div
         className="fixed top-0 left-0 pointer-events-none z-[9998]"
         style={{
-          x: fX, y: fY,
+          x: ringX, y: ringY,
           translateX: '-50%', translateY: '-50%',
-          width: 34, height: 34,
-          scale: fScale,
-          opacity: fOpacity,
-          rotate: fRotate,
+          width: ringSize, height: ringSize,
+          opacity: ringOp,
+          borderRadius: '50%',
+          border: '1px solid rgba(74,158,255,0.7)',
+          boxShadow: '0 0 8px rgba(74,158,255,0.2)',
         }}
-      >
-        {/* Top-left */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: 9, height: 9, borderTop: BLUE, borderLeft: BLUE }} />
-        {/* Top-right */}
-        <div style={{ position: 'absolute', top: 0, right: 0, width: 9, height: 9, borderTop: BLUE, borderRight: BLUE }} />
-        {/* Bottom-left */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, width: 9, height: 9, borderBottom: BLUE, borderLeft: BLUE }} />
-        {/* Bottom-right */}
-        <div style={{ position: 'absolute', bottom: 0, right: 0, width: 9, height: 9, borderBottom: BLUE, borderRight: BLUE }} />
-      </motion.div>
+      />
     </>
   )
 }
