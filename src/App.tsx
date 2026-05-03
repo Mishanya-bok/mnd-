@@ -5,14 +5,13 @@ import Hero from '@sections/Hero'
 import FeaturedProjects from '@sections/FeaturedProjects'
 import MobileCTA from '@components/MobileCTA'
 
-const About       = lazy(() => import('@sections/About'))
-const Services    = lazy(() => import('@sections/Services'))
-const Process     = lazy(() => import('@sections/Process'))
-const WhyUs       = lazy(() => import('@sections/WhyUs'))
-const Showreel    = lazy(() => import('@sections/Showreel'))
-const Pricing     = lazy(() => import('@sections/Pricing'))
-const Contact     = lazy(() => import('@sections/Contact'))
-const Footer      = lazy(() => import('@sections/Footer'))
+const About    = lazy(() => import('@sections/About'))
+const Services = lazy(() => import('@sections/Services'))
+const Process  = lazy(() => import('@sections/Process'))
+const WhyUs    = lazy(() => import('@sections/WhyUs'))
+const Pricing  = lazy(() => import('@sections/Pricing'))
+const Contact  = lazy(() => import('@sections/Contact'))
+const Footer   = lazy(() => import('@sections/Footer'))
 
 export default function App() {
   return (
@@ -26,7 +25,6 @@ export default function App() {
         <Services />
         <Process />
         <WhyUs />
-        <Showreel />
         <Pricing />
         <Contact />
         <Footer />
