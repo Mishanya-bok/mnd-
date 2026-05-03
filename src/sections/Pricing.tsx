@@ -61,7 +61,7 @@ export default function Pricing() {
           <motion.div
             key={i}
             variants={fadeUp}
-            whileHover={{ y: -5, scale: 1.02, boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.3)' }}
+            whileHover={{ y: -5, scale: 1.02, boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.3)' }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="group glass p-8 cursor-default flex flex-col gap-5"
           >
@@ -97,7 +97,7 @@ export default function Pricing() {
         </p>
         <motion.button
           onClick={scrollToContact}
-          whileHover={{ backgroundColor: '#111113', color: '#fff', scale: 1.02 }}
+          whileHover={{ backgroundColor: '#0c1220', color: '#fff', scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.22 }}
           className="label bg-[var(--color-accent)] text-white px-8 py-4 rounded-full shrink-0"

@@ -13,7 +13,7 @@ function ProcessRow({ step, index }: { step: typeof processSteps[0]; index: numb
       onMouseLeave={() => setHovered(false)}
       animate={{
         backgroundColor: hovered ? 'rgba(255,255,255,0.05)' : 'transparent',
-        boxShadow: hovered ? '0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.18)' : 'none',
+        boxShadow: hovered ? '0 4px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.18)' : 'none',
         scale: hovered ? 1.015 : 1,
       }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
@@ -24,7 +24,7 @@ function ProcessRow({ step, index }: { step: typeof processSteps[0]; index: numb
       <motion.div
         className="absolute left-0 top-4 bottom-4 w-[3px] rounded-full"
         animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
-        style={{ backgroundColor: '#c9a86c', transformOrigin: 'center' }}
+        style={{ backgroundColor: '#4a9eff', transformOrigin: 'center' }}
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       />
 
@@ -33,7 +33,7 @@ function ProcessRow({ step, index }: { step: typeof processSteps[0]; index: numb
         className="font-display font-semibold leading-none shrink-0 transition-colors duration-300 pt-1"
         style={{
           fontSize: 'clamp(2rem, 4vw, 3rem)',
-          color: hovered ? '#c9a86c' : 'var(--color-border)',
+          color: hovered ? '#4a9eff' : 'var(--color-border)',
           minWidth: '3.5rem',
         }}
       >
