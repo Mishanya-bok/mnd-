@@ -1,19 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  /* ── Colors (dark cinematic theme) ──────────────── */
-  --color-bg:        #080808;
-  --color-surface:   #111111;
-  --color-surface-2: rgba(255,255,255,0.04);
-  --color-border:    rgba(255,255,255,0.08);
-  --color-white:     #f0ede6;
-  --color-muted:     #6b6b6b;
-  --color-dim:       #4a4a44;
-  --color-accent:    #c9a86c;
-  --color-accent-dim:#e8d5a8;
+  /* ── Colors (dark tech / electric blue) ─────────── */
+  --color-bg:        #06080f;
+  --color-surface:   #0c1220;
+  --color-border:    rgba(74,158,255,0.1);
+  --color-white:     #e4edff;
+  --color-muted:     #7888b8;
+  --color-dim:       #3a4868;
+  --color-accent:    #4a9eff;
+  --color-accent-dim: rgba(74,158,255,0.12);
 
-  /* Hero stays dark */
-  --color-hero-bg:   #080808;
+  --color-hero-bg:   #06080f;
 
   /* ── Fonts ───────────────────────────────────────── */
   --font-display: 'Space Grotesk', system-ui, sans-serif;
@@ -148,22 +146,22 @@
     color: var(--color-muted);
   }
 
-  /* Glass card utility — dark glass */
+  /* Glass card utility — dark blue glass */
   .glass {
-    background: rgba(255, 255, 255, 0.04);
+    background: rgba(74,158,255,0.03);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(74,158,255,0.1);
     border-radius: var(--radius-lg);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4), 0 1px 0 rgba(255,255,255,0.05) inset;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5), 0 0 0 0 rgba(74,158,255,0.04) inset;
   }
 
   .glass-sm {
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(74,158,255,0.02);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(255, 255, 255, 0.07);
+    border: 1px solid rgba(74,158,255,0.08);
     border-radius: var(--radius-md);
-    box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.4);
   }
 }

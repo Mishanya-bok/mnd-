@@ -32,7 +32,7 @@ function ContactCard({ c }: { c: typeof contacts[0] }) {
         y: hovered ? -6 : 0,
         scale: hovered ? 1.02 : 1,
         boxShadow: hovered
-          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.3)'
+          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.3)'
           : '0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)',
       }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
@@ -42,7 +42,7 @@ function ContactCard({ c }: { c: typeof contacts[0] }) {
       <motion.div
         className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
         animate={{ scaleY: hovered ? 1 : 0.15, opacity: hovered ? 1 : 0 }}
-        style={{ backgroundColor: '#c9a86c', transformOrigin: 'center' }}
+        style={{ backgroundColor: '#4a9eff', transformOrigin: 'center' }}
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       />
 
@@ -52,7 +52,7 @@ function ContactCard({ c }: { c: typeof contacts[0] }) {
         className="font-display font-semibold leading-none transition-colors duration-300"
         style={{
           fontSize: 'clamp(2rem, 4vw, 3rem)',
-          color: hovered ? '#c9a86c' : 'var(--color-white)',
+          color: hovered ? '#4a9eff' : 'var(--color-white)',
         }}
       >
         {c.name}
@@ -62,13 +62,13 @@ function ContactCard({ c }: { c: typeof contacts[0] }) {
         <span className="w-6 h-px bg-[var(--color-accent)]" />
         <motion.span
           className="label transition-colors duration-300"
-          style={{ color: hovered ? '#c9a86c' : 'rgba(255,255,255,0.6)' }}
+          style={{ color: hovered ? '#4a9eff' : 'rgba(255,255,255,0.6)' }}
         >
           {c.handle}
         </motion.span>
         <span
           className="ml-auto text-xl transition-colors duration-300"
-          style={{ color: hovered ? '#c9a86c' : 'rgba(255,255,255,0.2)' }}
+          style={{ color: hovered ? '#4a9eff' : 'rgba(255,255,255,0.2)' }}
         >
           ↗
         </span>

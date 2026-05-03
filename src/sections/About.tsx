@@ -4,16 +4,18 @@ import { stagger, fadeUp } from '@lib/motion'
 
 const team = [
   {
-    name: 'София',
-    role: 'AI-Креатор / Визуальный директор',
-    telegram: '@alienlale',
-    description: 'Отвечает за визуальную концепцию, AI-режиссуру и общую эстетику. Тот вкус, к которому возвращаются клиенты.',
-  },
-  {
     name: 'Михаил',
     role: 'Монтажёр / Руководитель продакшена',
     telegram: '@mishanya_bok',
-    description: 'Монтаж, финальная сборка и коммерческая точность — то, что отличает сырой материал от готового продукта.',
+    path: 'Образование бухгалтера и аудитора — но всю жизнь создавал видео.',
+    description: '5 лет монтажа и владение пакетом Adobe + DaVinci Resolve. Работал с крупными блогерами. Теперь создаёт кинематографический визуал с помощью ИИ.',
+  },
+  {
+    name: 'София',
+    role: 'AI-Креатор / Визуальный директор',
+    telegram: '@alienlale',
+    path: 'Образование логиста. Разочаровалась. Вела блог. Взяла в руки ИИ — и всё изменилось.',
+    description: 'Лицензированный AI-креатор. Отвечает за визуальную концепцию и общую эстетику. Создаёт видео для крупных коммерческих компаний.',
   },
 ]
 
@@ -34,46 +36,53 @@ function TeamCard({ member, index }: { member: typeof team[0]; index: number }) 
         y: hovered ? -6 : 0,
         scale: hovered ? 1.02 : 1,
         boxShadow: hovered
-          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(201,168,108,0.3)'
-          : '0 2px 12px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,255,255,0.06)',
+          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.3)'
+          : '0 2px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(74,158,255,0.06)',
       }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       className="glass rounded-2xl p-8 cursor-default relative overflow-hidden"
     >
-      {/* Decorative large initial */}
+      {/* Decorative large index */}
       <span
         className="absolute top-4 right-6 font-display font-semibold leading-none select-none pointer-events-none transition-all duration-500"
         style={{
           fontSize: '6rem',
-          color: hovered ? 'rgba(201,168,108,0.08)' : 'rgba(0,0,0,0.04)',
+          color: hovered ? 'rgba(74,158,255,0.07)' : 'rgba(255,255,255,0.03)',
         }}
       >
         {String(index + 1).padStart(2, '0')}
       </span>
 
-      {/* Gold accent bar */}
+      {/* Blue accent bar */}
       <motion.div
         className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
         animate={{ scaleY: hovered ? 1 : 0.2, opacity: hovered ? 1 : 0 }}
-        style={{ backgroundColor: '#c9a86c', transformOrigin: 'center' }}
+        style={{ backgroundColor: '#4a9eff', transformOrigin: 'center' }}
         transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       />
 
-      <p className="label text-[var(--color-accent)] mb-3">{member.role}</p>
+      <p className="label text-[var(--color-accent)] mb-2">{member.role}</p>
+
+      {/* Personal journey — italic, muted */}
+      <p className="text-xs text-[var(--color-muted)] font-light italic mb-4 leading-relaxed max-w-[28ch]">
+        {member.path}
+      </p>
+
       <h3
         className="font-display font-semibold leading-none mb-4 transition-colors duration-300"
         style={{
           fontSize: 'clamp(2rem, 4vw, 3rem)',
-          color: hovered ? '#c9a86c' : 'var(--color-white)',
+          color: hovered ? '#4a9eff' : 'var(--color-white)',
         }}
       >
         {member.name}
       </h3>
+
       <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
         {member.description}
       </p>
 
-      {/* Telegram handle */}
+      {/* Telegram handle — reveals on hover */}
       <motion.div
         className="mt-5 flex items-center gap-2"
         animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
@@ -114,7 +123,7 @@ export default function About() {
         </div>
 
         {/* Team cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           {team.map((member, i) => (
             <TeamCard key={member.name} member={member} index={i} />
           ))}
@@ -123,7 +132,7 @@ export default function About() {
         {/* Stats strip */}
         <motion.div
           variants={fadeUp}
-          className="glass rounded-2xl grid grid-cols-2 divide-x divide-[rgba(0,0,0,0.07)]"
+          className="glass rounded-2xl grid grid-cols-2 divide-x divide-[rgba(74,158,255,0.08)]"
         >
           {stats.map((stat, i) => (
             <div key={i} className="px-8 py-7 flex items-center gap-5">

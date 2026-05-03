@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { motion, useMotionValue, useSpring } from 'framer-motion'
 
-const GOLD = '1.5px solid rgba(201,168,108,0.85)'
+const BLUE = '1.5px solid rgba(74,158,255,0.85)'
 
 export default function Cursor() {
   const mx = useMotionValue(-200)
@@ -74,13 +74,13 @@ export default function Cursor() {
         }}
       >
         {/* Top-left */}
-        <div style={{ position: 'absolute', top: 0, left: 0, width: 9, height: 9, borderTop: GOLD, borderLeft: GOLD }} />
+        <div style={{ position: 'absolute', top: 0, left: 0, width: 9, height: 9, borderTop: BLUE, borderLeft: BLUE }} />
         {/* Top-right */}
-        <div style={{ position: 'absolute', top: 0, right: 0, width: 9, height: 9, borderTop: GOLD, borderRight: GOLD }} />
+        <div style={{ position: 'absolute', top: 0, right: 0, width: 9, height: 9, borderTop: BLUE, borderRight: BLUE }} />
         {/* Bottom-left */}
-        <div style={{ position: 'absolute', bottom: 0, left: 0, width: 9, height: 9, borderBottom: GOLD, borderLeft: GOLD }} />
+        <div style={{ position: 'absolute', bottom: 0, left: 0, width: 9, height: 9, borderBottom: BLUE, borderLeft: BLUE }} />
         {/* Bottom-right */}
-        <div style={{ position: 'absolute', bottom: 0, right: 0, width: 9, height: 9, borderBottom: GOLD, borderRight: GOLD }} />
+        <div style={{ position: 'absolute', bottom: 0, right: 0, width: 9, height: 9, borderBottom: BLUE, borderRight: BLUE }} />
       </motion.div>
     </>
   )
