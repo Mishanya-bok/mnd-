@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { stagger, fadeUp } from '@lib/motion'
+import TiltCard from '@components/TiltCard'
 
 const tiers = [
   {
@@ -58,29 +59,27 @@ export default function Pricing() {
         className="grid grid-cols-1 md:grid-cols-3 gap-4"
       >
         {tiers.map((tier, i) => (
-          <motion.div
-            key={i}
-            variants={fadeUp}
-            whileHover={{ y: -5, scale: 1.02, boxShadow: '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.3)' }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="group glass p-8 cursor-default flex flex-col gap-5"
-          >
-            <div>
-              <span
-                className="font-display font-semibold text-[var(--color-accent)] leading-none block group-hover:text-[var(--color-white)] transition-colors duration-300"
-                style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)' }}
-              >
-                {tier.price}
-              </span>
-              {tier.unit && <span className="label text-[var(--color-muted)] mt-1.5 block">{tier.unit}</span>}
-            </div>
-            <div>
-              <p className="text-[var(--color-white)] font-semibold mb-2" style={{ fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                {tier.title}
-              </p>
-              <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">{tier.description}</p>
-            </div>
-            <div className="mt-auto h-px w-0 group-hover:w-8 bg-[var(--color-accent)] transition-all duration-400" />
+          <motion.div key={i} variants={fadeUp}>
+            <TiltCard className="h-full group" intensity={5}>
+              <div className="glass p-8 cursor-default flex flex-col gap-5 h-full">
+                <div>
+                  <span
+                    className="font-display font-semibold text-[var(--color-accent)] leading-none block group-hover:text-[var(--color-white)] transition-colors duration-300"
+                    style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.4rem)' }}
+                  >
+                    {tier.price}
+                  </span>
+                  {tier.unit && <span className="label text-[var(--color-muted)] mt-1.5 block">{tier.unit}</span>}
+                </div>
+                <div>
+                  <p className="text-[var(--color-white)] font-semibold mb-2" style={{ fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+                    {tier.title}
+                  </p>
+                  <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">{tier.description}</p>
+                </div>
+                <div className="mt-auto h-px w-0 group-hover:w-8 bg-[var(--color-accent)] transition-all duration-400" />
+              </div>
+            </TiltCard>
           </motion.div>
         ))}
       </motion.div>
@@ -97,10 +96,11 @@ export default function Pricing() {
         </p>
         <motion.button
           onClick={scrollToContact}
-          whileHover={{ backgroundColor: '#0c1220', color: '#fff', scale: 1.02 }}
+          whileHover={{ backgroundColor: '#071B2B', color: '#00D1FF', scale: 1.02 }}
           whileTap={{ scale: 0.97 }}
           transition={{ duration: 0.22 }}
-          className="label bg-[var(--color-accent)] text-white px-8 py-4 rounded-full shrink-0"
+          className="label bg-[var(--color-accent)] text-[#02040A] px-8 py-4 rounded-sm shrink-0 font-semibold"
+          style={{ boxShadow: '0 0 20px rgba(0,209,255,0.25)' }}
         >
           Обсудить бюджет
         </motion.button>

@@ -1,6 +1,7 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect, useRef } from 'react'
+import { motion, useInView } from 'framer-motion'
 import { stagger, fadeUp } from '@lib/motion'
+import TiltCard from '@components/TiltCard'
 
 const team = [
   {
@@ -19,78 +20,104 @@ const team = [
   },
 ]
 
-const stats = [
-  { number: '10M+', label: 'зрителей', sub: 'суммарный охват работ' },
-  { number: '10', label: 'экранов Москвы', sub: 'крупнейших билбордов города' },
+const statsData = [
+  { target: 10, suffix: 'M+', label: 'зрителей', sub: 'суммарный охват работ' },
+  { target: 10,  suffix: '',   label: 'экранов Москвы', sub: 'крупнейших билбордов города' },
 ]
+
+function AnimatedCounter({ target, suffix }: { target: number; suffix: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, amount: 0.5 })
+  const [count, setCount] = useState(0)
+
+  useEffect(() => {
+    if (!inView) return
+    const start = performance.now()
+    const duration = 1600
+    const raf = (now: number) => {
+      const t = Math.min((now - start) / duration, 1)
+      const ease = 1 - Math.pow(1 - t, 3)
+      setCount(Math.round(ease * target))
+      if (t < 1) requestAnimationFrame(raf)
+    }
+    requestAnimationFrame(raf)
+  }, [inView, target])
+
+  return (
+    <span ref={ref} className="font-display font-semibold text-[var(--color-accent)] leading-none shrink-0" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+      {count}{suffix}
+    </span>
+  )
+}
 
 function TeamCard({ member, index }: { member: typeof team[0]; index: number }) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <motion.div
-      variants={fadeUp}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      animate={{
-        y: hovered ? -6 : 0,
-        scale: hovered ? 1.02 : 1,
-        boxShadow: hovered
-          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(74,158,255,0.3)'
-          : '0 2px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(74,158,255,0.06)',
-      }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="glass rounded-2xl p-8 cursor-default relative overflow-hidden"
-    >
-      {/* Decorative large index */}
-      <span
-        className="absolute top-4 right-6 font-display font-semibold leading-none select-none pointer-events-none transition-all duration-500"
-        style={{
-          fontSize: '6rem',
-          color: hovered ? 'rgba(74,158,255,0.07)' : 'rgba(255,255,255,0.03)',
-        }}
-      >
-        {String(index + 1).padStart(2, '0')}
-      </span>
+    <motion.div variants={fadeUp}>
+      <TiltCard className="h-full" intensity={6}>
+        <div
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
+          className="glass rounded-2xl p-8 cursor-default relative overflow-hidden h-full"
+          style={{
+            transition: 'box-shadow 0.35s ease',
+            boxShadow: hovered
+              ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,209,255,0.3)'
+              : '0 2px 12px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,209,255,0.06)',
+          }}
+        >
+          {/* Decorative large index */}
+          <span
+            className="absolute top-4 right-6 font-display font-semibold leading-none select-none pointer-events-none"
+            style={{
+              fontSize: '6rem',
+              color: hovered ? 'rgba(0,209,255,0.07)' : 'rgba(255,255,255,0.03)',
+              transition: 'color 0.5s',
+            }}
+          >
+            {String(index + 1).padStart(2, '0')}
+          </span>
 
-      {/* Blue accent bar */}
-      <motion.div
-        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
-        animate={{ scaleY: hovered ? 1 : 0.2, opacity: hovered ? 1 : 0 }}
-        style={{ backgroundColor: '#4a9eff', transformOrigin: 'center' }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      />
+          {/* Cyan accent bar */}
+          <motion.div
+            className="absolute left-0 top-0 bottom-0 w-[2px]"
+            animate={{ scaleY: hovered ? 1 : 0.15, opacity: hovered ? 1 : 0 }}
+            style={{ backgroundColor: '#00D1FF', transformOrigin: 'center', boxShadow: '2px 0 8px rgba(0,209,255,0.4)' }}
+            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          />
 
-      <p className="label text-[var(--color-accent)] mb-2">{member.role}</p>
+          <p className="label text-[var(--color-accent)] mb-2">{member.role}</p>
 
-      {/* Personal journey — italic, muted */}
-      <p className="text-xs text-[var(--color-muted)] font-light italic mb-4 leading-relaxed max-w-[28ch]">
-        {member.path}
-      </p>
+          <p className="text-xs text-[var(--color-muted)] font-light italic mb-4 leading-relaxed max-w-[28ch]">
+            {member.path}
+          </p>
 
-      <h3
-        className="font-display font-semibold leading-none mb-4 transition-colors duration-300"
-        style={{
-          fontSize: 'clamp(2rem, 4vw, 3rem)',
-          color: hovered ? '#4a9eff' : 'var(--color-white)',
-        }}
-      >
-        {member.name}
-      </h3>
+          <h3
+            className="font-display font-semibold leading-none mb-4"
+            style={{
+              fontSize: 'clamp(2rem, 4vw, 3rem)',
+              color: hovered ? '#00D1FF' : 'var(--color-white)',
+              transition: 'color 0.3s',
+            }}
+          >
+            {member.name}
+          </h3>
 
-      <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
-        {member.description}
-      </p>
+          <p className="text-sm text-[var(--color-muted)] font-light leading-relaxed">
+            {member.description}
+          </p>
 
-      {/* Telegram handle — reveals on hover */}
-      <motion.div
-        className="mt-5 flex items-center gap-2"
-        animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
-        transition={{ duration: 0.3 }}
-      >
-        <span className="w-4 h-px bg-[var(--color-accent)]" />
-        <span className="label text-[var(--color-accent)]">{member.telegram}</span>
-      </motion.div>
+          <motion.div
+            className="mt-5 flex items-center gap-2"
+            animate={{ opacity: hovered ? 1 : 0, y: hovered ? 0 : 6 }}
+            transition={{ duration: 0.3 }}
+          >
+            <span className="w-4 h-px bg-[var(--color-accent)]" />
+            <span className="label text-[var(--color-accent)]">{member.telegram}</span>
+          </motion.div>
+        </div>
+      </TiltCard>
     </motion.div>
   )
 }
@@ -132,16 +159,11 @@ export default function About() {
         {/* Stats strip */}
         <motion.div
           variants={fadeUp}
-          className="glass rounded-2xl grid grid-cols-2 divide-x divide-[rgba(74,158,255,0.08)]"
+          className="glass rounded-2xl grid grid-cols-2 divide-x divide-[rgba(0,209,255,0.08)]"
         >
-          {stats.map((stat, i) => (
+          {statsData.map((stat, i) => (
             <div key={i} className="px-8 py-7 flex items-center gap-5">
-              <span
-                className="font-display font-semibold text-[var(--color-accent)] leading-none shrink-0"
-                style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}
-              >
-                {stat.number}
-              </span>
+              <AnimatedCounter target={stat.target} suffix={stat.suffix} />
               <div>
                 <p className="text-[var(--color-white)] font-medium text-sm">{stat.label}</p>
                 <p className="text-[var(--color-dim)] font-light text-xs mt-0.5">{stat.sub}</p>

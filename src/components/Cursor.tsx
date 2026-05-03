@@ -68,8 +68,8 @@ export default function Cursor() {
           width: ringSize, height: ringSize,
           opacity: ringOp,
           borderRadius: '50%',
-          border: '1px solid rgba(74,158,255,0.7)',
-          boxShadow: '0 0 8px rgba(74,158,255,0.2)',
+          border: '1px solid rgba(0,209,255,0.7)',
+          boxShadow: '0 0 8px rgba(0,209,255,0.2)',
         }}
       />
     </>

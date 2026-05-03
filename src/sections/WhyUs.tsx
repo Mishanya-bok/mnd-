@@ -34,7 +34,7 @@ function ReasonRow({ reason }: { reason: typeof reasons[0] }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       animate={{
-        backgroundColor: hovered ? 'rgba(74,158,255,0.07)' : 'rgba(255,255,255,0)',
+        backgroundColor: hovered ? 'rgba(0,209,255,0.07)' : 'rgba(255,255,255,0)',
       }}
       transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
       className="group flex flex-col md:flex-row md:items-center gap-4 md:gap-10 py-8 px-5 rounded-xl cursor-default border-b border-white/10 last:border-b-0 relative"
@@ -43,11 +43,11 @@ function ReasonRow({ reason }: { reason: typeof reasons[0] }) {
       <motion.div
         className="absolute left-0 top-4 bottom-4 w-[3px] rounded-full"
         animate={{ scaleY: hovered ? 1 : 0, opacity: hovered ? 1 : 0 }}
-        style={{ backgroundColor: '#4a9eff', transformOrigin: 'center' }}
+        style={{ backgroundColor: '#00D1FF', transformOrigin: 'center' }}
         transition={{ duration: 0.3 }}
       />
 
-      <span className="label text-white/25 w-8 shrink-0 group-hover:text-[#4a9eff] transition-colors duration-300">
+      <span className="label text-white/25 w-8 shrink-0 group-hover:text-[#00D1FF] transition-colors duration-300">
         {reason.tag}
       </span>
 
@@ -55,7 +55,7 @@ function ReasonRow({ reason }: { reason: typeof reasons[0] }) {
         className="font-display font-semibold md:w-[55%] leading-snug transition-colors duration-300"
         style={{
           fontSize: 'clamp(1.1rem, 2.2vw, 1.45rem)',
-          color: hovered ? '#4a9eff' : 'rgba(255,255,255,0.92)',
+          color: hovered ? '#00D1FF' : 'rgba(255,255,255,0.92)',
         }}
       >
         {reason.statement}
@@ -109,7 +109,7 @@ export default function WhyUs() {
       {/* Gradient fade to dark at bottom */}
       <div
         className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, #06080f)' }}
+        style={{ background: 'linear-gradient(to bottom, transparent, #02040A)' }}
       />
     </section>
   )
