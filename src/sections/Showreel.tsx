@@ -17,7 +17,7 @@ export default function Showreel() {
         if (entries[0].isIntersecting && !loaded) {
           const v = videoRef.current
           if (v && !v.src) {
-            v.src = '/videos/showreel.webm'
+            v.src = '/videos/cartoon-mnd.webm'
             v.load()
           }
           setLoaded(true)
