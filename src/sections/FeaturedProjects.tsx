@@ -372,7 +372,7 @@ function MobileCard({ project, color, onOpen }: {
 
 // ── Main export ───────────────────────────────────────────────
 export default function FeaturedProjects() {
-  const [[activeIdx, direction], setState] = useState<[number, number]>([0, 0])
+  const [[activeIdx], setState] = useState<[number, number]>([0, 0])
   const [activeProject, setActiveProject] = useState<Project | null>(null)
 
   const cat = CATS[activeIdx]
