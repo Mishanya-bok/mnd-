@@ -431,6 +431,179 @@ function ArrowBtn({ dir, color, onClick }: { dir: 'left' | 'right'; color: strin
   )
 }
 
+// ── Mobile: single video card with IntersectionObserver lazy loading ──
+function MobileVideoCard({ project, color, onPlay, onOpen }: {
+  project: Project; color: string
+  onPlay: (v: HTMLVideoElement) => void
+  onOpen: () => void
+}) {
+  const wrapRef  = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const loadedRef = useRef(false)
+  const [ready,   setReady]   = useState(false)
+  const [errored, setErrored] = useState(false)
+
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const v = videoRef.current
+        if (!v) return
+        if (entry.isIntersecting) {
+          // Lazy-load: assign src only on first intersection
+          if (!loadedRef.current) {
+            loadedRef.current = true
+            v.src = project.videoSrc
+            v.load()
+          }
+          v.play().then(() => onPlay(v)).catch(() => {})
+        } else {
+          v.pause()
+        }
+      },
+      { threshold: 0.4 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [project.videoSrc, onPlay])
+
+  return (
+    <div ref={wrapRef} onClick={onOpen}
+      style={{
+        position: 'relative', width: '100%', aspectRatio: '16 / 9',
+        borderRadius: 6, overflow: 'hidden',
+        border: `1px solid rgba(255,255,255,0.10)`,
+        backgroundColor: '#060f1c',
+        cursor: 'pointer',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.60)',
+      }}>
+      {/* Placeholder */}
+      {!ready && !errored && (
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: `linear-gradient(135deg, ${color}22 0%, #060f1c 70%)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <div style={{ width: 40, height: 40, borderRadius: '50%',
+            border: `1px solid ${color}55`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ width: 0, height: 0, marginLeft: 4,
+              borderTop: '9px solid transparent',
+              borderBottom: '9px solid transparent',
+              borderLeft: `14px solid ${color}77` }} />
+          </div>
+        </div>
+      )}
+      <video ref={videoRef} playsInline muted loop preload="none"
+        style={{ width: '100%', height: '100%', objectFit: 'cover',
+          opacity: ready ? 1 : 0, transition: 'opacity 0.4s',
+          display: 'block' }}
+        onLoadedMetadata={() => setReady(true)}
+        onCanPlay={() => setReady(true)}
+        onError={() => setErrored(true)} />
+      {/* Bottom gradient + title */}
+      <div style={{
+        position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: 'linear-gradient(to top, rgba(2,4,10,0.90) 0%, transparent 55%)',
+        display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+        padding: '10px 14px',
+      }}>
+        <p style={{ fontFamily: 'Space Mono, monospace', fontSize: 11,
+          letterSpacing: '0.08em', color: '#E4EEF4',
+          textTransform: 'uppercase', lineHeight: 1.4, margin: 0 }}>
+          {project.title}
+        </p>
+        <p style={{ fontFamily: 'Space Mono, monospace', fontSize: 9,
+          color: color + 'aa', letterSpacing: '0.06em', marginTop: 3 }}>
+          {project.year} · {project.tags[0]}
+        </p>
+      </div>
+      {/* Corner brackets */}
+      <div style={{ position: 'absolute', top: 8, left: 8, width: 12, height: 12,
+        borderTop: `1px solid ${color}55`, borderLeft: `1px solid ${color}55`,
+        pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: 8, right: 8, width: 12, height: 12,
+        borderTop: `1px solid ${color}55`, borderRight: `1px solid ${color}55`,
+        pointerEvents: 'none' }} />
+      <span style={{ position: 'absolute', top: 10, right: 12, pointerEvents: 'none',
+        fontFamily: 'Space Mono, monospace', fontSize: 9,
+        color: color + '88', letterSpacing: '0.06em' }}>
+        TAP ↗
+      </span>
+    </div>
+  )
+}
+
+// ── Mobile gallery: category tabs + vertical video feed ──────
+function MobileGallery({ onOpen }: { onOpen: (p: Project) => void }) {
+  const [activeTab, setActiveTab] = useState(0)
+  const currentVideoRef = useRef<HTMLVideoElement | null>(null)
+
+  const cat         = CATS[activeTab]
+  const catProjects = projects.filter(p => p.category === cat.id)
+
+  // Pause the previous video before any new one starts
+  const handlePlay = useCallback((v: HTMLVideoElement) => {
+    if (currentVideoRef.current && currentVideoRef.current !== v) {
+      currentVideoRef.current.pause()
+    }
+    currentVideoRef.current = v
+  }, [])
+
+  // Stop current video when switching category
+  const switchTab = useCallback((i: number) => {
+    if (currentVideoRef.current) {
+      currentVideoRef.current.pause()
+      currentVideoRef.current = null
+    }
+    setActiveTab(i)
+  }, [])
+
+  return (
+    <div>
+      {/* Category tabs */}
+      <div className="container-x" style={{ overflowX: 'auto', scrollbarWidth: 'none' }}>
+        <div style={{ display: 'flex', gap: 8, paddingBottom: 16, minWidth: 'max-content' }}>
+          {CATS.map((c, i) => (
+            <button key={c.id} onClick={() => switchTab(i)}
+              style={{
+                padding: '7px 16px', borderRadius: 4, cursor: 'pointer',
+                border: `1px solid ${i === activeTab ? c.color + 'bb' : 'rgba(255,255,255,0.12)'}`,
+                background: i === activeTab ? c.color + '1A' : 'transparent',
+                color: i === activeTab ? c.color : 'rgba(255,255,255,0.40)',
+                fontFamily: 'Space Mono, monospace', fontSize: 10,
+                letterSpacing: '0.10em', textTransform: 'uppercase',
+                whiteSpace: 'nowrap', transition: 'all 0.2s',
+              }}>
+              {c.num} {c.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Video feed */}
+      <div className="container-x" style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+        {catProjects.map(proj => (
+          <MobileVideoCard key={proj.id} project={proj} color={cat.color}
+            onPlay={handlePlay} onOpen={() => onOpen(proj)} />
+        ))}
+      </div>
+
+      {/* Category count label */}
+      <div className="container-x" style={{ marginTop: 16, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontFamily: 'Space Mono, monospace', fontSize: 10,
+          letterSpacing: '0.14em', textTransform: 'uppercase', color: cat.color + 'cc' }}>
+          {cat.num} — {cat.label}
+        </span>
+        <span style={{ fontFamily: 'Space Mono, monospace', fontSize: 9,
+          color: 'rgba(255,255,255,0.28)', letterSpacing: '0.08em' }}>
+          {catProjects.length.toString().padStart(2, '0')} ВИДЕО
+        </span>
+      </div>
+    </div>
+  )
+}
 
 // ── Main export ───────────────────────────────────────────────
 export default function FeaturedProjects() {
@@ -445,15 +618,15 @@ export default function FeaturedProjects() {
   const goNext = useCallback(() => setState(([i]) => [(i + 1) % CATS.length, 1] as [number, number]), [])
   const goPrev = useCallback(() => setState(([i]) => [(i + CATS.length - 1) % CATS.length, -1] as [number, number]), [])
 
-  // Scale scene to fit viewport on mobile; scene internal width ~920px for active orbit
   const isMobile = windowWidth < 768
-  const mobileScale = isMobile ? Math.max(Math.min(windowWidth / 920, 1), 0.32) : 1
+  // Scale scene to fit viewport on tablet (768–920px)
+  const mobileScale = Math.max(Math.min(windowWidth / 920, 1), 0.32)
   const sceneH = Math.round(820 * mobileScale)
 
-  // Shared orbital scene — same JSX used at all breakpoints, scaled via CSS
+  // Desktop orbital scene
   const orbitalScene = (
     <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 820,
-      transform: isMobile ? `scale(${mobileScale})` : 'none',
+      transform: mobileScale < 1 ? `scale(${mobileScale})` : 'none',
       transformOrigin: 'top center' }}>
 
       {/* Nebula background */}
@@ -542,7 +715,7 @@ export default function FeaturedProjects() {
       })}
 
       {/* Orbiting thumbnails */}
-      <OrbitalSystem key={cat.id + '-orb'} cat={cat} onOpen={setActiveProject} isMobile={isMobile} />
+      <OrbitalSystem key={cat.id + '-orb'} cat={cat} onOpen={setActiveProject} isMobile={false} />
 
       {/* HUD */}
       <AnimatePresence mode="wait">
@@ -564,11 +737,11 @@ export default function FeaturedProjects() {
         ))}
       </div>
 
-      {/* Arrows — hidden on mobile (replaced by tap buttons below) */}
-      <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40 hidden md:block">
+      {/* Arrows */}
+      <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40">
         <ArrowBtn dir="left" color={cat.color} onClick={goPrev} />
       </div>
-      <div className="absolute right-6 top-1/2 -translate-y-1/2 z-40 hidden md:block">
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 z-40">
         <ArrowBtn dir="right" color={cat.color} onClick={goNext} />
       </div>
     </div>
@@ -587,45 +760,33 @@ export default function FeaturedProjects() {
           </h2>
         </div>
 
-        {/* ── Orbital scene — shared between mobile and desktop via CSS scale ── */}
-        <div className="relative" style={{ height: sceneH, overflow: 'hidden' }}>
-          {orbitalScene}
-        </div>
+        {isMobile ? (
+          /* ── Mobile: lightweight vertical gallery ── */
+          <MobileGallery onOpen={setActiveProject} />
+        ) : (
+          /* ── Desktop / tablet: orbital scene ── */
+          <>
+            <div className="relative" style={{ height: sceneH, overflow: 'hidden' }}>
+              {orbitalScene}
+            </div>
 
-        {/* Mobile nav buttons — large tap targets */}
-        <div className="md:hidden container-x flex items-center justify-between mt-4">
-          <button onClick={goPrev}
-            style={{ minWidth: 52, minHeight: 52, borderRadius: '50%',
-              border: `1px solid ${cat.color}40`, background: 'rgba(4,12,24,0.8)',
-              color: cat.color, fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            ←
-          </button>
-          <span className="label text-[var(--color-muted)]" style={{ fontSize: 10, letterSpacing: '0.1em' }}>
-            {cat.num} / {CATS.length} · {cat.label.toUpperCase()}
-          </span>
-          <button onClick={goNext}
-            style={{ minWidth: 52, minHeight: 52, borderRadius: '50%',
-              border: `1px solid ${cat.color}40`, background: 'rgba(4,12,24,0.8)',
-              color: cat.color, fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            →
-          </button>
-        </div>
-
-        {/* Active category label */}
-        <div className="container-x mt-5 md:mt-5 flex items-baseline justify-between">
-          <AnimatePresence mode="wait">
-            <motion.h3 key={cat.id + '-lbl'}
-              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35 }}
-              className="font-display font-bold"
-              style={{ fontSize: 'clamp(1.6rem, 4vw, 3.2rem)', color: cat.color }}>
-              {cat.label}
-            </motion.h3>
-          </AnimatePresence>
-          <span className="label text-[var(--color-dim)]">
-            {catProjects.length.toString().padStart(2, '0')} видео
-          </span>
-        </div>
+            {/* Active category label */}
+            <div className="container-x mt-5 flex items-baseline justify-between">
+              <AnimatePresence mode="wait">
+                <motion.h3 key={cat.id + '-lbl'}
+                  initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35 }}
+                  className="font-display font-bold"
+                  style={{ fontSize: 'clamp(1.6rem, 4vw, 3.2rem)', color: cat.color }}>
+                  {cat.label}
+                </motion.h3>
+              </AnimatePresence>
+              <span className="label text-[var(--color-dim)]">
+                {catProjects.length.toString().padStart(2, '0')} видео
+              </span>
+            </div>
+          </>
+        )}
 
       </section>
 

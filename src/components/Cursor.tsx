@@ -4,6 +4,7 @@ import { motion, useMotionValue, useSpring } from 'framer-motion'
 export default function Cursor() {
   const mx = useMotionValue(-200)
   const my = useMotionValue(-200)
+  // All hooks run unconditionally; we skip rendering on touch devices below
 
   // Dot: near-instant
   const dotX = useSpring(mx, { stiffness: 2000, damping: 120 })
@@ -44,6 +45,9 @@ export default function Cursor() {
       document.removeEventListener('mouseout', onOut)
     }
   }, [ringSize, ringOp, ringBorder])
+
+  // Touch devices have no mouse pointer — skip the cursor entirely
+  if (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0) return null
 
   return (
     <>
