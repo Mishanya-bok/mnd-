@@ -28,7 +28,7 @@ export const projects: Project[] = [
     year: '2025',
     description:
       'Коммерческий ролик для Rolf, показанный на 10 крупнейших экранах Москвы. Совместная работа с агентством Dibrain — городской масштаб, брендовая точность, кинематографический визуальный язык.',
-    videoSrc: '/videos/rolf-banners.webm',
+    videoSrc: '/videos/rolf.webm',
     tags: ['Коммерческий', 'OOH', 'Dibrain'],
     featured: true,
   },
@@ -50,7 +50,7 @@ export const projects: Project[] = [
     year: '2026',
     description:
       'Видео-контент для блогера Романа Каграманова. В этом проекте mnd. отвечали за графику — вся визуальная часть создана с помощью AI.',
-    videoSrc: '/videos/roman.webm',
+    videoSrc: '/videos/ai-1.webm',
     tags: ['Блогер', 'AI Графика', 'Личный бренд'],
     featured: true,
   },
@@ -61,7 +61,7 @@ export const projects: Project[] = [
     year: '2026',
     description:
       'Спек-реклама для Яндекс Лавки в стиле реализма. Продукт снятый так, будто это уже официальный кампейн.',
-    videoSrc: '/videos/yandex-lavka.webm',
+    videoSrc: '/videos/ai-2.webm',
     tags: ['Спек-реклама', 'Фудтех', 'Реализм'],
     featured: true,
   },
