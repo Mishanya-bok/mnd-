@@ -13,168 +13,165 @@ const CATS = [
 
 type Cat = typeof CATS[number]
 
-const slideVariants = {
-  enter: (d: number) => ({ x: d >= 0 ? '32%' : '-32%', opacity: 0, scale: 0.88 }),
-  center: { x: 0, opacity: 1, scale: 1,
-    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
-  exit: (d: number) => ({ x: d >= 0 ? '-32%' : '32%', opacity: 0, scale: 0.9,
-    transition: { duration: 0.3, ease: [0.4, 0, 1, 1] } }),
+const PLANET_SIZE = 560
+const THUMB_W     = 320
+const THUMB_H     = 180
+const ORBIT_RX    = 480
+const ORBIT_RY    = 192
+
+// Resting positions for inactive planets (px offset from scene center)
+const BG_SLOTS = [
+  { x: -530, y: -115, scale: 0.230, opacity: 0.58, blur: 1.5 },
+  { x:  510, y: -140, scale: 0.195, opacity: 0.50, blur: 2.0 },
+  { x:  495, y:  110, scale: 0.215, opacity: 0.54, blur: 1.5 },
+] as const
+
+function getPlanetPos(idx: number, activeIdx: number) {
+  if (idx === activeIdx) return { x: 0, y: 0, scale: 1, opacity: 1, blur: 0 }
+  const slot = (idx - activeIdx + CATS.length) % CATS.length - 1
+  return BG_SLOTS[slot]
 }
 
-// ── True 3D planet SVG ───────────────────────────────────────
-// Limb darkening + specular highlight + atmospheric rim + clipped bands
+// ── True 3D planet SVG ────────────────────────────────────────
 function Planet3D({ color, size = 300 }: { color: string; size?: number }) {
-  const u = `${Math.round(size)}${color.replace(/[^0-9a-fA-F]/g, '')}`
+  const uid = `p${Math.round(size)}${color.replace(/[^a-fA-F0-9]/g, '')}`
   const c = size / 2
   const r = size * 0.43
 
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-hidden>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}
+      style={{ overflow: 'visible', display: 'block' }} aria-hidden>
       <defs>
-        {/* Base colour — bright top-left, dark limb */}
-        <radialGradient id={`B${u}`} cx="38%" cy="32%" r="72%">
-          <stop offset="0%"   stopColor={color}    stopOpacity="0.70" />
-          <stop offset="28%"  stopColor={color}    stopOpacity="0.30" />
-          <stop offset="62%"  stopColor="#040d1a"  stopOpacity="0.88" />
-          <stop offset="100%" stopColor="#02040A"  stopOpacity="1"    />
+        <radialGradient id={`B${uid}`} cx="38%" cy="32%" r="72%">
+          <stop offset="0%"   stopColor={color}   stopOpacity="0.82" />
+          <stop offset="30%"  stopColor={color}   stopOpacity="0.38" />
+          <stop offset="65%"  stopColor="#040d1a" stopOpacity="0.92" />
+          <stop offset="100%" stopColor="#020409" stopOpacity="1"    />
         </radialGradient>
-
-        {/* Limb darkening — darkens sphere edges */}
-        <radialGradient id={`L${u}`} cx="50%" cy="50%" r="50%">
-          <stop offset="52%"  stopColor="transparent" />
-          <stop offset="80%"  stopColor="#000" stopOpacity="0.26" />
-          <stop offset="100%" stopColor="#000" stopOpacity="0.80" />
+        <radialGradient id={`L${uid}`} cx="50%" cy="50%" r="50%">
+          <stop offset="50%"  stopColor="transparent" />
+          <stop offset="78%"  stopColor="#000" stopOpacity="0.32" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0.88" />
         </radialGradient>
-
-        {/* Specular — bright spot upper-left */}
-        <radialGradient id={`S${u}`} cx="35%" cy="30%" r="38%">
-          <stop offset="0%"   stopColor="#fff" stopOpacity="0.22" />
-          <stop offset="55%"  stopColor="#fff" stopOpacity="0.05" />
+        <radialGradient id={`S${uid}`} cx="33%" cy="28%" r="42%">
+          <stop offset="0%"   stopColor="#fff" stopOpacity="0.30" />
+          <stop offset="55%"  stopColor="#fff" stopOpacity="0.07" />
           <stop offset="100%" stopColor="#fff" stopOpacity="0"    />
         </radialGradient>
-
-        {/* Clip surface bands to sphere */}
-        <clipPath id={`C${u}`}><circle cx={c} cy={c} r={r} /></clipPath>
-
-        {/* Soft atmosphere blur */}
-        <filter id={`A${u}`} x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation={size * 0.044} />
+        <clipPath id={`C${uid}`}><circle cx={c} cy={c} r={r} /></clipPath>
+        <filter id={`Atm${uid}`} x="-70%" y="-70%" width="240%" height="240%">
+          <feGaussianBlur stdDeviation={size * 0.052} />
         </filter>
-
-        {/* Deep glow */}
-        <filter id={`G${u}`} x="-55%" y="-55%" width="210%" height="210%">
-          <feGaussianBlur stdDeviation={size * 0.072} result="b" />
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        <filter id={`Glo${uid}`} x="-110%" y="-110%" width="320%" height="320%">
+          <feGaussianBlur stdDeviation={size * 0.12} />
         </filter>
       </defs>
 
-      {/* Outer deep glow halo */}
-      <circle cx={c} cy={c} r={r * 1.24}
-        fill={color} fillOpacity="0.045" filter={`url(#G${u})`} />
-
+      {/* Deep corona */}
+      <circle cx={c} cy={c} r={r * 1.65} fill={color} fillOpacity="0.022" filter={`url(#Glo${uid})`} />
       {/* Atmospheric rim */}
-      <circle cx={c} cy={c} r={r * 1.07}
-        fill="none" stroke={color} strokeWidth={r * 0.12}
-        strokeOpacity="0.22" filter={`url(#A${u})`} />
-
-      {/* Planet body */}
-      <circle cx={c} cy={c} r={r} fill={`url(#B${u})`} />
-
-      {/* Surface latitude bands — clipped to sphere */}
-      <g clipPath={`url(#C${u})`}>
-        {/* Bright equatorial belt */}
-        <ellipse cx={c} cy={c + r * 0.04} rx={r * 0.97} ry={r * 0.09}
-          fill={color} fillOpacity="0.055" />
-        {/* Main bands */}
-        <ellipse cx={c} cy={c}            rx={r * 0.97} ry={r * 0.26}
-          fill="none" stroke={color} strokeWidth="1.0" strokeOpacity="0.15" />
-        <ellipse cx={c} cy={c - r * 0.26} rx={r * 0.82} ry={r * 0.17}
-          fill="none" stroke={color} strokeWidth="0.6" strokeOpacity="0.10" />
-        <ellipse cx={c} cy={c + r * 0.32} rx={r * 0.88} ry={r * 0.20}
-          fill="none" stroke={color} strokeWidth="0.7" strokeOpacity="0.09" />
-        <ellipse cx={c} cy={c - r * 0.48} rx={r * 0.62} ry={r * 0.13}
-          fill="none" stroke={color} strokeWidth="0.45" strokeOpacity="0.07" />
-        <ellipse cx={c} cy={c + r * 0.57} rx={r * 0.72} ry={r * 0.11}
-          fill="none" stroke={color} strokeWidth="0.35" strokeOpacity="0.055" />
+      <circle cx={c} cy={c} r={r * 1.10} fill="none" stroke={color}
+        strokeWidth={r * 0.15} strokeOpacity="0.32" filter={`url(#Atm${uid})`} />
+      {/* Planet sphere */}
+      <circle cx={c} cy={c} r={r} fill={`url(#B${uid})`} />
+      {/* Surface bands */}
+      <g clipPath={`url(#C${uid})`}>
+        <ellipse cx={c} cy={c + r * 0.04} rx={r * 0.97} ry={r * 0.09} fill={color} fillOpacity="0.07" />
+        <ellipse cx={c} cy={c}            rx={r * 0.97} ry={r * 0.26} fill="none" stroke={color} strokeWidth="1.2" strokeOpacity="0.20" />
+        <ellipse cx={c} cy={c - r * 0.26} rx={r * 0.82} ry={r * 0.17} fill="none" stroke={color} strokeWidth="0.7" strokeOpacity="0.13" />
+        <ellipse cx={c} cy={c + r * 0.32} rx={r * 0.88} ry={r * 0.20} fill="none" stroke={color} strokeWidth="0.8" strokeOpacity="0.11" />
+        <ellipse cx={c} cy={c - r * 0.48} rx={r * 0.62} ry={r * 0.13} fill="none" stroke={color} strokeWidth="0.5" strokeOpacity="0.08" />
+        <ellipse cx={c} cy={c + r * 0.57} rx={r * 0.72} ry={r * 0.11} fill="none" stroke={color} strokeWidth="0.4" strokeOpacity="0.06" />
       </g>
-
-      {/* Limb darkening overlay */}
-      <circle cx={c} cy={c} r={r} fill={`url(#L${u})`} />
-
+      {/* Limb darkening */}
+      <circle cx={c} cy={c} r={r} fill={`url(#L${uid})`} />
       {/* Specular highlight */}
-      <circle cx={c} cy={c} r={r} fill={`url(#S${u})`} />
-
-      {/* Edge atmosphere halo */}
-      <circle cx={c} cy={c} r={r}
-        fill="none" stroke={color} strokeWidth="2.5"
-        strokeOpacity="0.38" filter={`url(#A${u})`} />
+      <circle cx={c} cy={c} r={r} fill={`url(#S${uid})`} />
+      {/* Edge atmosphere */}
+      <circle cx={c} cy={c} r={r} fill="none" stroke={color}
+        strokeWidth="3" strokeOpacity="0.48" filter={`url(#Atm${uid})`} />
     </svg>
   )
 }
 
-// ── Mini planet selector ─────────────────────────────────────
-function PlanetBtn({ cat, active, onClick }: { cat: Cat; active: boolean; onClick: () => void }) {
+// ── Orbital rings + sci-fi decorations ────────────────────────
+function OrbitalRings({ color }: { color: string }) {
   return (
-    <motion.button
-      onClick={onClick}
-      className="flex flex-col items-center gap-2 shrink-0"
-      whileTap={{ scale: 0.88 }}
-    >
-      <motion.div
-        animate={{ scale: active ? 1 : 0.65, opacity: active ? 1 : 0.40 }}
-        transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
-        style={{ position: 'relative' }}
-      >
-        <Planet3D color={cat.color} size={76} />
-        {active && (
-          <motion.div
-            style={{
-              position: 'absolute', inset: -10, borderRadius: '50%',
-              border: `1px solid ${cat.color}28`, pointerEvents: 'none',
-            }}
-            animate={{ scale: [1, 1.38, 1], opacity: [0.65, 0.07, 0.65] }}
-            transition={{ duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        )}
-      </motion.div>
-      <span
-        className="label text-[9px] text-center leading-tight"
-        style={{ color: active ? cat.color : 'rgba(255,255,255,0.28)', transition: 'color 0.4s', maxWidth: 68 }}
-      >
-        {cat.num} / {cat.label.toUpperCase()}
-      </span>
-    </motion.button>
+    <svg className="absolute inset-0 w-full h-full pointer-events-none"
+      style={{ overflow: 'visible' }} aria-hidden>
+      {/* Main orbit path */}
+      <ellipse cx="50%" cy="50%" rx={ORBIT_RX} ry={ORBIT_RY}
+        fill="none" stroke={color} strokeWidth="0.8"
+        strokeOpacity="0.13" strokeDasharray="8 14" />
+      {/* Tilted ring 1 */}
+      <g style={{ transform: 'rotate(-28deg)', transformOrigin: '50% 50%' }}>
+        <ellipse cx="50%" cy="50%" rx={ORBIT_RX * 0.78} ry={ORBIT_RY * 1.62}
+          fill="none" stroke={color} strokeWidth="0.5"
+          strokeOpacity="0.07" strokeDasharray="4 18" />
+      </g>
+      {/* Tilted ring 2 */}
+      <g style={{ transform: 'rotate(44deg)', transformOrigin: '50% 50%' }}>
+        <ellipse cx="50%" cy="50%" rx={ORBIT_RX * 1.12} ry={ORBIT_RY * 0.52}
+          fill="none" stroke={color} strokeWidth="0.5"
+          strokeOpacity="0.07" strokeDasharray="3 22" />
+      </g>
+      {/* Inner rings */}
+      <ellipse cx="50%" cy="50%" rx={ORBIT_RX * 0.40} ry={ORBIT_RY * 0.40}
+        fill="none" stroke={color} strokeWidth="0.4"
+        strokeOpacity="0.12" strokeDasharray="2 8" />
+      <ellipse cx="50%" cy="50%" rx={ORBIT_RX * 0.56} ry={ORBIT_RY * 0.56}
+        fill="none" stroke={color} strokeWidth="0.35" strokeOpacity="0.07" />
+      {/* Outer faint ring */}
+      <ellipse cx="50%" cy="50%" rx={ORBIT_RX * 1.28} ry={ORBIT_RY * 1.28}
+        fill="none" stroke={color} strokeWidth="0.35" strokeOpacity="0.05" />
+    </svg>
   )
 }
 
-// ── Arrow button ─────────────────────────────────────────────
-function ArrowBtn({ dir, onClick }: { dir: 'left' | 'right'; onClick: () => void }) {
+// ── HUD overlay ───────────────────────────────────────────────
+function HUDOverlay({ color, catNum, count }: { color: string; catNum: string; count: number }) {
+  const b = color + '55'
+  const text = { fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: '0.10em',
+    textTransform: 'uppercase' as const, lineHeight: 1.7, pointerEvents: 'none' as const }
+
   return (
-    <motion.button
-      onClick={onClick}
-      className="flex items-center justify-center shrink-0"
-      whileHover={{ borderColor: 'rgba(0,209,255,0.75)', color: '#00D1FF',
-        boxShadow: '0 0 18px rgba(0,209,255,0.28)' }}
-      whileTap={{ scale: 0.88 }}
-      style={{
-        width: 54, height: 54, borderRadius: '50%',
-        border: '1px solid rgba(0,209,255,0.2)',
-        background: 'rgba(7,27,43,0.65)',
-        backdropFilter: 'blur(14px)',
-        color: 'rgba(255,255,255,0.42)',
-        fontSize: 20,
-        transition: 'border-color 0.2s, color 0.2s, box-shadow 0.2s',
-      }}
-    >
-      {dir === 'left' ? '←' : '→'}
-    </motion.button>
+    <>
+      {/* Corner brackets */}
+      <div style={{ position: 'absolute', top: 22, left: 22, width: 22, height: 22,
+        borderTop: `1px solid ${b}`, borderLeft: `1px solid ${b}`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', top: 22, right: 22, width: 22, height: 22,
+        borderTop: `1px solid ${b}`, borderRight: `1px solid ${b}`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: 22, left: 22, width: 22, height: 22,
+        borderBottom: `1px solid ${b}`, borderLeft: `1px solid ${b}`, pointerEvents: 'none' }} />
+      <div style={{ position: 'absolute', bottom: 22, right: 22, width: 22, height: 22,
+        borderBottom: `1px solid ${b}`, borderRight: `1px solid ${b}`, pointerEvents: 'none' }} />
+
+      {/* TL readout */}
+      <div style={{ ...text, position: 'absolute', top: 24, left: 52, color: color + '77' }}>
+        <div>SYS · ORBITAL_VIEW</div>
+        <div>CAT · {catNum}</div>
+      </div>
+      {/* TR readout */}
+      <div style={{ ...text, position: 'absolute', top: 24, right: 52,
+        color: color + '77', textAlign: 'right' }}>
+        <div>{count.toString().padStart(2, '0')} OBJECTS</div>
+        <div>STATUS · ACTIVE</div>
+      </div>
+      {/* Center cross-hair lines */}
+      <div style={{ position: 'absolute', top: '50%', left: '50%',
+        transform: 'translate(-50%, -50%)', width: 12, height: 12, pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', top: 5, left: 0, width: '100%',
+          height: 1, background: color + '30' }} />
+        <div style={{ position: 'absolute', left: 5, top: 0, height: '100%',
+          width: 1, background: color + '30' }} />
+      </div>
+    </>
   )
 }
 
-// ── Single orbiting video thumbnail ─────────────────────────
+// ── Single orbiting video thumbnail ──────────────────────────
 function OrbThumb({ project, color, setRef, onPause, onClick }: {
-  project: Project
-  color: string
+  project: Project; color: string
   setRef: (el: HTMLDivElement | null) => void
   onPause: (v: boolean) => void
   onClick: () => void
@@ -198,77 +195,88 @@ function OrbThumb({ project, color, setRef, onPause, onClick }: {
       onMouseEnter={enter}
       onMouseLeave={leave}
       className="cursor-pointer absolute"
-      style={{ width: 232, height: 130, marginLeft: -116, marginTop: -65 }}
+      style={{ width: THUMB_W, height: THUMB_H, marginLeft: -THUMB_W / 2, marginTop: -THUMB_H / 2 }}
     >
       <div style={{
-        width: '100%', height: '100%', borderRadius: 5, overflow: 'hidden',
-        border: `1px solid ${hovered ? color + 'cc' : 'rgba(0,209,255,0.14)'}`,
+        width: '100%', height: '100%', borderRadius: 6, overflow: 'hidden',
+        border: `1px solid ${hovered ? color + 'cc' : 'rgba(0,209,255,0.13)'}`,
         boxShadow: hovered
-          ? `0 0 28px ${color}58, 0 10px 36px rgba(0,0,0,0.78)`
-          : '0 5px 22px rgba(0,0,0,0.65)',
+          ? `0 0 32px ${color}60, 0 12px 40px rgba(0,0,0,0.82)`
+          : '0 6px 24px rgba(0,0,0,0.70)',
         backgroundColor: '#071B2B',
+        transform: hovered ? 'scale(1.08)' : 'scale(1)',
         transition: 'border-color 0.25s, box-shadow 0.25s, transform 0.25s',
-        transform: hovered ? 'scale(1.1)' : 'scale(1)',
         position: 'relative',
       }}>
         <video
-          ref={videoRef}
-          playsInline muted loop
+          ref={videoRef} playsInline muted loop
           style={{ width: '100%', height: '100%', objectFit: 'cover',
-            opacity: ready ? (hovered ? 1 : 0.80) : 0.4, transition: 'opacity 0.4s' }}
+            opacity: ready ? (hovered ? 1 : 0.82) : 0.35, transition: 'opacity 0.4s' }}
           onLoadedMetadata={() => setReady(true)}
           onCanPlay={() => setReady(true)}
         />
+        {/* Metadata overlay */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(to top, rgba(2,4,10,0.9) 0%, transparent 55%)',
+          background: 'linear-gradient(to top, rgba(2,4,10,0.92) 0%, transparent 52%)',
           opacity: hovered ? 1 : 0, transition: 'opacity 0.25s',
-          display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: '7px 10px',
+          display: 'flex', flexDirection: 'column', justifyContent: 'flex-end',
+          padding: '8px 12px',
         }}>
-          <p style={{ fontFamily: 'Space Mono, monospace', fontSize: 9, letterSpacing: '0.08em',
-            color: '#E4EEF4', textTransform: 'uppercase', lineHeight: 1.4, maxWidth: 210 }}>
+          <p style={{ fontFamily: 'Space Mono, monospace', fontSize: 10,
+            letterSpacing: '0.08em', color: '#E4EEF4',
+            textTransform: 'uppercase', lineHeight: 1.4 }}>
             {project.title}
+          </p>
+          <p style={{ fontFamily: 'Space Mono, monospace', fontSize: 8,
+            color: color + 'aa', letterSpacing: '0.06em', marginTop: 2 }}>
+            {project.year} · {project.tags[0]}
           </p>
         </div>
         {hovered && (
-          <span style={{ position: 'absolute', top: 6, right: 9, fontFamily: 'Space Mono, monospace',
-            fontSize: 9, color, letterSpacing: '0.06em' }}>
+          <span style={{ position: 'absolute', top: 8, right: 10,
+            fontFamily: 'Space Mono, monospace', fontSize: 9, color,
+            letterSpacing: '0.06em' }}>
             PLAY ↗
           </span>
         )}
+        {/* Corner accents */}
+        <div style={{ position: 'absolute', bottom: 0, left: 0, width: 10, height: 10,
+          borderBottom: `1px solid ${color}50`, borderLeft: `1px solid ${color}50`,
+          pointerEvents: 'none' }} />
+        <div style={{ position: 'absolute', top: 0, right: 0, width: 10, height: 10,
+          borderTop: `1px solid ${color}50`, borderRight: `1px solid ${color}50`,
+          pointerEvents: 'none' }} />
       </div>
     </div>
   )
 }
 
-// ── Orbital system — desktop ─────────────────────────────────
-// Each instance gets fresh RAF loop; AnimatePresence key remounts on category change
-function OrbitalSystem({ cat, direction, onOpen }: {
-  cat: Cat; direction: number; onOpen: (p: Project) => void
-}) {
+// ── Orbital system ────────────────────────────────────────────
+// key-remounted on category change; NO opacity on wrapper (preserves z-index layering)
+function OrbitalSystem({ cat, onOpen }: { cat: Cat; onOpen: (p: Project) => void }) {
   const catProjects = projects.filter(p => p.category === cat.id)
   const n = catProjects.length
   const cardEls = useRef<Map<string, HTMLDivElement>>(new Map())
-  const timeRef  = useRef(0)
+  const timeRef = useRef(0)
   const pauseRef = useRef(false)
-  const rx = 315 + n * 6
-  const ry = 122
 
   useEffect(() => {
     let rafId: number
     let last: number | null = null
     const tick = (ts: number) => {
-      if (last !== null && !pauseRef.current) timeRef.current += (ts - last) * 0.00022
+      if (last !== null && !pauseRef.current) timeRef.current += (ts - last) * 0.00019
       last = ts
       catProjects.forEach((proj, i) => {
         const angle = (2 * Math.PI * i / n) + timeRef.current
-        const x     = Math.cos(angle) * rx
-        const y     = Math.sin(angle) * ry
+        const x     = Math.cos(angle) * ORBIT_RX
+        const y     = Math.sin(angle) * ORBIT_RY
         const depth = Math.sin(angle)
         const el    = cardEls.current.get(proj.id)
         if (el) {
-          el.style.transform = `translate(${x}px, ${y}px) scale(${+(0.68 + (depth + 1) * 0.16).toFixed(3)})`
-          el.style.opacity   = String(+(0.40 + (depth + 1) * 0.30).toFixed(2))
+          const sc = 0.70 + (depth + 1) * 0.152
+          el.style.transform = `translate(${x}px, ${y}px) scale(${+sc.toFixed(3)})`
+          el.style.opacity   = String(+(0.42 + (depth + 1) * 0.29).toFixed(2))
           el.style.zIndex    = String(Math.round(depth * 10 + 15))
         }
       })
@@ -280,65 +288,51 @@ function OrbitalSystem({ cat, direction, onOpen }: {
   }, [])
 
   return (
-    <motion.div
-      custom={direction}
-      variants={slideVariants}
-      initial="enter"
-      animate="center"
-      exit="exit"
-      className="relative hidden md:flex items-center justify-center flex-1"
-      style={{ height: 590 }}
-    >
-      {/* Orbit guide ellipse */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none"
-        style={{ overflow: 'visible' }} aria-hidden>
-        <ellipse cx="50%" cy="50%" rx={rx} ry={ry}
-          fill="none" stroke={cat.color} strokeWidth="1"
-          strokeOpacity="0.10" strokeDasharray="6 10" />
-      </svg>
-
-      {/* 3D planet + breathing glow */}
-      <div style={{ position: 'relative', zIndex: 20, pointerEvents: 'none' }}>
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ duration: 90, repeat: Infinity, ease: 'linear' }}
-        >
-          <Planet3D color={cat.color} size={308} />
-        </motion.div>
-        <motion.div
-          style={{
-            position: 'absolute', inset: '-38%', borderRadius: '50%',
-            background: `radial-gradient(circle, ${cat.color}12 0%, transparent 70%)`,
-            pointerEvents: 'none',
-          }}
-          animate={{ scale: [1, 1.22, 1], opacity: [0.5, 1, 0.5] }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+    // NO z-index on this container — keeps thumbnails in parent stacking context
+    <div className="absolute inset-0 flex items-center justify-center">
+      {catProjects.map(proj => (
+        <OrbThumb
+          key={proj.id}
+          project={proj}
+          color={cat.color}
+          setRef={el => el ? cardEls.current.set(proj.id, el) : cardEls.current.delete(proj.id)}
+          onPause={v => { pauseRef.current = v }}
+          onClick={() => onOpen(proj)}
         />
-      </div>
-
-      {/* Thumbnails — fade in after first RAF tick positions them */}
-      <motion.div
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-        transition={{ delay: 0.12, duration: 0.4 }}
-        className="absolute inset-0 flex items-center justify-center"
-      >
-        {catProjects.map(proj => (
-          <OrbThumb
-            key={proj.id}
-            project={proj}
-            color={cat.color}
-            setRef={el => el ? cardEls.current.set(proj.id, el) : cardEls.current.delete(proj.id)}
-            onPause={v => { pauseRef.current = v }}
-            onClick={() => onOpen(proj)}
-          />
-        ))}
-      </motion.div>
-    </motion.div>
+      ))}
+    </div>
   )
 }
 
-// ── Mobile card ──────────────────────────────────────────────
-function MobileCard({ project, color, onOpen }: { project: Project; color: string; onOpen: (p: Project) => void }) {
+// ── Arrow button ──────────────────────────────────────────────
+function ArrowBtn({ dir, color, onClick }: { dir: 'left' | 'right'; color: string; onClick: () => void }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      whileHover={{ borderColor: color + 'cc', color: color,
+        boxShadow: `0 0 24px ${color}42` }}
+      whileTap={{ scale: 0.88 }}
+      style={{
+        width: 56, height: 56, borderRadius: '50%',
+        border: `1px solid ${color}38`,
+        background: 'rgba(4,14,26,0.76)',
+        backdropFilter: 'blur(18px)',
+        color: 'rgba(255,255,255,0.38)',
+        fontSize: 18, cursor: 'pointer',
+        transition: 'border-color 0.2s, color 0.2s, box-shadow 0.2s',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        position: 'relative', zIndex: 40,
+      }}
+    >
+      {dir === 'left' ? '←' : '→'}
+    </motion.button>
+  )
+}
+
+// ── Mobile card ───────────────────────────────────────────────
+function MobileCard({ project, color, onOpen }: {
+  project: Project; color: string; onOpen: (p: Project) => void
+}) {
   const videoRef = useRef<HTMLVideoElement>(null)
   const wrapRef  = useRef<HTMLDivElement>(null)
   const [ready, setReady] = useState(false)
@@ -358,38 +352,34 @@ function MobileCard({ project, color, onOpen }: { project: Project; color: strin
   }, [project.videoSrc])
 
   return (
-    <div
-      ref={wrapRef}
-      className="shrink-0 cursor-pointer relative overflow-hidden"
-      style={{ width: 226, height: 127, borderRadius: 5, border: `1px solid ${color}22`, backgroundColor: '#071B2B' }}
-      onClick={() => onOpen(project)}
-    >
-      <video
-        ref={videoRef}
-        playsInline muted loop
-        style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: ready ? 0.82 : 0.4, transition: 'opacity 0.4s' }}
+    <div ref={wrapRef} className="shrink-0 cursor-pointer relative overflow-hidden"
+      style={{ width: 234, height: 132, borderRadius: 6,
+        border: `1px solid ${color}22`, backgroundColor: '#071B2B' }}
+      onClick={() => onOpen(project)}>
+      <video ref={videoRef} playsInline muted loop
+        style={{ width: '100%', height: '100%', objectFit: 'cover',
+          opacity: ready ? 0.82 : 0.4, transition: 'opacity 0.4s' }}
         onLoadedMetadata={() => setReady(true)}
         onCanPlay={() => setReady(true)}
       />
       <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '6px 8px',
-        background: 'linear-gradient(to top, rgba(2,4,10,0.82) 0%, transparent 100%)' }}>
+        background: 'linear-gradient(to top, rgba(2,4,10,0.85) 0%, transparent 100%)' }}>
         <p className="label text-[9px] text-white/70">{project.title}</p>
       </div>
     </div>
   )
 }
 
-// ── Main export ──────────────────────────────────────────────
+// ── Main export ───────────────────────────────────────────────
 export default function FeaturedProjects() {
   const [[activeIdx, direction], setState] = useState<[number, number]>([0, 0])
   const [activeProject, setActiveProject] = useState<Project | null>(null)
+
   const cat = CATS[activeIdx]
   const catProjects = projects.filter(p => p.category === cat.id)
 
-  const goNext = () =>
-    setState(([i]) => [(i + 1) % CATS.length, 1] as [number, number])
-  const goPrev = () =>
-    setState(([i]) => [(i + CATS.length - 1) % CATS.length, -1] as [number, number])
+  const goNext = () => setState(([i]) => [(i + 1) % CATS.length, 1] as [number, number])
+  const goPrev = () => setState(([i]) => [(i + CATS.length - 1) % CATS.length, -1] as [number, number])
 
   return (
     <>
@@ -404,48 +394,126 @@ export default function FeaturedProjects() {
           </h2>
         </div>
 
-        {/* Mini 3D planet selectors */}
-        <div className="container-x flex items-start gap-6 sm:gap-10 mb-4 overflow-x-auto pb-2">
-          {CATS.map((c, i) => (
-            <PlanetBtn
-              key={c.id}
-              cat={c}
-              active={i === activeIdx}
-              onClick={() => setState(([cur]) => [i, i > cur ? 1 : -1] as [number, number])}
-            />
-          ))}
-        </div>
+        {/* ── Galaxy scene (desktop) ── */}
+        <div className="relative hidden md:block overflow-hidden" style={{ height: 760 }}>
 
-        {/* Orbital display + arrows (desktop) */}
-        <div className="relative">
-          <div className="absolute left-5 md:left-8 top-1/2 -translate-y-1/2 z-30 hidden md:block">
-            <ArrowBtn dir="left" onClick={goPrev} />
-          </div>
+          {/* Space depth gradient */}
+          <div style={{
+            position: 'absolute', inset: 0, pointerEvents: 'none',
+            background: 'radial-gradient(ellipse 75% 65% at 50% 50%, rgba(0,28,52,0.52) 0%, transparent 72%)',
+          }} />
 
-          <AnimatePresence mode="wait" custom={direction}>
-            <OrbitalSystem
-              key={cat.id}
-              cat={cat}
-              direction={direction}
-              onOpen={setActiveProject}
-            />
+          {/* Orbital rings — animated color transition */}
+          <AnimatePresence mode="wait">
+            <motion.div key={cat.id + '-rings'} className="absolute inset-0"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.65 }}>
+              <OrbitalRings color={cat.color} />
+            </motion.div>
           </AnimatePresence>
 
-          <div className="absolute right-5 md:right-8 top-1/2 -translate-y-1/2 z-30 hidden md:block">
-            <ArrowBtn dir="right" onClick={goNext} />
+          {/* ── All 4 planets — always in DOM, animated position ── */}
+          {CATS.map((c, i) => {
+            const pos = getPlanetPos(i, activeIdx)
+            const isActive = i === activeIdx
+            return (
+              <motion.div
+                key={c.id}
+                style={{
+                  position: 'absolute',
+                  left: '50%', top: '50%',
+                  marginLeft: -PLANET_SIZE / 2,
+                  marginTop: -PLANET_SIZE / 2,
+                  zIndex: isActive ? 18 : 4,
+                  cursor: isActive ? 'default' : 'pointer',
+                }}
+                animate={{
+                  x: pos.x, y: pos.y,
+                  scale: pos.scale, opacity: pos.opacity,
+                  filter: `blur(${pos.blur}px)`,
+                }}
+                transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+                onClick={isActive ? undefined
+                  : () => setState(([cur]) => [i, i > cur ? 1 : -1] as [number, number])}
+                title={isActive ? undefined : c.label}
+              >
+                {/* Breathing glow */}
+                <motion.div
+                  style={{
+                    position: 'absolute', inset: '-44%', borderRadius: '50%',
+                    background: `radial-gradient(circle, ${c.color}15 0%, transparent 68%)`,
+                    pointerEvents: 'none',
+                  }}
+                  animate={isActive
+                    ? { scale: [1, 1.18, 1], opacity: [0.55, 1, 0.55] }
+                    : { scale: 1, opacity: 0.5 }}
+                  transition={isActive
+                    ? { duration: 5, repeat: Infinity, ease: 'easeInOut' }
+                    : {}}
+                />
+                {/* Slow rotation on active planet */}
+                <motion.div
+                  animate={isActive ? { rotate: 360 } : { rotate: 0 }}
+                  transition={isActive
+                    ? { duration: 100, repeat: Infinity, ease: 'linear' }
+                    : {}}
+                >
+                  <Planet3D color={c.color} size={PLANET_SIZE} />
+                </motion.div>
+              </motion.div>
+            )
+          })}
+
+          {/* ── Orbiting video thumbnails — remount on category change ── */}
+          {/* NO AnimatePresence opacity wrapper here — preserves z-index layering with planet */}
+          <OrbitalSystem
+            key={cat.id + '-orb'}
+            cat={cat}
+            onOpen={setActiveProject}
+          />
+
+          {/* HUD overlay */}
+          <AnimatePresence mode="wait">
+            <motion.div key={cat.id + '-hud'}
+              className="absolute inset-0 pointer-events-none"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}>
+              <HUDOverlay color={cat.color} catNum={cat.num} count={catProjects.length} />
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Category indicator dots */}
+          <div style={{
+            position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)',
+            display: 'flex', gap: 8, zIndex: 40, pointerEvents: 'none',
+          }}>
+            {CATS.map((c, i) => (
+              <motion.div key={c.id}
+                animate={{ scale: i === activeIdx ? 1 : 0.65, opacity: i === activeIdx ? 1 : 0.35 }}
+                transition={{ duration: 0.4 }}
+                style={{ width: 6, height: 6, borderRadius: '50%', background: c.color }}
+              />
+            ))}
           </div>
+
+          {/* Arrows */}
+          <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40">
+            <ArrowBtn dir="left" color={cat.color} onClick={goPrev} />
+          </div>
+          <div className="absolute right-6 top-1/2 -translate-y-1/2 z-40">
+            <ArrowBtn dir="right" color={cat.color} onClick={goNext} />
+          </div>
+
         </div>
 
         {/* Mobile card row */}
         <div className="md:hidden flex gap-3 overflow-x-auto pb-4"
           style={{ paddingLeft: 'var(--container-x)', paddingRight: 'var(--container-x)' }}>
           <AnimatePresence mode="wait">
-            <motion.div
-              key={cat.id + '-mob'}
+            <motion.div key={cat.id + '-mob'}
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               transition={{ duration: 0.28 }}
-              className="flex gap-3"
-            >
+              className="flex gap-3">
               {catProjects.map(proj => (
                 <MobileCard key={proj.id} project={proj} color={cat.color} onOpen={setActiveProject} />
               ))}
@@ -461,17 +529,13 @@ export default function FeaturedProjects() {
         </div>
 
         {/* Active category label */}
-        <div className="container-x mt-6 md:mt-3 flex items-baseline justify-between">
+        <div className="container-x mt-6 md:mt-5 flex items-baseline justify-between">
           <AnimatePresence mode="wait">
-            <motion.h3
-              key={cat.id + '-lbl'}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+            <motion.h3 key={cat.id + '-lbl'}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.35 }}
               className="font-display font-bold"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', color: cat.color }}
-            >
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', color: cat.color }}>
               {cat.label}
             </motion.h3>
           </AnimatePresence>
