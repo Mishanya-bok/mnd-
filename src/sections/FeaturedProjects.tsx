@@ -431,9 +431,6 @@ function ArrowBtn({ dir, color, onClick }: { dir: 'left' | 'right'; color: strin
   )
 }
 
-// MobileCard removed — orbital scene now handles all breakpoints via CSS scale
-  )
-}
 
 // ── Main export ───────────────────────────────────────────────
 export default function FeaturedProjects() {
