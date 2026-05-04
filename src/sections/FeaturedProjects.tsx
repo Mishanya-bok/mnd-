@@ -431,42 +431,7 @@ function ArrowBtn({ dir, color, onClick }: { dir: 'left' | 'right'; color: strin
   )
 }
 
-// ── Mobile card ───────────────────────────────────────────────
-function MobileCard({ project, color, onOpen }: {
-  project: Project; color: string; onOpen: (p: Project) => void
-}) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const wrapRef  = useRef<HTMLDivElement>(null)
-  const [ready, setReady] = useState(false)
-
-  useEffect(() => {
-    const el = wrapRef.current
-    if (!el) return
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) {
-        const v = videoRef.current
-        if (v && !v.src) { v.preload = 'metadata'; v.src = project.videoSrc }
-        obs.disconnect()
-      }
-    }, { threshold: 0.1, rootMargin: '80px' })
-    obs.observe(el)
-    return () => obs.disconnect()
-  }, [project.videoSrc])
-
-  return (
-    <div ref={wrapRef} className="shrink-0 cursor-pointer relative overflow-hidden"
-      style={{ width: 234, height: 132, borderRadius: 6,
-        border: `1px solid ${color}22`, backgroundColor: '#071B2B' }}
-      onClick={() => onOpen(project)}>
-      <video ref={videoRef} playsInline muted loop
-        style={{ width: '100%', height: '100%', objectFit: 'cover',
-          opacity: ready ? 0.82 : 0.4, transition: 'opacity 0.4s' }}
-        onLoadedMetadata={() => setReady(true)} onCanPlay={() => setReady(true)} />
-      <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: '6px 8px',
-        background: 'linear-gradient(to top, rgba(2,4,10,0.85) 0%, transparent 100%)' }}>
-        <p className="label text-[9px] text-white/70">{project.title}</p>
-      </div>
-    </div>
+// MobileCard removed — orbital scene now handles all breakpoints via CSS scale
   )
 }
 
