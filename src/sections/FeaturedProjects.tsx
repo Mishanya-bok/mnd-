@@ -462,6 +462,7 @@ export default function FeaturedProjects() {
                   marginTop: -PLANET_SIZE / 2,
                   zIndex: isActive ? 18 : 4,
                   cursor: isActive ? 'default' : 'pointer',
+                  pointerEvents: isActive ? 'none' : 'auto',
                 }}
                 animate={{
                   x: pos.x, y: pos.y,

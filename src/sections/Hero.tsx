@@ -91,7 +91,7 @@ export default function Hero() {
       <motion.div className="absolute inset-0" style={{ scale: videoScale }}>
         <video
           className="absolute inset-0 w-full h-full object-cover object-center"
-          src="/videos/hero-loop.webm"
+          src="/videos/main screen2.webm"
           autoPlay muted loop playsInline preload="auto"
         />
       </motion.div>
