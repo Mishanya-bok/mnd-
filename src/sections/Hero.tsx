@@ -143,7 +143,7 @@ export default function Hero() {
 
       {/* Content */}
       <motion.div
-        className="relative z-10 container-x w-full flex flex-col items-center text-center pb-16 md:pb-0"
+        className="relative z-10 container-x w-full flex flex-col items-center text-center pb-8 md:pb-0"
         style={{ y: contentY }}
       >
         <motion.div
@@ -153,7 +153,7 @@ export default function Hero() {
           className="flex flex-col items-center"
         >
           {/* Category tags */}
-          <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-2 mb-10">
+          <motion.div variants={fadeUp} className="flex flex-wrap justify-center gap-2 mb-6 md:mb-10">
             {categories.map((cat) => (
               <span
                 key={cat}
@@ -170,16 +170,16 @@ export default function Hero() {
             <motion.h1
               variants={maskReveal}
               className="font-display font-bold leading-[0.9] text-[var(--color-white)]"
-              style={{ fontSize: 'clamp(3.5rem, 9vw, 8rem)' }}
+              style={{ fontSize: 'clamp(2.6rem, 9vw, 8rem)' }}
             >
               Мы создаём
             </motion.h1>
           </div>
-          <div className="overflow-hidden mb-10">
+          <div className="overflow-hidden mb-6 md:mb-10">
             <motion.h1
               variants={maskReveal}
               className="font-display font-bold leading-[0.9]"
-              style={{ fontSize: 'clamp(3.5rem, 9vw, 8rem)', color: 'rgba(0,209,255,0.9)' }}
+              style={{ fontSize: 'clamp(2.6rem, 9vw, 8rem)', color: 'rgba(0,209,255,0.9)' }}
             >
               миры.
             </motion.h1>
@@ -187,7 +187,7 @@ export default function Hero() {
 
           <motion.p
             variants={fadeUp}
-            className="label text-[var(--color-muted)] mb-10 tracking-widest"
+            className="label text-[var(--color-muted)] mb-6 md:mb-10 tracking-widest"
           >
             AI CINEMATIC PRODUCTION — SOFIA + MIKHAIL
           </motion.p>

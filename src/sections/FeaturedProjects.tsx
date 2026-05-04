@@ -1,4 +1,16 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+
+// Tracks viewport width for responsive scaling
+function useWindowWidth() {
+  const [width, setWidth] = useState(1280)
+  useEffect(() => {
+    const fn = () => setWidth(window.innerWidth)
+    fn()
+    window.addEventListener('resize', fn)
+    return () => window.removeEventListener('resize', fn)
+  }, [])
+  return width
+}
 import { motion, AnimatePresence } from 'framer-motion'
 import VideoModal from '@components/VideoModal'
 import { projects } from '@data/projects'
@@ -405,203 +417,179 @@ function MobileCard({ project, color, onOpen }: {
 export default function FeaturedProjects() {
   const [[activeIdx], setState] = useState<[number, number]>([0, 0])
   const [activeProject, setActiveProject] = useState<Project | null>(null)
+  const windowWidth = useWindowWidth()
 
   const cat = CATS[activeIdx]
   const catProjects = projects.filter(p => p.category === cat.id)
 
-  const goNext = () => setState(([i]) => [(i + 1) % CATS.length, 1] as [number, number])
-  const goPrev = () => setState(([i]) => [(i + CATS.length - 1) % CATS.length, -1] as [number, number])
+  const goNext = useCallback(() => setState(([i]) => [(i + 1) % CATS.length, 1] as [number, number]), [])
+  const goPrev = useCallback(() => setState(([i]) => [(i + CATS.length - 1) % CATS.length, -1] as [number, number]), [])
+
+  // Scale scene to fit viewport on mobile; scene internal width ~920px for active orbit
+  const isMobile = windowWidth < 768
+  const mobileScale = isMobile ? Math.max(Math.min(windowWidth / 920, 1), 0.32) : 1
+  const sceneH = Math.round(820 * mobileScale)
+
+  // Shared orbital scene — same JSX used at all breakpoints, scaled via CSS
+  const orbitalScene = (
+    <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 820,
+      transform: isMobile ? `scale(${mobileScale})` : 'none',
+      transformOrigin: 'top center' }}>
+
+      {/* Nebula background */}
+      <AnimatePresence mode="wait">
+        <motion.div key={cat.id + '-nebula'} className="absolute inset-0 pointer-events-none"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 1.0 }}
+          style={{ background: `radial-gradient(ellipse 70% 60% at 50% 52%, ${cat.color}1A 0%, transparent 70%)` }} />
+      </AnimatePresence>
+
+      {/* Orbital rings */}
+      <AnimatePresence mode="wait">
+        <motion.div key={cat.id + '-rings'} className="absolute inset-0"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 0.7 }}>
+          <OrbitalRings color={cat.color} />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* All 4 planets */}
+      {CATS.map((c, i) => {
+        const pos = getPlanetPos(i, activeIdx)
+        const isActive = i === activeIdx
+        return (
+          <motion.div key={c.id}
+            style={{
+              position: 'absolute', left: '50%', top: '50%',
+              marginLeft: -PLANET_SIZE / 2, marginTop: -PLANET_SIZE / 2,
+              zIndex: isActive ? 18 : 4,
+              cursor: isActive ? 'default' : 'pointer',
+              pointerEvents: isActive ? 'none' : 'auto',
+            }}
+            animate={{ x: pos.x, y: pos.y, scale: pos.scale, opacity: pos.opacity,
+              filter: `blur(${pos.blur}px)` }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+            onClick={isActive ? undefined
+              : () => setState(([cur]) => [i, i > cur ? 1 : -1] as [number, number])}
+            title={isActive ? undefined : c.label}
+          >
+            <motion.div style={{
+              position: 'absolute', inset: '-46%', borderRadius: '50%',
+              background: `radial-gradient(circle, ${c.color}17 0%, transparent 66%)`,
+              pointerEvents: 'none',
+            }}
+              animate={isActive ? { scale: [1, 1.16, 1], opacity: [0.55, 1, 0.55] } : { scale: 1, opacity: 0.45 }}
+              transition={isActive ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' } : {}} />
+            <motion.div
+              animate={isActive ? { rotate: 360 } : { rotate: 0 }}
+              transition={isActive ? { duration: 100, repeat: Infinity, ease: 'linear' } : {}}>
+              <Planet3D color={c.color} rim={c.rim} size={PLANET_SIZE} />
+            </motion.div>
+          </motion.div>
+        )
+      })}
+
+      {/* Planet labels */}
+      {CATS.map((c, i) => {
+        const pos = getPlanetPos(i, activeIdx)
+        const isActive = i === activeIdx
+        const labelY = getLabelY(pos)
+        return (
+          <motion.div key={`${c.id}-label`}
+            style={{ position: 'absolute', left: '50%', top: '50%',
+              transform: 'translateX(-50%)', zIndex: isActive ? 22 : 6,
+              pointerEvents: 'none', whiteSpace: 'nowrap', textAlign: 'center' }}
+            animate={{ x: pos.x, y: labelY, opacity: pos.opacity }}
+            transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}>
+            <span style={{ fontFamily: 'Space Mono, monospace',
+              fontSize: isActive ? 12 : 10, letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              color: isActive ? c.color + 'ee' : c.color + 'cc',
+              textShadow: isActive ? `0 0 16px ${c.color}80` : 'none' }}>
+              {isActive ? `${c.num} ─ ${c.label}` : c.label}
+            </span>
+          </motion.div>
+        )
+      })}
+
+      {/* Orbiting thumbnails */}
+      <OrbitalSystem key={cat.id + '-orb'} cat={cat} onOpen={setActiveProject} />
+
+      {/* HUD */}
+      <AnimatePresence mode="wait">
+        <motion.div key={cat.id + '-hud'} className="absolute inset-0 pointer-events-none"
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}>
+          <HUDOverlay color={cat.color} catNum={cat.num} count={catProjects.length} />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Category dots */}
+      <div style={{ position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)',
+        display: 'flex', gap: 8, zIndex: 40, pointerEvents: 'none' }}>
+        {CATS.map((c, i) => (
+          <motion.div key={c.id}
+            animate={{ scale: i === activeIdx ? 1 : 0.6, opacity: i === activeIdx ? 1 : 0.35 }}
+            transition={{ duration: 0.4 }}
+            style={{ width: 6, height: 6, borderRadius: '50%', background: c.color }} />
+        ))}
+      </div>
+
+      {/* Arrows — hidden on mobile (replaced by tap buttons below) */}
+      <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40 hidden md:block">
+        <ArrowBtn dir="left" color={cat.color} onClick={goPrev} />
+      </div>
+      <div className="absolute right-6 top-1/2 -translate-y-1/2 z-40 hidden md:block">
+        <ArrowBtn dir="right" color={cat.color} onClick={goNext} />
+      </div>
+    </div>
+  )
 
   return (
     <>
       <section id="projects" className="section-gap" style={{ overflowX: 'hidden' }}>
 
         {/* Header */}
-        <div className="container-x mb-10">
-          <p className="label text-[var(--color-muted)] mb-4">Избранное</p>
+        <div className="container-x mb-8 md:mb-10">
+          <p className="label text-[var(--color-muted)] mb-3 md:mb-4">Избранное</p>
           <h2 className="font-display font-bold text-[var(--color-white)]"
-            style={{ fontSize: 'clamp(2.4rem, 6vw, 5rem)' }}>
+            style={{ fontSize: 'clamp(2rem, 6vw, 5rem)' }}>
             Наши работы
           </h2>
         </div>
 
-        {/* ── Galaxy scene (desktop) ── */}
-        {/* NO overflow:hidden — prevents clipping of planet glows and orbit graphics */}
-        <div className="relative hidden md:block" style={{ height: 820 }}>
-
-          {/* Nebula depth gradient — transitions with active category */}
-          <AnimatePresence mode="wait">
-            <motion.div key={cat.id + '-nebula'}
-              className="absolute inset-0 pointer-events-none"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 1.0 }}
-              style={{
-                background: `radial-gradient(ellipse 70% 60% at 50% 52%, ${cat.color}1A 0%, transparent 70%)`,
-              }} />
-          </AnimatePresence>
-
-          {/* Orbital rings */}
-          <AnimatePresence mode="wait">
-            <motion.div key={cat.id + '-rings'} className="absolute inset-0"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.7 }}>
-              <OrbitalRings color={cat.color} />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* ── All 4 planets — always in DOM, animated between positions ── */}
-          {CATS.map((c, i) => {
-            const pos = getPlanetPos(i, activeIdx)
-            const isActive = i === activeIdx
-            return (
-              <motion.div key={c.id}
-                style={{
-                  position: 'absolute',
-                  left: '50%', top: '50%',
-                  marginLeft: -PLANET_SIZE / 2,
-                  marginTop: -PLANET_SIZE / 2,
-                  zIndex: isActive ? 18 : 4,
-                  cursor: isActive ? 'default' : 'pointer',
-                  pointerEvents: isActive ? 'none' : 'auto',
-                }}
-                animate={{
-                  x: pos.x, y: pos.y,
-                  scale: pos.scale, opacity: pos.opacity,
-                  filter: `blur(${pos.blur}px)`,
-                }}
-                transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-                onClick={isActive ? undefined
-                  : () => setState(([cur]) => [i, i > cur ? 1 : -1] as [number, number])}
-                title={isActive ? undefined : c.label}
-              >
-                {/* Breathing glow */}
-                <motion.div style={{
-                  position: 'absolute', inset: '-46%', borderRadius: '50%',
-                  background: `radial-gradient(circle, ${c.color}17 0%, transparent 66%)`,
-                  pointerEvents: 'none',
-                }}
-                  animate={isActive
-                    ? { scale: [1, 1.16, 1], opacity: [0.55, 1, 0.55] }
-                    : { scale: 1, opacity: 0.45 }}
-                  transition={isActive
-                    ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' }
-                    : {}} />
-                {/* Slow rotation on active */}
-                <motion.div
-                  animate={isActive ? { rotate: 360 } : { rotate: 0 }}
-                  transition={isActive
-                    ? { duration: 100, repeat: Infinity, ease: 'linear' }
-                    : {}}>
-                  <Planet3D color={c.color} rim={c.rim} size={PLANET_SIZE} />
-                </motion.div>
-              </motion.div>
-            )
-          })}
-
-          {/* ── Planet labels — separate elements, always legible ── */}
-          {CATS.map((c, i) => {
-            const pos = getPlanetPos(i, activeIdx)
-            const isActive = i === activeIdx
-            const labelY = getLabelY(pos)
-
-            return (
-              <motion.div key={`${c.id}-label`}
-                style={{
-                  position: 'absolute',
-                  left: '50%', top: '50%',
-                  transform: 'translateX(-50%)',
-                  zIndex: isActive ? 22 : 6,
-                  pointerEvents: 'none',
-                  whiteSpace: 'nowrap',
-                  textAlign: 'center',
-                }}
-                animate={{ x: pos.x, y: labelY, opacity: pos.opacity }}
-                transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-              >
-                <span style={{
-                  fontFamily: 'Space Mono, monospace',
-                  fontSize: isActive ? 12 : 10,
-                  letterSpacing: '0.14em',
-                  textTransform: 'uppercase',
-                  color: isActive ? c.color + 'ee' : c.color + 'cc',
-                  textShadow: isActive ? `0 0 16px ${c.color}80` : 'none',
-                }}>
-                  {isActive ? `${c.num} ─ ${c.label}` : c.label}
-                </span>
-              </motion.div>
-            )
-          })}
-
-          {/* ── Orbiting video thumbnails ── */}
-          <OrbitalSystem
-            key={cat.id + '-orb'}
-            cat={cat}
-            onOpen={setActiveProject}
-          />
-
-          {/* HUD overlay */}
-          <AnimatePresence mode="wait">
-            <motion.div key={cat.id + '-hud'} className="absolute inset-0 pointer-events-none"
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}>
-              <HUDOverlay color={cat.color} catNum={cat.num} count={catProjects.length} />
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Category indicator dots */}
-          <div style={{
-            position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)',
-            display: 'flex', gap: 8, zIndex: 40, pointerEvents: 'none',
-          }}>
-            {CATS.map((c, i) => (
-              <motion.div key={c.id}
-                animate={{ scale: i === activeIdx ? 1 : 0.6, opacity: i === activeIdx ? 1 : 0.35 }}
-                transition={{ duration: 0.4 }}
-                style={{ width: 6, height: 6, borderRadius: '50%', background: c.color }}
-              />
-            ))}
-          </div>
-
-          {/* Arrows */}
-          <div className="absolute left-6 top-1/2 -translate-y-1/2 z-40">
-            <ArrowBtn dir="left" color={cat.color} onClick={goPrev} />
-          </div>
-          <div className="absolute right-6 top-1/2 -translate-y-1/2 z-40">
-            <ArrowBtn dir="right" color={cat.color} onClick={goNext} />
-          </div>
-
+        {/* ── Orbital scene — shared between mobile and desktop via CSS scale ── */}
+        <div className="relative" style={{ height: sceneH, overflow: 'hidden' }}>
+          {orbitalScene}
         </div>
 
-        {/* Mobile card row */}
-        <div className="md:hidden flex gap-3 overflow-x-auto pb-4"
-          style={{ paddingLeft: 'var(--container-x)', paddingRight: 'var(--container-x)' }}>
-          <AnimatePresence mode="wait">
-            <motion.div key={cat.id + '-mob'}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.28 }}
-              className="flex gap-3">
-              {catProjects.map(proj => (
-                <MobileCard key={proj.id} project={proj} color={cat.color} onOpen={setActiveProject} />
-              ))}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        {/* Mobile arrows */}
-        <div className="md:hidden container-x flex items-center justify-between mt-5">
-          <button onClick={goPrev} className="label text-white/40 px-3 py-2">← Назад</button>
-          <span className="label text-[var(--color-muted)]">{activeIdx + 1} / {CATS.length}</span>
-          <button onClick={goNext} className="label text-white/40 px-3 py-2">Далее →</button>
+        {/* Mobile nav buttons — large tap targets */}
+        <div className="md:hidden container-x flex items-center justify-between mt-4">
+          <button onClick={goPrev}
+            style={{ minWidth: 52, minHeight: 52, borderRadius: '50%',
+              border: `1px solid ${cat.color}40`, background: 'rgba(4,12,24,0.8)',
+              color: cat.color, fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            ←
+          </button>
+          <span className="label text-[var(--color-muted)]" style={{ fontSize: 10, letterSpacing: '0.1em' }}>
+            {cat.num} / {CATS.length} · {cat.label.toUpperCase()}
+          </span>
+          <button onClick={goNext}
+            style={{ minWidth: 52, minHeight: 52, borderRadius: '50%',
+              border: `1px solid ${cat.color}40`, background: 'rgba(4,12,24,0.8)',
+              color: cat.color, fontSize: 20, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            →
+          </button>
         </div>
 
         {/* Active category label */}
-        <div className="container-x mt-6 md:mt-5 flex items-baseline justify-between">
+        <div className="container-x mt-5 md:mt-5 flex items-baseline justify-between">
           <AnimatePresence mode="wait">
             <motion.h3 key={cat.id + '-lbl'}
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.35 }}
               className="font-display font-bold"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', color: cat.color }}>
+              style={{ fontSize: 'clamp(1.6rem, 4vw, 3.2rem)', color: cat.color }}>
               {cat.label}
             </motion.h3>
           </AnimatePresence>
