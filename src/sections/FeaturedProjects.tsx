@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, memo } from 'react'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 
 // Tracks viewport width for responsive scaling
 function useWindowWidth() {
@@ -11,7 +12,6 @@ function useWindowWidth() {
   }, [])
   return width
 }
-import { motion, AnimatePresence } from 'framer-motion'
 import VideoModal from '@components/VideoModal'
 import { projects } from '@data/projects'
 import type { Project } from '@data/projects'
@@ -50,8 +50,8 @@ function getLabelY(pos: { y: number; scale: number }) {
 }
 
 // ── Volumetric 3D planet SVG ──────────────────────────────────
-// Improved: subsurface scatter, rim backlight, cloud wisps, stronger specular
-function Planet3D({ color, rim, size = 300 }: { color: string; rim: string; size?: number }) {
+// memo: prevents re-render of heavy SVG when activeIdx changes
+const Planet3D = memo(function Planet3D({ color, rim, size = 300 }: { color: string; rim: string; size?: number }) {
   const uid = `p${Math.round(size)}${color.replace(/[^a-fA-F0-9]/g, '')}`
   const c = size / 2
   const r = size * 0.43
@@ -142,7 +142,7 @@ function Planet3D({ color, rim, size = 300 }: { color: string; rim: string; size
         strokeWidth="3.5" strokeOpacity="0.55" filter={`url(#Atm${uid})`} />
     </svg>
   )
-}
+})
 
 // ── Orbital rings + sci-fi decorations ────────────────────────
 function OrbitalRings({ color }: { color: string }) {
@@ -227,26 +227,51 @@ function HUDOverlay({ color, catNum, count }: { color: string; catNum: string; c
 }
 
 // ── Single orbiting video thumbnail ──────────────────────────
+// Performance: video src is set only on first hover — not on mount.
+// This prevents 18+ simultaneous network requests at page load.
 function OrbThumb({ project, color, setRef, onPause, onClick }: {
   project: Project; color: string
   setRef: (el: HTMLDivElement | null) => void
   onPause: (v: boolean) => void
   onClick: () => void
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [ready, setReady] = useState(false)
+  const videoRef  = useRef<HTMLVideoElement>(null)
+  const loadedRef = useRef(false)
+  const [ready,   setReady]   = useState(false)
   const [hovered, setHovered] = useState(false)
+  const [errored, setErrored] = useState(false)
 
-  useEffect(() => {
+  const loadVideo = useCallback(() => {
+    if (loadedRef.current) return
+    loadedRef.current = true
     const v = videoRef.current
-    if (v && !v.src) { v.preload = 'metadata'; v.src = project.videoSrc }
+    if (!v) return
+    v.preload = 'auto'
+    v.src = project.videoSrc
+    v.load()
   }, [project.videoSrc])
 
-  const enter = () => { setHovered(true); onPause(true); videoRef.current?.play().catch(() => {}) }
-  const leave = () => { setHovered(false); onPause(false); videoRef.current?.pause() }
+  const enter = useCallback(() => {
+    setHovered(true)
+    onPause(true)
+    loadVideo()
+    videoRef.current?.play().catch(() => {})
+  }, [onPause, loadVideo])
+
+  const leave = useCallback(() => {
+    setHovered(false)
+    onPause(false)
+    videoRef.current?.pause()
+  }, [onPause])
+
+  // Also load when clicked (mobile tap)
+  const handleClick = useCallback(() => {
+    loadVideo()
+    onClick()
+  }, [loadVideo, onClick])
 
   return (
-    <div ref={setRef} onClick={onClick} onMouseEnter={enter} onMouseLeave={leave}
+    <div ref={setRef} onClick={handleClick} onMouseEnter={enter} onMouseLeave={leave}
       className="cursor-pointer absolute"
       style={{ width: THUMB_W, height: THUMB_H,
         marginLeft: -THUMB_W / 2, marginTop: -THUMB_H / 2 }}>
@@ -261,10 +286,35 @@ function OrbThumb({ project, color, setRef, onPause, onClick }: {
         transition: 'border-color 0.25s, box-shadow 0.25s, transform 0.25s',
         position: 'relative',
       }}>
+        {/* Placeholder — always visible until video ready */}
+        {!ready && !errored && (
+          <div style={{
+            position: 'absolute', inset: 0,
+            background: `linear-gradient(135deg, ${color}22 0%, #060f1c 70%)`,
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+          }}>
+            <div style={{ width: 28, height: 28, borderRadius: '50%',
+              border: `1px solid ${color}44`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <div style={{ width: 0, height: 0, marginLeft: 3,
+                borderTop: '6px solid transparent',
+                borderBottom: '6px solid transparent',
+                borderLeft: `9px solid ${color}66` }} />
+            </div>
+          </div>
+        )}
+        {/* Error fallback */}
+        {errored && (
+          <div style={{ position: 'absolute', inset: 0,
+            background: `linear-gradient(135deg, ${color}18 0%, #060f1c 80%)` }} />
+        )}
         <video ref={videoRef} playsInline muted loop
           style={{ width: '100%', height: '100%', objectFit: 'cover',
-            opacity: ready ? (hovered ? 1 : 0.82) : 0.35, transition: 'opacity 0.4s' }}
-          onLoadedMetadata={() => setReady(true)} onCanPlay={() => setReady(true)} />
+            opacity: ready ? (hovered ? 1 : 0.82) : 0, transition: 'opacity 0.5s' }}
+          onLoadedMetadata={() => setReady(true)}
+          onCanPlay={() => setReady(true)}
+          onError={() => setErrored(true)} />
+        {/* Metadata overlay on hover */}
         <div style={{
           position: 'absolute', inset: 0,
           background: 'linear-gradient(to top, rgba(2,4,10,0.92) 0%, transparent 52%)',
@@ -302,19 +352,27 @@ function OrbThumb({ project, color, setRef, onPause, onClick }: {
 
 // ── Orbital system ────────────────────────────────────────────
 // NO opacity on wrapper — keeps thumbnails in parent stacking context
-function OrbitalSystem({ cat, onOpen }: { cat: Cat; onOpen: (p: Project) => void }) {
+function OrbitalSystem({ cat, onOpen, isMobile }: {
+  cat: Cat; onOpen: (p: Project) => void; isMobile: boolean
+}) {
   const catProjects = projects.filter(p => p.category === cat.id)
   const n = catProjects.length
   const cardEls = useRef<Map<string, HTMLDivElement>>(new Map())
   const timeRef  = useRef(0)
   const pauseRef = useRef(false)
+  // Target frame interval: ~16ms (60fps) desktop, ~33ms (30fps) mobile
+  const frameMs  = isMobile ? 33 : 16
 
   useEffect(() => {
     let rafId: number
-    let last: number | null = null
+    let last = 0
     const tick = (ts: number) => {
-      if (last !== null && !pauseRef.current) timeRef.current += (ts - last) * 0.00019
+      rafId = requestAnimationFrame(tick)
+      // Throttle to target fps
+      if (ts - last < frameMs) return
+      const dt = Math.min(ts - last, 100) // cap delta to avoid jumps after tab switch
       last = ts
+      if (!pauseRef.current) timeRef.current += dt * 0.00019
       catProjects.forEach((proj, i) => {
         const angle = (2 * Math.PI * i / n) + timeRef.current
         const x     = Math.cos(angle) * ORBIT_RX
@@ -328,12 +386,11 @@ function OrbitalSystem({ cat, onOpen }: { cat: Cat; onOpen: (p: Project) => void
           el.style.zIndex    = String(Math.round(depth * 10 + 15))
         }
       })
-      rafId = requestAnimationFrame(tick)
     }
     rafId = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(rafId)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [frameMs])
 
   return (
     <div className="absolute inset-0 flex items-center justify-center">
@@ -417,7 +474,8 @@ function MobileCard({ project, color, onOpen }: {
 export default function FeaturedProjects() {
   const [[activeIdx], setState] = useState<[number, number]>([0, 0])
   const [activeProject, setActiveProject] = useState<Project | null>(null)
-  const windowWidth = useWindowWidth()
+  const windowWidth  = useWindowWidth()
+  const reducedMotion = useReducedMotion()
 
   const cat = CATS[activeIdx]
   const catProjects = projects.filter(p => p.category === cat.id)
@@ -473,16 +531,25 @@ export default function FeaturedProjects() {
               : () => setState(([cur]) => [i, i > cur ? 1 : -1] as [number, number])}
             title={isActive ? undefined : c.label}
           >
+            {/* Glow: breathing only on active planet, static on background (perf) */}
             <motion.div style={{
               position: 'absolute', inset: '-46%', borderRadius: '50%',
               background: `radial-gradient(circle, ${c.color}17 0%, transparent 66%)`,
               pointerEvents: 'none',
+              opacity: isActive ? undefined : 0.45,
             }}
-              animate={isActive ? { scale: [1, 1.16, 1], opacity: [0.55, 1, 0.55] } : { scale: 1, opacity: 0.45 }}
-              transition={isActive ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' } : {}} />
+              animate={isActive && !reducedMotion
+                ? { scale: [1, 1.16, 1], opacity: [0.55, 1, 0.55] }
+                : undefined}
+              transition={isActive && !reducedMotion
+                ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' }
+                : undefined} />
+            {/* Rotation: only active planet, disabled on reduced-motion */}
             <motion.div
-              animate={isActive ? { rotate: 360 } : { rotate: 0 }}
-              transition={isActive ? { duration: 100, repeat: Infinity, ease: 'linear' } : {}}>
+              animate={isActive && !reducedMotion ? { rotate: 360 } : undefined}
+              transition={isActive && !reducedMotion
+                ? { duration: 100, repeat: Infinity, ease: 'linear' }
+                : undefined}>
               <Planet3D color={c.color} rim={c.rim} size={PLANET_SIZE} />
             </motion.div>
           </motion.div>
@@ -513,7 +580,7 @@ export default function FeaturedProjects() {
       })}
 
       {/* Orbiting thumbnails */}
-      <OrbitalSystem key={cat.id + '-orb'} cat={cat} onOpen={setActiveProject} />
+      <OrbitalSystem key={cat.id + '-orb'} cat={cat} onOpen={setActiveProject} isMobile={isMobile} />
 
       {/* HUD */}
       <AnimatePresence mode="wait">

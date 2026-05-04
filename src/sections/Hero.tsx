@@ -135,8 +135,8 @@ export default function Hero() {
         }}
       />
 
-      {/* Wire clusters */}
-      <div className="absolute inset-0 z-[4] pointer-events-none">
+      {/* Wire clusters — desktop only (2 RAF loops + heavy SVG filters) */}
+      <div className="absolute inset-0 z-[4] pointer-events-none hidden md:block">
         <WireCluster side="bottomLeft" className="bottom-0 left-0" />
         <WireCluster side="topRight"   className="top-0 right-0" />
       </div>
