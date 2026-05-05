@@ -682,14 +682,13 @@ export default function FeaturedProjects() {
               transition={isActive && !reducedMotion
                 ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' }
                 : undefined} />
-            {/* Rotation: only active planet, disabled on reduced-motion */}
-            <motion.div
-              animate={isActive && !reducedMotion ? { rotate: 360 } : undefined}
-              transition={isActive && !reducedMotion
-                ? { duration: 100, repeat: Infinity, ease: 'linear' }
-                : undefined}>
+            {/* Rotation via CSS — runs on compositor thread, no JS cost */}
+            <div style={{
+              animation: isActive && !reducedMotion
+                ? 'planet-spin 100s linear infinite' : 'none',
+            }}>
               <Planet3D color={c.color} rim={c.rim} size={PLANET_SIZE} simple={!isActive} />
-            </motion.div>
+            </div>
           </motion.div>
         )
       })}

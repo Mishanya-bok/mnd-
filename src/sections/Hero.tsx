@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState } from 'react'
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion'
+import { motion, useMotionValue, useSpring } from 'framer-motion'
 import { stagger, fadeUp, maskReveal } from '@lib/motion'
-import WireCluster from '@components/WireCluster'
 
 const categories = ['AI Ролики', 'Фэшн-видео', 'Брендовый контент', 'Кино-нарративы']
 
@@ -64,14 +63,6 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const [showScroll, setShowScroll] = useState(true)
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end start'],
-  })
-
-  const contentY   = useTransform(scrollYProgress, [0, 1], ['0%', '-18%'])
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
-  const overlayOp  = useTransform(scrollYProgress, [0, 1], [0.55, 0.82])
 
   useEffect(() => {
     const t = setTimeout(() => setShowScroll(false), 3500)
@@ -88,13 +79,13 @@ export default function Hero() {
       style={{ backgroundColor: '#02040A' }}
     >
       {/* Background video */}
-      <motion.div className="absolute inset-0" style={{ scale: videoScale }}>
+      <div className="absolute inset-0">
         <video
           className="absolute inset-0 w-full h-full object-contain md:object-cover object-center"
           src="/videos/main screen2.webm"
           autoPlay muted loop playsInline preload="auto"
         />
-      </motion.div>
+      </div>
 
       {/* Scanlines HUD */}
       <div
@@ -127,24 +118,17 @@ export default function Hero() {
       />
 
       {/* Dark gradient overlay */}
-      <motion.div
+      <div
         className="absolute inset-0 z-[3]"
         style={{
-          opacity: overlayOp,
+          opacity: 0.65,
           background: 'linear-gradient(to bottom, rgba(2,4,10,0.25) 0%, rgba(2,4,10,0.6) 60%, rgba(2,4,10,1) 100%)',
         }}
       />
 
-      {/* Wire clusters — desktop only (2 RAF loops + heavy SVG filters) */}
-      <div className="absolute inset-0 z-[4] pointer-events-none hidden md:block">
-        <WireCluster side="bottomLeft" className="bottom-0 left-0" />
-        <WireCluster side="topRight"   className="top-0 right-0" />
-      </div>
-
       {/* Content */}
       <motion.div
         className="relative z-10 container-x w-full flex flex-col items-center text-center pb-8 md:pb-0"
-        style={{ y: contentY }}
       >
         <motion.div
           variants={stagger}
