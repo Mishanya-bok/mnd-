@@ -33,7 +33,7 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
     <AnimatePresence>
       {project && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-8"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-3 md:p-8"
           variants={modalBackdrop}
           initial="hidden"
           animate="visible"
@@ -44,23 +44,30 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
 
           {/* Panel */}
           <motion.div
-            className="relative w-full max-w-5xl z-10"
+            className="relative w-full max-w-5xl z-10 max-h-[92svh] overflow-y-auto rounded-xl"
             variants={modalPanel}
             initial="hidden"
             animate="visible"
             exit="exit"
           >
-            {/* Close */}
+            {/* Close — always inside panel, top-right corner overlay */}
             <button
               onClick={onClose}
-              className="absolute -top-12 right-0 text-[var(--color-muted)] hover:text-[var(--color-white)] transition-colors duration-200 flex items-center gap-2"
+              className="sticky top-2 float-right mr-2 z-20 flex items-center gap-1.5 text-white/70 hover:text-white transition-colors duration-200"
+              style={{
+                background: 'rgba(2,4,10,0.75)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.12)',
+                borderRadius: 6,
+                padding: '5px 10px',
+              }}
               aria-label="Закрыть"
             >
-              <span className="label">Закрыть</span>
-              <X size={16} strokeWidth={1.5} />
+              <span className="label text-xs">Закрыть</span>
+              <X size={14} strokeWidth={1.5} />
             </button>
 
-            {/* Video — full size, not cropped */}
+            {/* Video */}
             <div className="relative w-full bg-black overflow-hidden">
               <video
                 ref={videoRef}
@@ -68,7 +75,7 @@ export default function VideoModal({ project, onClose }: VideoModalProps) {
                 controls
                 autoPlay
                 playsInline
-                className="w-full h-auto max-h-[72vh] object-contain"
+                className="w-full h-auto max-h-[72svh] object-contain"
               />
             </div>
 
