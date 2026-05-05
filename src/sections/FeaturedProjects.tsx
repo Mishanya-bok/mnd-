@@ -51,7 +51,8 @@ function getLabelY(pos: { y: number; scale: number }) {
 
 // ── Volumetric 3D planet SVG ──────────────────────────────────
 // memo: prevents re-render of heavy SVG when activeIdx changes
-const Planet3D = memo(function Planet3D({ color, rim, size = 300 }: { color: string; rim: string; size?: number }) {
+// simple=true skips all feGaussianBlur filters — used for background planets to save GPU
+const Planet3D = memo(function Planet3D({ color, rim, size = 300, simple = false }: { color: string; rim: string; size?: number; simple?: boolean }) {
   const uid = `p${Math.round(size)}${color.replace(/[^a-fA-F0-9]/g, '')}`
   const c = size / 2
   const r = size * 0.43
@@ -93,19 +94,19 @@ const Planet3D = memo(function Planet3D({ color, rim, size = 300 }: { color: str
           <stop offset="100%" stopColor="transparent" stopOpacity="0" />
         </radialGradient>
         <clipPath id={`C${uid}`}><circle cx={c} cy={c} r={r} /></clipPath>
-        <filter id={`Atm${uid}`} x="-80%" y="-80%" width="260%" height="260%">
+        {!simple && <filter id={`Atm${uid}`} x="-80%" y="-80%" width="260%" height="260%">
           <feGaussianBlur stdDeviation={size * 0.055} />
-        </filter>
-        <filter id={`Glo${uid}`} x="-120%" y="-120%" width="340%" height="340%">
+        </filter>}
+        {!simple && <filter id={`Glo${uid}`} x="-120%" y="-120%" width="340%" height="340%">
           <feGaussianBlur stdDeviation={size * 0.13} />
-        </filter>
+        </filter>}
       </defs>
 
-      {/* Deep outer corona */}
-      <circle cx={c} cy={c} r={r * 1.72} fill={color} fillOpacity="0.024" filter={`url(#Glo${uid})`} />
+      {/* Deep outer corona — skip on background planets */}
+      {!simple && <circle cx={c} cy={c} r={r * 1.72} fill={color} fillOpacity="0.024" filter={`url(#Glo${uid})`} />}
       {/* Atmospheric rim glow */}
-      <circle cx={c} cy={c} r={r * 1.11} fill="none" stroke={color}
-        strokeWidth={r * 0.17} strokeOpacity="0.36" filter={`url(#Atm${uid})`} />
+      {!simple && <circle cx={c} cy={c} r={r * 1.11} fill="none" stroke={color}
+        strokeWidth={r * 0.17} strokeOpacity="0.36" filter={`url(#Atm${uid})`} />}
       {/* Planet sphere */}
       <circle cx={c} cy={c} r={r} fill={`url(#B${uid})`} />
 
@@ -132,14 +133,16 @@ const Planet3D = memo(function Planet3D({ color, rim, size = 300 }: { color: str
           transform={`rotate(-7, ${c}, ${c})`} />
       </g>
 
-      {/* Volumetric layers */}
-      <circle cx={c} cy={c} r={r} fill={`url(#SS${uid})`} />
+      {/* Volumetric layers — subsurface/rim skipped on background planets */}
+      {!simple && <circle cx={c} cy={c} r={r} fill={`url(#SS${uid})`} />}
       <circle cx={c} cy={c} r={r} fill={`url(#L${uid})`} />
       <circle cx={c} cy={c} r={r} fill={`url(#S${uid})`} />
-      <circle cx={c} cy={c} r={r} fill={`url(#R${uid})`} />
-      {/* Crisp atmospheric edge */}
-      <circle cx={c} cy={c} r={r} fill="none" stroke={color}
-        strokeWidth="3.5" strokeOpacity="0.55" filter={`url(#Atm${uid})`} />
+      {!simple && <circle cx={c} cy={c} r={r} fill={`url(#R${uid})`} />}
+      {/* Crisp atmospheric edge — filter only on active planet */}
+      {!simple && <circle cx={c} cy={c} r={r} fill="none" stroke={color}
+        strokeWidth="3.5" strokeOpacity="0.55" filter={`url(#Atm${uid})`} />}
+      {simple && <circle cx={c} cy={c} r={r} fill="none" stroke={color}
+        strokeWidth="2" strokeOpacity="0.35" />}
     </svg>
   )
 })
@@ -685,7 +688,7 @@ export default function FeaturedProjects() {
               transition={isActive && !reducedMotion
                 ? { duration: 100, repeat: Infinity, ease: 'linear' }
                 : undefined}>
-              <Planet3D color={c.color} rim={c.rim} size={PLANET_SIZE} />
+              <Planet3D color={c.color} rim={c.rim} size={PLANET_SIZE} simple={!isActive} />
             </motion.div>
           </motion.div>
         )

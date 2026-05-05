@@ -18,9 +18,13 @@ export default function Cursor() {
   const ringBorder = useSpring(0.5, { stiffness: 300, damping: 24 })
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => { mx.set(e.clientX); my.set(e.clientY) }
+    let rafId = 0
+    const onMove = (e: MouseEvent) => {
+      cancelAnimationFrame(rafId)
+      rafId = requestAnimationFrame(() => { mx.set(e.clientX); my.set(e.clientY) })
+    }
     window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
+    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(rafId) }
   }, [mx, my])
 
   useEffect(() => {
@@ -60,6 +64,7 @@ export default function Cursor() {
           width: 4, height: 4,
           borderRadius: '50%',
           backgroundColor: '#fff',
+          willChange: 'transform',
         }}
       />
 
@@ -74,6 +79,7 @@ export default function Cursor() {
           borderRadius: '50%',
           border: '1px solid rgba(0,209,255,0.7)',
           boxShadow: '0 0 8px rgba(0,209,255,0.2)',
+          willChange: 'transform',
         }}
       />
     </>
