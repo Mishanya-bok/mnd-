@@ -1,87 +1,79 @@
-import { useEffect } from 'react'
-import { motion, useMotionValue, useSpring } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 
+// Pure DOM cursor — no framer-motion springs, single shared RAF loop with lerp
 export default function Cursor() {
-  const mx = useMotionValue(-200)
-  const my = useMotionValue(-200)
-  // All hooks run unconditionally; we skip rendering on touch devices below
-
-  // Dot: near-instant
-  const dotX = useSpring(mx, { stiffness: 2000, damping: 120 })
-  const dotY = useSpring(my, { stiffness: 2000, damping: 120 })
-
-  // Ring: lags behind
-  const ringX   = useSpring(mx, { stiffness: 160, damping: 18 })
-  const ringY   = useSpring(my, { stiffness: 160, damping: 18 })
-  const ringSize   = useSpring(28, { stiffness: 380, damping: 26 })
-  const ringOp     = useSpring(0.45, { stiffness: 300, damping: 24 })
-  const ringBorder = useSpring(0.5, { stiffness: 300, damping: 24 })
+  const dotRef  = useRef<HTMLDivElement>(null)
+  const ringRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (navigator.maxTouchPoints > 0) return
+
     let rafId = 0
-    const onMove = (e: MouseEvent) => {
-      cancelAnimationFrame(rafId)
-      rafId = requestAnimationFrame(() => { mx.set(e.clientX); my.set(e.clientY) })
-    }
-    window.addEventListener('mousemove', onMove)
-    return () => { window.removeEventListener('mousemove', onMove); cancelAnimationFrame(rafId) }
-  }, [mx, my])
+    let mx = -200, my = -200
+    let rx = -200, ry = -200
+    let rSize = 28, rTargetSize = 28
 
-  useEffect(() => {
+    const onMove = (e: MouseEvent) => { mx = e.clientX; my = e.clientY }
+
     const onOver = (e: MouseEvent) => {
-      if ((e.target as Element).closest('a, button, .group, [data-cursor]')) {
-        ringSize.set(52)
-        ringOp.set(0.9)
-        ringBorder.set(1)
-      }
+      if ((e.target as Element).closest('a, button, .group, [data-cursor]')) rTargetSize = 52
     }
     const onOut = (e: MouseEvent) => {
-      if ((e.target as Element).closest('a, button, .group, [data-cursor]')) {
-        ringSize.set(28)
-        ringOp.set(0.45)
-        ringBorder.set(0.5)
+      if ((e.target as Element).closest('a, button, .group, [data-cursor]')) rTargetSize = 28
+    }
+
+    const tick = () => {
+      rafId = requestAnimationFrame(tick)
+      rx += (mx - rx) * 0.13
+      ry += (my - ry) * 0.13
+      rSize += (rTargetSize - rSize) * 0.18
+
+      const dot  = dotRef.current
+      const ring = ringRef.current
+      if (dot)  dot.style.transform  = `translate(${mx}px, ${my}px)`
+      if (ring) {
+        ring.style.transform = `translate(${rx}px, ${ry}px)`
+        ring.style.width     = `${rSize}px`
+        ring.style.height    = `${rSize}px`
       }
     }
-    document.addEventListener('mouseover', onOver)
-    document.addEventListener('mouseout', onOut)
-    return () => {
-      document.removeEventListener('mouseover', onOver)
-      document.removeEventListener('mouseout', onOut)
-    }
-  }, [ringSize, ringOp, ringBorder])
 
-  // Touch devices have no mouse pointer — skip the cursor entirely
+    window.addEventListener('mousemove', onMove)
+    document.addEventListener('mouseover', onOver)
+    document.addEventListener('mouseout',  onOut)
+    rafId = requestAnimationFrame(tick)
+
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      document.removeEventListener('mouseover', onOver)
+      document.removeEventListener('mouseout',  onOut)
+      cancelAnimationFrame(rafId)
+    }
+  }, [])
+
   if (typeof navigator !== 'undefined' && navigator.maxTouchPoints > 0) return null
 
   return (
     <>
-      {/* Center dot */}
-      <motion.div
+      <div ref={dotRef}
         className="fixed top-0 left-0 pointer-events-none z-[9999]"
         style={{
-          x: dotX, y: dotY,
-          translateX: '-50%', translateY: '-50%',
-          width: 4, height: 4,
-          borderRadius: '50%',
+          width: 4, height: 4, borderRadius: '50%',
           backgroundColor: '#fff',
+          transform: 'translate(-200px, -200px)',
+          marginLeft: -2, marginTop: -2,
           willChange: 'transform',
-        }}
-      />
-
-      {/* Ring */}
-      <motion.div
+        }} />
+      <div ref={ringRef}
         className="fixed top-0 left-0 pointer-events-none z-[9998]"
         style={{
-          x: ringX, y: ringY,
-          translateX: '-50%', translateY: '-50%',
-          width: ringSize, height: ringSize,
-          opacity: ringOp,
-          borderRadius: '50%',
+          width: 28, height: 28, borderRadius: '50%',
           border: '1px solid rgba(0,209,255,0.7)',
           boxShadow: '0 0 8px rgba(0,209,255,0.2)',
+          transform: 'translate(-200px, -200px)',
+          marginLeft: -14, marginTop: -14,
           willChange: 'transform',
-        }}
-      />
+        }} />
     </>
   )
 }

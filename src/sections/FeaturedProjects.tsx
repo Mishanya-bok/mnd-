@@ -94,19 +94,14 @@ const Planet3D = memo(function Planet3D({ color, rim, size = 300, simple = false
           <stop offset="100%" stopColor="transparent" stopOpacity="0" />
         </radialGradient>
         <clipPath id={`C${uid}`}><circle cx={c} cy={c} r={r} /></clipPath>
-        {!simple && <filter id={`Atm${uid}`} x="-80%" y="-80%" width="260%" height="260%">
-          <feGaussianBlur stdDeviation={size * 0.055} />
-        </filter>}
-        {!simple && <filter id={`Glo${uid}`} x="-120%" y="-120%" width="340%" height="340%">
-          <feGaussianBlur stdDeviation={size * 0.13} />
+        {!simple && <filter id={`Atm${uid}`} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation={size * 0.035} />
         </filter>}
       </defs>
 
-      {/* Deep outer corona — skip on background planets */}
-      {!simple && <circle cx={c} cy={c} r={r * 1.72} fill={color} fillOpacity="0.024" filter={`url(#Glo${uid})`} />}
-      {/* Atmospheric rim glow */}
-      {!simple && <circle cx={c} cy={c} r={r * 1.11} fill="none" stroke={color}
-        strokeWidth={r * 0.17} strokeOpacity="0.36" filter={`url(#Atm${uid})`} />}
+      {/* Atmospheric rim glow — lighter filter, no deep corona */}
+      {!simple && <circle cx={c} cy={c} r={r * 1.08} fill="none" stroke={color}
+        strokeWidth={r * 0.14} strokeOpacity="0.30" filter={`url(#Atm${uid})`} />}
       {/* Planet sphere */}
       <circle cx={c} cy={c} r={r} fill={`url(#B${uid})`} />
 
