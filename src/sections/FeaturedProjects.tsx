@@ -272,7 +272,8 @@ function OrbThumb({ project, color, setRef, onPause, onClick }: {
     <div ref={setRef} onClick={handleClick} onMouseEnter={enter} onMouseLeave={leave}
       className="cursor-pointer absolute"
       style={{ width: THUMB_W, height: THUMB_H,
-        marginLeft: -THUMB_W / 2, marginTop: -THUMB_H / 2 }}>
+        marginLeft: -THUMB_W / 2, marginTop: -THUMB_H / 2,
+        willChange: 'transform, opacity' }}>
       <div style={{
         width: '100%', height: '100%', borderRadius: 6, overflow: 'hidden',
         border: `1px solid ${hovered ? color + 'cc' : 'rgba(255,255,255,0.10)'}`,
@@ -366,9 +367,8 @@ function OrbitalSystem({ cat, onOpen, isMobile }: {
     let last = 0
     const tick = (ts: number) => {
       rafId = requestAnimationFrame(tick)
-      // Throttle to target fps
       if (ts - last < frameMs) return
-      const dt = Math.min(ts - last, 100) // cap delta to avoid jumps after tab switch
+      const dt = Math.min(ts - last, 100)
       last = ts
       if (!pauseRef.current) timeRef.current += dt * 0.00019
       catProjects.forEach((proj, i) => {
@@ -378,10 +378,13 @@ function OrbitalSystem({ cat, onOpen, isMobile }: {
         const depth = Math.sin(angle)
         const el    = cardEls.current.get(proj.id)
         if (el) {
-          const sc = 0.70 + (depth + 1) * 0.152
-          el.style.transform = `translate(${x}px, ${y}px) scale(${+sc.toFixed(3)})`
-          el.style.opacity   = String(+(0.42 + (depth + 1) * 0.29).toFixed(2))
-          el.style.zIndex    = String(Math.round(depth * 10 + 15))
+          const sc = +(0.70 + (depth + 1) * 0.152).toFixed(3)
+          const op = +(0.42 + (depth + 1) * 0.29).toFixed(2)
+          const zi = String(Math.round(depth * 10 + 15))
+          // transform every frame; opacity/zIndex only when value changes (avoids stacking recalc)
+          el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px) scale(${sc})`
+          if (el.dataset.op !== String(op)) { el.style.opacity = String(op); el.dataset.op = String(op) }
+          if (el.dataset.zi !== zi)         { el.style.zIndex  = zi;         el.dataset.zi = zi }
         }
       })
     }
@@ -664,19 +667,15 @@ export default function FeaturedProjects() {
               : () => setState(([cur]) => [i, i > cur ? 1 : -1] as [number, number])}
             title={isActive ? undefined : c.label}
           >
-            {/* Glow: breathing only on active planet, static on background (perf) */}
-            <motion.div style={{
+            {/* Glow: CSS animation on active planet, static opacity on background */}
+            <div style={{
               position: 'absolute', inset: '-46%', borderRadius: '50%',
               background: `radial-gradient(circle, ${c.color}17 0%, transparent 66%)`,
               pointerEvents: 'none',
-              opacity: isActive ? undefined : 0.45,
-            }}
-              animate={isActive && !reducedMotion
-                ? { scale: [1, 1.16, 1], opacity: [0.55, 1, 0.55] }
-                : undefined}
-              transition={isActive && !reducedMotion
-                ? { duration: 5.5, repeat: Infinity, ease: 'easeInOut' }
-                : undefined} />
+              opacity: isActive ? 0.55 : 0.45,
+              animation: isActive && !reducedMotion
+                ? 'planet-breathe 5.5s ease-in-out infinite' : 'none',
+            }} />
             {/* Rotation via CSS — runs on compositor thread, no JS cost */}
             <div style={{
               animation: isActive && !reducedMotion
