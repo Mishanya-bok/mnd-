@@ -57,7 +57,5 @@ export const contacts = {
 }
 
 export const socials = [
-  { label: 'Instagram', href: '#' },
-  { label: 'Telegram',  href: 'https://t.me/mishanya_bok' },
-  { label: 'Behance',   href: '#' },
+  { label: 'Telegram', href: 'https://t.me/mishanya_bok' },
 ]
