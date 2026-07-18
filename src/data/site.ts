@@ -1,15 +1,17 @@
 import { asset } from '@lib/asset'
 
-/** Brands shown in the animated "trusted by" ticker.
- *  `color` tints the wordmark toward each brand's identity.
+/** Brands shown in the minimal monochrome "trusted by" ticker.
+ *  Each wordmark gets a distinct typographic treatment to read like a logo.
  *  Drop real SVG logos into /public/brands and swap `text` for <img> later. */
-export const brands = [
-  { text: 'P&G', color: '#4aa3df', weight: 800, style: 'italic' as const },
-  { text: 'РОЛЬФ', color: '#ffffff', weight: 800, style: 'normal' as const },
-  { text: 'Fresh Auto', color: '#7ed957', weight: 700, style: 'normal' as const },
-  { text: 'Positive Technologies', color: '#ff2d6f', weight: 700, style: 'normal' as const },
-  { text: 'Яндекс', color: '#ffcc33', weight: 700, style: 'normal' as const },
-  { text: 'Т-Банк', color: '#ffdd2d', weight: 800, style: 'normal' as const },
+import type { CSSProperties } from 'react'
+
+export const brands: { text: string; font: CSSProperties }[] = [
+  { text: 'P&G',                   font: { fontFamily: 'Georgia, serif', fontWeight: 700, fontStyle: 'italic', letterSpacing: '-0.02em' } },
+  { text: 'РОЛЬФ',                 font: { fontFamily: '"Arial Narrow", Inter, sans-serif', fontWeight: 800, letterSpacing: '0.14em' } },
+  { text: 'Fresh Auto',            font: { fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: '-0.04em' } },
+  { text: 'Positive Technologies', font: { fontFamily: '"Courier New", monospace', fontWeight: 700, letterSpacing: '-0.03em' } },
+  { text: 'Яндекс',                font: { fontFamily: 'Inter, sans-serif', fontWeight: 700, letterSpacing: '-0.02em' } },
+  { text: 'Т—Банк',               font: { fontFamily: 'Georgia, serif', fontWeight: 700, letterSpacing: '0.01em' } },
 ]
 
 export const offerings = [

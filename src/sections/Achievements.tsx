@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '@lib/motion'
-import { achievement, numbers, offerings, socialProof } from '@data/site'
+import { achievement, offerings, socialProof } from '@data/site'
 
 export default function Achievements() {
   return (
@@ -29,21 +29,6 @@ export default function Achievements() {
           <motion.p variants={fadeUp} className="u-lg text-[color:var(--color-bone)]/75 leading-snug lg:pt-2">
             {achievement.body}
           </motion.p>
-        </motion.div>
-
-        {/* Numbers */}
-        <motion.div
-          variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}
-          className="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20 border-t border-[color:var(--color-line)] pt-10"
-        >
-          {numbers.map((n) => (
-            <motion.div key={n.label} variants={fadeUp}>
-              <div className="u-mega text-[color:var(--color-crimson)] leading-[0.85]" style={{ fontSize: 'clamp(2.6rem,6vw,4.5rem)' }}>
-                {n.value}
-              </div>
-              <p className="u-label-sm text-[color:var(--color-bone)]/55 mt-3">{n.label}</p>
-            </motion.div>
-          ))}
         </motion.div>
 
         {/* Social proof gallery */}

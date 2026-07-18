@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '@lib/motion'
 import { contacts } from '@data/site'
@@ -7,93 +6,53 @@ const PEOPLE = [contacts.sofia, contacts.mikhail]
 const tg = (h: string) => `https://t.me/${h.replace('@', '')}`
 
 export default function Contact() {
-  const [sent, setSent] = useState(false)
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setSent(true)
-    window.open(tg(contacts.mikhail.telegram), '_blank', 'noopener')
-  }
-
   return (
-    <section id="contact" className="relative py-[var(--section-y)]">
-      <div className="container-x">
-        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={viewport} className="max-w-3xl">
+    <section id="contact" className="relative min-h-[100svh] flex flex-col justify-center py-[var(--section-y)]">
+      <div className="container-x w-full">
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={viewport} className="max-w-3xl mb-12">
           <motion.p variants={fadeUp} className="u-label text-[color:var(--color-bone)]/60 mb-5">Контакты</motion.p>
           <motion.h2 variants={fadeUp} className="u-hero">Давайте что-нибудь создадим.</motion.h2>
           <motion.p variants={fadeUp} className="u-lg text-[color:var(--color-bone)]/75 mt-6 max-w-md">
-            Расскажите о проекте — ответим в течение 24 часов.
+            Напишите напрямую — ответим в течение 24 часов.
           </motion.p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 mt-14">
-          {/* contact cards */}
-          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={viewport} className="grid sm:grid-cols-2 gap-5 content-start">
-            {PEOPLE.map((p) => (
-              <motion.a
-                key={p.telegram}
-                variants={fadeUp}
-                href={tg(p.telegram)}
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ y: -6 }}
-                transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                className="group relative overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-ink)]/55 backdrop-blur p-6 flex flex-col justify-between min-h-[190px]"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="u-label-sm text-[color:var(--color-bone)]/50">{p.role}</span>
-                  <span className="grid place-items-center w-9 h-9 rounded-full bg-[color:var(--color-bone)]/10 group-hover:bg-[color:var(--color-bone)] group-hover:text-[color:var(--color-ink)] transition-colors">
-                    <TgIcon />
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-[clamp(1.8rem,3.2vw,2.4rem)] font-extrabold tracking-tight leading-none">{p.name}</h3>
-                  <p className="mt-3 font-medium text-[color:var(--color-bone)]/80 group-hover:text-[color:var(--color-bone)] transition-colors">{p.telegram}</p>
-                </div>
-                <span className="pointer-events-none absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-[color:var(--color-crimson)]/25 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              </motion.a>
-            ))}
-          </motion.div>
-
-          {/* form */}
-          <motion.form
-            onSubmit={onSubmit}
-            variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}
-            className="flex flex-col gap-8"
-          >
-            {[
-              { name: 'name', label: 'Имя', ph: 'Ваше имя' },
-              { name: 'contact', label: 'Telegram или почта', ph: '@ник или email' },
-            ].map((f) => (
-              <motion.label key={f.name} variants={fadeUp} className="block">
-                <span className="u-label-sm text-[color:var(--color-bone)]/55">{f.label}</span>
-                <input
-                  required
-                  type="text"
-                  name={f.name}
-                  placeholder={f.ph}
-                  className="w-full mt-3 bg-transparent border-b border-[color:var(--color-line)] pb-3 text-[color:var(--color-bone)] placeholder:text-[color:var(--color-bone)]/35 focus:border-[color:var(--color-bone)] outline-none transition-colors"
-                />
-              </motion.label>
-            ))}
-            <motion.label variants={fadeUp} className="block">
-              <span className="u-label-sm text-[color:var(--color-bone)]/55">О проекте</span>
-              <textarea
-                required
-                name="brief"
-                rows={4}
-                placeholder="Пара строк о том, что хотите сделать…"
-                className="w-full mt-3 bg-transparent border-b border-[color:var(--color-line)] pb-3 text-[color:var(--color-bone)] placeholder:text-[color:var(--color-bone)]/35 focus:border-[color:var(--color-bone)] outline-none transition-colors resize-none"
-              />
-            </motion.label>
-            <motion.button
+        <motion.div
+          variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}
+          className="grid md:grid-cols-2 gap-5 lg:gap-6"
+        >
+          {PEOPLE.map((p) => (
+            <motion.a
+              key={p.telegram}
               variants={fadeUp}
-              type="submit"
-              className="w-full bg-[color:var(--color-bone)] text-[color:var(--color-ink)] u-label py-4 rounded-full hover:bg-white transition-colors"
+              href={tg(p.telegram)}
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ y: -8 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="group relative overflow-hidden rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-ink)]/55 backdrop-blur p-8 lg:p-10 flex flex-col justify-between min-h-[340px] lg:min-h-[440px]"
             >
-              {sent ? 'Открываю Telegram…' : 'Отправить'}
-            </motion.button>
-          </motion.form>
-        </div>
+              <div className="flex items-start justify-between">
+                <span className="u-label-sm text-[color:var(--color-bone)]/55">{p.role}</span>
+                <span className="grid place-items-center w-12 h-12 rounded-full bg-[color:var(--color-bone)]/10 group-hover:bg-[color:var(--color-bone)] group-hover:text-[color:var(--color-ink)] transition-colors">
+                  <TgIcon />
+                </span>
+              </div>
+
+              <div>
+                <h3 className="u-display leading-[0.9]">{p.name}</h3>
+                <p className="mt-4 text-[1.15rem] font-medium text-[color:var(--color-bone)]/80 group-hover:text-[color:var(--color-bone)] transition-colors">
+                  {p.telegram}
+                </p>
+                <span className="mt-6 inline-flex items-center gap-2 u-label-sm text-[color:var(--color-bone)]/50 group-hover:text-[color:var(--color-bone)] transition-colors">
+                  Написать в Telegram <span aria-hidden>→</span>
+                </span>
+              </div>
+
+              <span className="pointer-events-none absolute -right-10 -bottom-10 w-48 h-48 rounded-full bg-[color:var(--color-crimson)]/30 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            </motion.a>
+          ))}
+        </motion.div>
       </div>
     </section>
   )
@@ -101,7 +60,7 @@ export default function Contact() {
 
 function TgIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
       <path d="M21.9 4.3 18.9 19c-.2 1-.8 1.2-1.6.75l-4.5-3.3-2.2 2.1c-.24.24-.44.44-.9.44l.32-4.6L18.7 6.2c.36-.32-.08-.5-.56-.18L7.9 12.5l-4.5-1.4c-.98-.3-1-1 .2-1.45l17.6-6.8c.8-.3 1.5.2 1.24 1.45Z" />
     </svg>
   )

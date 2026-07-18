@@ -1,14 +1,9 @@
 import { motion } from 'framer-motion'
-import { maskReveal, fadeUp, stagger } from '@lib/motion'
+import { maskReveal } from '@lib/motion'
 import { asset } from '@lib/asset'
 import Marquee from '@components/Marquee'
 
 const HEAD = ['Студия', 'по созданию', 'ИИ-контента.']
-const STATS = [
-  { v: '50+', l: 'Проектов' },
-  { v: '2', l: 'Создателя, одно видение' },
-  { v: 'ИИ', l: 'Сертифицированный подход' },
-]
 
 export default function Hero() {
   return (
@@ -80,20 +75,6 @@ export default function Hero() {
           </a>
           <span className="u-label-sm text-[color:var(--color-bone)]/60">ИИ + Продакшн</span>
         </motion.div>
-
-        <motion.dl
-          className="mt-12 grid grid-cols-3 gap-6 max-w-xl"
-          variants={stagger}
-          initial="hidden"
-          animate="visible"
-        >
-          {STATS.map((s) => (
-            <motion.div key={s.l} variants={fadeUp} className="border-t border-[color:var(--color-line)] pt-3">
-              <dt className="u-display leading-none">{s.v}</dt>
-              <dd className="u-label-sm text-[color:var(--color-bone)]/60 mt-2">{s.l}</dd>
-            </motion.div>
-          ))}
-        </motion.dl>
       </div>
 
       {/* trusted-by ticker pinned to the bottom of the hero */}

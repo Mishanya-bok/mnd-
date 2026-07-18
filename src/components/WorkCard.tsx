@@ -10,15 +10,14 @@ interface Props {
   active: boolean
   muted: boolean
   spacing: number
-  angle: number
-  depth: number
-  long: number
+  cardW: number
+  cardH: number
   onToggleMute: () => void
   onOpen: () => void
 }
 
 export default function WorkCard({
-  project, index, count, pos, active, muted, spacing, angle, depth, long, onToggleMute, onOpen,
+  project, index, count, pos, active, muted, spacing, cardW, cardH, onToggleMute, onOpen,
 }: Props) {
   // wrapped delta → cards recycle for an infinite loop
   const delta = useTransform(pos, (p) => {
@@ -27,17 +26,14 @@ export default function WorkCard({
     return d
   })
   const x = useTransform(delta, (d) => d * spacing)
-  const rotateY = useTransform(delta, (d) => Math.max(-52, Math.min(52, d * -angle)))
-  const z = useTransform(delta, (d) => -Math.min(Math.abs(d), 3.2) * depth)
+  const rotateY = useTransform(delta, (d) => Math.max(-44, Math.min(44, d * -17)))
+  const z = useTransform(delta, (d) => -Math.min(Math.abs(d), 3) * 90)
+  const scale = useTransform(delta, (d) => Math.max(0.62, 1 - Math.abs(d) * 0.12))
   const opacity = useTransform(delta, (d) => {
     const a = Math.abs(d)
-    return a > 3.4 ? 0 : a > 2.6 ? 0.35 : 1
+    return a > 3.4 ? 0 : a > 2.6 ? 0.4 : 1
   })
   const zIndex = useTransform(delta, (d) => 100 - Math.round(Math.abs(d) * 10))
-
-  const isPortrait = project.aspect === '9:16'
-  const w = isPortrait ? long * (9 / 16) : long
-  const h = isPortrait ? long : long * (9 / 16)
 
   const videoRef = useRef<HTMLVideoElement>(null)
   useEffect(() => {
@@ -51,20 +47,19 @@ export default function WorkCard({
     <motion.div
       className="absolute left-1/2 top-1/2 will-change-transform"
       style={{
-        x, rotateY, z, opacity, zIndex,
-        width: w, height: h,
-        marginLeft: -w / 2, marginTop: -h / 2,
+        x, rotateY, z, scale, opacity, zIndex,
+        width: cardW, height: cardH,
+        marginLeft: -cardW / 2, marginTop: -cardH / 2,
         transformStyle: 'preserve-3d',
       }}
     >
       <div
-        onClick={active ? onOpen : undefined}
-        className="group relative w-full h-full rounded-2xl overflow-hidden border border-[color:var(--color-line)]"
+        onClick={onOpen}
+        className="group relative w-full h-full rounded-2xl overflow-hidden border border-[color:var(--color-line)] cursor-pointer"
         style={{
-          cursor: active ? 'pointer' : 'default',
           boxShadow: active
-            ? '0 40px 90px -30px rgba(0,0,0,0.6)'
-            : '0 20px 50px -30px rgba(0,0,0,0.5)',
+            ? '0 50px 100px -30px rgba(0,0,0,0.65)'
+            : '0 24px 60px -30px rgba(0,0,0,0.5)',
         }}
       >
         {active ? (
@@ -83,27 +78,26 @@ export default function WorkCard({
             src={project.poster}
             alt={project.title}
             className="w-full h-full object-cover"
-            style={{ filter: 'saturate(0.8) brightness(0.82)' }}
+            style={{ filter: 'saturate(0.82) brightness(0.8)' }}
             loading="lazy"
             draggable={false}
           />
         )}
 
-        {/* gradient + meta */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/5 to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/5 to-transparent pointer-events-none" />
         <div className="absolute left-4 right-4 bottom-4 flex items-end justify-between gap-3">
           <div className="min-w-0">
             <p className="u-label-sm text-[color:var(--color-bone)]/70">
               {project.category} · {project.year}
             </p>
-            <h3 className="text-[color:var(--color-bone)] font-semibold text-[0.98rem] leading-tight truncate mt-1">
+            <h3 className="text-[color:var(--color-bone)] font-semibold text-[1rem] leading-tight truncate mt-1">
               {project.title}
             </h3>
           </div>
 
           {active && (
             <button
-              aria-label={muted ? 'Unmute' : 'Mute'}
+              aria-label={muted ? 'Включить звук' : 'Выключить звук'}
               onClick={(e) => { e.stopPropagation(); onToggleMute() }}
               className="shrink-0 grid place-items-center w-9 h-9 rounded-full bg-[color:var(--color-ink)]/80 backdrop-blur border border-white/15 hover:bg-black transition-colors"
             >
