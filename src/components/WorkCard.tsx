@@ -5,6 +5,7 @@ import type { Project } from '@data/projects'
 interface Props {
   project: Project
   index: number
+  count: number
   pos: MotionValue<number>
   active: boolean
   muted: boolean
@@ -17,9 +18,14 @@ interface Props {
 }
 
 export default function WorkCard({
-  project, index, pos, active, muted, spacing, angle, depth, long, onToggleMute, onOpen,
+  project, index, count, pos, active, muted, spacing, angle, depth, long, onToggleMute, onOpen,
 }: Props) {
-  const delta = useTransform(pos, (p) => index - p)
+  // wrapped delta → cards recycle for an infinite loop
+  const delta = useTransform(pos, (p) => {
+    let d = ((((index - p) % count) + count) % count)
+    if (d > count / 2) d -= count
+    return d
+  })
   const x = useTransform(delta, (d) => d * spacing)
   const rotateY = useTransform(delta, (d) => Math.max(-52, Math.min(52, d * -angle)))
   const z = useTransform(delta, (d) => -Math.min(Math.abs(d), 3.2) * depth)

@@ -21,90 +21,81 @@ const N = projects.length
 
 export default function SelectedWork() {
   const isDesktop = useIsDesktop()
-  const START = Math.min(2, N - 1)
-  const pos = useMotionValue(START)
-  const [active, setActive] = useState(START)
+  const pos = useMotionValue(0)
+  const [active, setActive] = useState(0)
   const [muted, setMuted] = useState(true)
+  const [paused, setPaused] = useState(false)
   const [lightbox, setLightbox] = useState<number | null>(null)
 
-  // layout constants
-  const SPACING = 288
+  const SPACING = 300
   const ANGLE = 20
-  const DEPTH = 210
+  const DEPTH = 220
   const LONG = 360
 
+  const wrap = (i: number) => ((i % N) + N) % N
+
   useMotionValueEvent(pos, 'change', (v) => {
-    const i = Math.max(0, Math.min(N - 1, Math.round(v)))
+    const i = wrap(Math.round(v))
     setActive((prev) => {
       if (prev !== i) { setMuted(true); return i }
       return prev
     })
   })
 
-  const snapTo = (i: number) => {
-    const t = Math.max(0, Math.min(N - 1, i))
-    animate(pos, t, { type: 'spring', stiffness: 210, damping: 30 })
-  }
+  const snapTo = (target: number) => animate(pos, target, { type: 'spring', stiffness: 190, damping: 30 })
 
-  // pointer drag (desktop)
+  // auto-advance — infinite loop, paused on hover / drag / lightbox
+  useEffect(() => {
+    if (!isDesktop || paused || lightbox != null) return
+    const t = setTimeout(() => snapTo(Math.round(pos.get()) + 1), 3800)
+    return () => clearTimeout(t)
+  }, [active, paused, lightbox, isDesktop])
+
+  // pointer drag
   const drag = useRef<{ x: number; start: number } | null>(null)
   const onPointerDown = (e: React.PointerEvent) => {
     if (!isDesktop) return
+    setPaused(true)
     drag.current = { x: e.clientX, start: pos.get() }
     ;(e.target as Element).setPointerCapture?.(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent) => {
     if (!drag.current) return
-    const dx = e.clientX - drag.current.x
-    const next = drag.current.start - dx / SPACING
-    pos.set(Math.max(-0.4, Math.min(N - 0.6, next)))
+    pos.set(drag.current.start - (e.clientX - drag.current.x) / SPACING)
   }
   const onPointerUp = () => {
     if (!drag.current) return
     drag.current = null
     snapTo(Math.round(pos.get()))
+    setTimeout(() => setPaused(false), 400)
   }
 
-  const onWheel = (e: React.WheelEvent) => {
-    if (!isDesktop) return
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-      pos.set(Math.max(0, Math.min(N - 1, pos.get() + e.deltaX / 260)))
-      clearTimeout((onWheel as any)._t)
-      ;(onWheel as any)._t = setTimeout(() => snapTo(Math.round(pos.get())), 120)
-    }
-  }
-
-  const onKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowRight') snapTo(active + 1)
-    if (e.key === 'ArrowLeft') snapTo(active - 1)
-  }
+  const step = (dir: number) => { setPaused(true); snapTo(Math.round(pos.get()) + dir); setTimeout(() => setPaused(false), 600) }
 
   return (
     <section id="work" className="relative py-[var(--section-y)] overflow-hidden">
-      {/* header */}
       <div className="container-x flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-4">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-          <p className="u-label text-[color:var(--color-bone)]/60 mb-4">Selected Work</p>
-          <h2 className="u-hero max-w-[12ch]">Projects<br />That Move.</h2>
+          <p className="u-label text-[color:var(--color-bone)]/60 mb-4">Избранные работы</p>
+          <h2 className="u-hero max-w-[12ch]">Проекты<br />в движении.</h2>
         </motion.div>
         <motion.p
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
           className="u-lg text-[color:var(--color-bone)]/70 max-w-sm md:text-right"
         >
-          Drag, scroll or use the arrows. The centred piece plays — tap it for the full cut with sound.
+          Лента крутится сама. Наведи, чтобы остановить, тяни или жми стрелки — клик открывает полный ролик со звуком.
         </motion.p>
       </div>
 
       {isDesktop ? (
         <>
           <div
-            tabIndex={0}
-            onKeyDown={onKeyDown}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
-            onWheel={onWheel}
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
             className="relative h-[460px] outline-none select-none"
             style={{ perspective: 1800, cursor: 'grab', touchAction: 'pan-y' }}
           >
@@ -113,6 +104,7 @@ export default function SelectedWork() {
                 key={p.id}
                 project={p}
                 index={i}
+                count={N}
                 pos={pos}
                 active={i === active}
                 muted={muted}
@@ -126,17 +118,15 @@ export default function SelectedWork() {
             ))}
           </div>
 
-          {/* controls */}
           <div className="container-x flex items-center justify-center gap-6 mt-8">
-            <button onClick={() => snapTo(active - 1)} aria-label="Previous" className="w-11 h-11 grid place-items-center rounded-full border border-[color:var(--color-line)] hover:bg-[color:var(--color-ink)] transition-colors">←</button>
+            <button onClick={() => step(-1)} aria-label="Назад" className="w-11 h-11 grid place-items-center rounded-full border border-[color:var(--color-line)] hover:bg-[color:var(--color-ink)] transition-colors">←</button>
             <span className="u-label-sm text-[color:var(--color-bone)]/55 tabular-nums">
               {String(active + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
             </span>
-            <button onClick={() => snapTo(active + 1)} aria-label="Next" className="w-11 h-11 grid place-items-center rounded-full border border-[color:var(--color-line)] hover:bg-[color:var(--color-ink)] transition-colors">→</button>
+            <button onClick={() => step(1)} aria-label="Вперёд" className="w-11 h-11 grid place-items-center rounded-full border border-[color:var(--color-line)] hover:bg-[color:var(--color-ink)] transition-colors">→</button>
           </div>
         </>
       ) : (
-        // MOBILE — horizontal snap scroll
         <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-[var(--container-x)] pb-2">
           {projects.map((p, i) => {
             const portrait = p.aspect === '9:16'
@@ -162,8 +152,8 @@ export default function SelectedWork() {
       <Lightbox
         project={lightbox != null ? projects[lightbox] : null}
         onClose={() => setLightbox(null)}
-        onPrev={() => setLightbox((v) => (v == null ? v : Math.max(0, v - 1)))}
-        onNext={() => setLightbox((v) => (v == null ? v : Math.min(N - 1, v + 1)))}
+        onPrev={() => setLightbox((v) => (v == null ? v : wrap(v - 1)))}
+        onNext={() => setLightbox((v) => (v == null ? v : wrap(v + 1)))}
       />
     </section>
   )

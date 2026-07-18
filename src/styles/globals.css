@@ -35,7 +35,11 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   html {
-    background-color: var(--color-crimson);
+    /* radial crimson — brighter centre, dark edges (matches the reel vignette) */
+    background-color: #7a0d10;
+    background-image:
+      radial-gradient(120% 90% at 50% 8%, #d1231f 0%, #b01418 42%, #7a0d10 78%, #4a0709 100%);
+    background-attachment: fixed;
     color: var(--color-bone);
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
@@ -49,6 +53,18 @@
     line-height: 1.5;
     overflow-x: hidden;
   }
+
+  /* global edge vignette — darkens the corners for depth */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(130% 120% at 50% 45%, transparent 52%, rgba(0,0,0,0.28) 82%, rgba(0,0,0,0.6) 100%);
+  }
+
+  #root { position: relative; z-index: 1; }
 
   ::selection { background: var(--color-bone); color: var(--color-crimson); }
 
@@ -93,6 +109,11 @@
 
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@keyframes ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
 @media (prefers-reduced-motion: reduce) {

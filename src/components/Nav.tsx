@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 
 const LINKS = [
-  { label: 'Work', href: '#work' },
-  { label: 'Studio', href: '#studio' },
-  { label: 'Services', href: '#studio' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Работы', href: '#work' },
+  { label: 'Достижения', href: '#studio' },
+  { label: 'Услуги', href: '#studio' },
+  { label: 'Контакты', href: '#contact' },
 ]
 
 export default function Nav() {
@@ -55,7 +55,7 @@ export default function Nav() {
               href="#contact"
               className="hidden md:inline-flex items-center bg-[color:var(--color-ink)] text-[color:var(--color-bone)] u-label-sm px-5 py-2.5 rounded-full hover:bg-black transition-colors"
             >
-              Inquire
+              Связаться
             </a>
             <button
               aria-label="Menu"
@@ -80,8 +80,8 @@ export default function Nav() {
           >
             <div className="container-x flex items-center justify-between h-[68px]">
               <span className="text-[1.15rem] font-extrabold tracking-tight">mnd.team</span>
-              <button aria-label="Close" onClick={() => setOpen(false)} className="p-2 -mr-2 u-label-sm">
-                Close
+              <button aria-label="Закрыть" onClick={() => setOpen(false)} className="p-2 -mr-2 u-label-sm">
+                Закрыть
               </button>
             </div>
             <div className="flex-1 container-x flex flex-col justify-center gap-2">

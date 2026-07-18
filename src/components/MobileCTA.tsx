@@ -4,7 +4,7 @@ export default function MobileCTA() {
   return (
     <div className="md:hidden fixed bottom-0 inset-x-0 z-40 grid grid-cols-2 border-t border-[color:var(--color-line)] bg-[color:var(--color-crimson-2)]/95 backdrop-blur">
       <a href="#contact" className="text-center u-label-sm py-4 border-r border-[color:var(--color-line)]">
-        Discuss a Project
+        Обсудить проект
       </a>
       <a
         href={`https://t.me/${contacts.mikhail.telegram.replace('@', '')}`}
@@ -12,7 +12,7 @@ export default function MobileCTA() {
         rel="noopener noreferrer"
         className="text-center u-label-sm py-4"
       >
-        Write on Telegram
+        Написать в Telegram
       </a>
     </div>
   )

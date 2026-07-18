@@ -1,29 +1,57 @@
+import { asset } from '@lib/asset'
+
+/** Brands shown in the animated "trusted by" ticker.
+ *  `color` tints the wordmark toward each brand's identity.
+ *  Drop real SVG logos into /public/brands and swap `text` for <img> later. */
+export const brands = [
+  { text: 'P&G', color: '#4aa3df', weight: 800, style: 'italic' as const },
+  { text: 'РОЛЬФ', color: '#ffffff', weight: 800, style: 'normal' as const },
+  { text: 'Fresh Auto', color: '#7ed957', weight: 700, style: 'normal' as const },
+  { text: 'Positive Technologies', color: '#ff2d6f', weight: 700, style: 'normal' as const },
+  { text: 'Яндекс', color: '#ffcc33', weight: 700, style: 'normal' as const },
+  { text: 'Т-Банк', color: '#ffdd2d', weight: 800, style: 'normal' as const },
+]
+
 export const offerings = [
-  { title: 'AI Commercials', line: 'Product and brand spots built at AI speed, finished like film.' },
-  { title: 'Fashion & Beauty Visuals', line: 'Editorial motion where light, texture and mood do the talking.' },
-  { title: 'Branded Social Content', line: 'Vertical cuts made to stop the scroll and hold it.' },
-  { title: 'Music Videos', line: 'Worlds for artists — rhythm, character and cut as one.' },
-  { title: 'Concept & Campaign Visuals', line: 'Ideas turned into images before a single day of shooting.' },
-  { title: 'Cinematic Storytelling', line: 'Short-form narrative with a director’s eye on every frame.' },
+  { title: 'ИИ-реклама', line: 'Продуктовые и имиджевые ролики на скорости ИИ, с финишем как в кино.' },
+  { title: 'Fashion & Beauty', line: 'Визуалы, где всё решают свет, фактура и настроение.' },
+  { title: 'Контент для соцсетей', line: 'Вертикальные ролики, которые останавливают ленту.' },
+  { title: 'Клипы', line: 'Миры для артистов — ритм, герой и монтаж как единое целое.' },
+  { title: 'Концепты и кампании', line: 'Идея превращается в кадр ещё до съёмочного дня.' },
+  { title: 'Сторителлинг', line: 'Короткий метр с режиссёрским взглядом в каждом кадре.' },
 ]
 
 export const numbers = [
-  { value: '50+', label: 'Projects delivered' },
-  { value: '12',  label: 'Countries reached' },
-  { value: '100%', label: 'In-house production' },
-  { value: 'AI',  label: 'Certified workflow' },
+  { value: '50+', label: 'Проектов реализовано' },
+  { value: '12', label: 'Стран охвачено' },
+  { value: '100%', label: 'Собственное производство' },
+  { value: 'ИИ', label: 'Сертифицированный подход' },
 ]
 
-// NOTE: placeholder quotes — replace `who` / `role` with real client attributions.
-export const testimonials = [
-  { quote: 'They deliver cinematic quality at AI speed.', who: 'CLIENT NAME', role: 'Creative Director' },
-  { quote: 'Two people, and the output of a full studio.', who: 'CLIENT NAME', role: 'Brand Lead' },
-  { quote: 'The only team we trust with the final polish.', who: 'CLIENT NAME', role: 'Founder' },
-]
+export const achievement = {
+  label: 'Награда',
+  title: '«Ну, ИИ, погоди!»',
+  body:
+    'Призёры всероссийского семейного конкурса анимации к 90-летию киностудии «Союзмультфильм» — совместно со Сбером и «Школой 21».',
+}
+
+/** Social proof — reposts & mentions from big creators and brands.
+ *  Non-clickable. Upload the 4 screenshots to /public/social/ as
+ *  proof-1.jpg … proof-4.jpg (portrait). Until then these show a placeholder. */
+export const socialProof = {
+  title: 'Наши ролики смотрят и репостят',
+  sub: 'Крупные блогеры и бренды забирают наши работы к себе.',
+  shots: [
+    { src: asset('/social/proof-1.jpg'), who: 'julia.gavrilina' },
+    { src: asset('/social/proof-2.jpg'), who: 'an1kv · visofi.ai' },
+    { src: asset('/social/proof-3.jpg'), who: 'gochampenergy' },
+    { src: asset('/social/proof-4.jpg'), who: 'mozi_j' },
+  ],
+}
 
 export const contacts = {
-  mikhail: { name: 'Mikhail', role: 'Editor & Final Assembly', telegram: '@mishanya_bok' },
-  sofia:   { name: 'Sofia',   role: 'AI Creator & Visual Director', telegram: '@alienlale' },
+  sofia:   { name: 'София',  role: 'ИИ-креатор и визуальный директор', telegram: '@alienlale' },
+  mikhail: { name: 'Михаил', role: 'Монтаж и финальная сборка',        telegram: '@mishanya_bok' },
 }
 
 export const socials = [

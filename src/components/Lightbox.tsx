@@ -66,15 +66,14 @@ export default function Lightbox({ project, onClose, onPrev, onNext }: Props) {
               />
             </div>
 
-            <div className="flex items-start justify-between gap-6 mt-5">
+            <div className="flex items-center justify-between gap-6 mt-5">
               <div>
                 <p className="u-label-sm text-[color:var(--color-bone)]/60">{project.category} · {project.year}</p>
                 <h3 className="u-xl mt-2">{project.title}</h3>
-                <p className="text-[color:var(--color-bone)]/70 mt-2 max-w-xl">{project.description}</p>
               </div>
-              <div className="hidden sm:flex items-center gap-3 shrink-0 pt-1">
-                <button onClick={onPrev} aria-label="Previous" className="w-11 h-11 grid place-items-center rounded-full border border-white/15 hover:bg-white/10 transition-colors">←</button>
-                <button onClick={onNext} aria-label="Next" className="w-11 h-11 grid place-items-center rounded-full border border-white/15 hover:bg-white/10 transition-colors">→</button>
+              <div className="hidden sm:flex items-center gap-3 shrink-0">
+                <button onClick={onPrev} aria-label="Назад" className="w-11 h-11 grid place-items-center rounded-full border border-white/15 hover:bg-white/10 transition-colors">←</button>
+                <button onClick={onNext} aria-label="Вперёд" className="w-11 h-11 grid place-items-center rounded-full border border-white/15 hover:bg-white/10 transition-colors">→</button>
               </div>
             </div>
           </motion.div>
