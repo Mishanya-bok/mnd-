@@ -119,4 +119,6 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  /* keep the brand ticker looping even with reduced motion */
+  .mnd-ticker { animation-duration: 28s !important; }
 }

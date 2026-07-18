@@ -23,7 +23,7 @@ export default function Marquee() {
         <div className="relative flex-1 overflow-hidden">
           <div className="pointer-events-none absolute inset-y-0 left-0 w-12 z-10 bg-gradient-to-r from-black/50 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-12 z-10 bg-gradient-to-l from-black/50 to-transparent" />
-          <div className="flex w-max animate-[ticker_30s_linear_infinite] hover:[animation-play-state:paused]">
+          <div className="mnd-ticker flex w-max animate-[ticker_28s_linear_infinite] hover:[animation-play-state:paused]">
             {row}
             {row}
           </div>

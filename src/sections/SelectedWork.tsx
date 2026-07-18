@@ -81,7 +81,15 @@ export default function SelectedWork() {
 
   return (
     <section id="work" className="relative py-[var(--section-y)] overflow-hidden">
-      <div className="container-x flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-6">
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(56% 52% at 50% 68%, rgba(208,36,38,1) 0%, rgba(150,20,22,0.45) 46%, transparent 72%), linear-gradient(180deg, #150409 0%, #1d060b 100%)',
+        }}
+      />
+      <div className="relative container-x flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 md:mb-6">
         <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
           <p className="u-label text-[color:var(--color-bone)]/60 mb-4">Избранное</p>
           <h2 className="u-hero max-w-[12ch]">Наши работы.</h2>

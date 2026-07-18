@@ -32,7 +32,7 @@ export default function Achievements() {
         </motion.div>
 
         {/* Social proof gallery */}
-        <div className="mt-24">
+        <div className="mt-24 border-t border-[color:var(--color-line)] pt-10">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewport} className="max-w-2xl">
             <h3 className="u-xl">{socialProof.title}</h3>
             <p className="text-[color:var(--color-bone)]/60 mt-2">{socialProof.sub}</p>
@@ -40,11 +40,20 @@ export default function Achievements() {
 
           <motion.div
             variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}
-            className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5 mt-10"
+            className="grid md:grid-cols-2 gap-6 lg:gap-10 mt-10 items-stretch"
           >
-            {socialProof.shots.map((s) => (
-              <ProofCard key={s.who} src={s.src} who={s.who} />
-            ))}
+            {/* two portrait stories */}
+            <div className="grid grid-cols-2 gap-4 md:gap-5">
+              {socialProof.stories.map((s) => (
+                <StoryCard key={s.who} src={s.src} who={s.who} />
+              ))}
+            </div>
+            {/* two wide "liked your reel" notifications */}
+            <div className="flex flex-col justify-center gap-4 md:gap-5">
+              {socialProof.likes.map((s) => (
+                <LikeCard key={s.who} src={s.src} who={s.who} />
+              ))}
+            </div>
           </motion.div>
         </div>
 
@@ -70,31 +79,46 @@ export default function Achievements() {
   )
 }
 
-function ProofCard({ src, who }: { src: string; who: string }) {
+function StoryCard({ src, who }: { src: string; who: string }) {
   const [ok, setOk] = useState(true)
   return (
     <motion.figure
       variants={fadeUp}
       whileHover={{ y: -6, scale: 1.015 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="relative rounded-xl overflow-hidden border border-[color:var(--color-line)] bg-[color:var(--color-ink-2)] select-none"
+      className="relative rounded-2xl overflow-hidden border border-[color:var(--color-line)] bg-[color:var(--color-ink-2)] select-none"
       style={{ aspectRatio: '9 / 16' }}
     >
       {ok ? (
-        <img
-          src={src}
-          alt={who}
-          onError={() => setOk(false)}
-          draggable={false}
-          className="w-full h-full object-cover pointer-events-none"
-        />
+        <img src={src} alt={who} onError={() => setOk(false)} draggable={false}
+          className="w-full h-full object-cover pointer-events-none" />
       ) : (
         <div className="w-full h-full grid place-items-center text-center px-3">
           <span className="u-label-sm text-[color:var(--color-bone)]/40">{who}<br /><span className="text-[color:var(--color-bone)]/25">скриншот скоро</span></span>
         </div>
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
-      <figcaption className="absolute left-3 bottom-3 u-label-sm text-[color:var(--color-bone)]/80">{who}</figcaption>
+      <figcaption className="absolute left-3 bottom-3 u-label-sm text-[color:var(--color-bone)]/85 mix-blend-difference">{who}</figcaption>
+    </motion.figure>
+  )
+}
+
+function LikeCard({ src, who }: { src: string; who: string }) {
+  const [ok, setOk] = useState(true)
+  return (
+    <motion.figure
+      variants={fadeUp}
+      whileHover={{ y: -4, scale: 1.01 }}
+      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+      className="relative rounded-2xl overflow-hidden border border-[color:var(--color-line)] bg-white/[0.04] select-none p-2"
+    >
+      {ok ? (
+        <img src={src} alt={who} onError={() => setOk(false)} draggable={false}
+          className="w-full h-auto rounded-lg pointer-events-none" />
+      ) : (
+        <div className="h-20 grid place-items-center text-center">
+          <span className="u-label-sm text-[color:var(--color-bone)]/40">{who} · скриншот скоро</span>
+        </div>
+      )}
     </motion.figure>
   )
 }

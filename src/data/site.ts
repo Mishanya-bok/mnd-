@@ -37,17 +37,17 @@ export const achievement = {
     'Призёры всероссийского семейного конкурса анимации к 90-летию киностудии «Союзмультфильм» — совместно со Сбером и «Школой 21».',
 }
 
-/** Social proof — reposts & mentions from big creators and brands.
- *  Non-clickable. Upload the 4 screenshots to /public/social/ as
- *  proof-1.jpg … proof-4.jpg (portrait). Until then these show a placeholder. */
+/** Social proof — reposts & mentions from big creators and brands. Non-clickable. */
 export const socialProof = {
   title: 'Наши ролики смотрят и репостят',
   sub: 'Крупные блогеры и бренды забирают наши работы к себе.',
-  shots: [
-    { src: asset('/social/proof-1.jpg'), who: 'julia.gavrilina' },
-    { src: asset('/social/proof-2.jpg'), who: 'an1kv · visofi.ai' },
-    { src: asset('/social/proof-3.jpg'), who: 'gochampenergy' },
-    { src: asset('/social/proof-4.jpg'), who: 'mozi_j' },
+  stories: [
+    { src: asset('/social/proof-1.png'), who: 'julia.gavrilina' },
+    { src: asset('/social/proof-2.png'), who: 'an1kv · visofi.ai' },
+  ],
+  likes: [
+    { src: asset('/social/proof-3.png'), who: 'gochampenergy' },
+    { src: asset('/social/proof-4.png'), who: 'mozi_j' },
   ],
 }
 

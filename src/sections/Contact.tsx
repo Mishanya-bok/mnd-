@@ -7,8 +7,16 @@ const tg = (h: string) => `https://t.me/${h.replace('@', '')}`
 
 export default function Contact() {
   return (
-    <section id="contact" className="relative min-h-[100svh] flex flex-col justify-center py-[var(--section-y)]">
-      <div className="container-x w-full">
+    <section id="contact" className="relative min-h-[100svh] flex flex-col justify-center py-[var(--section-y)] overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'radial-gradient(58% 46% at 50% 74%, rgba(208,36,38,1) 0%, rgba(150,20,22,0.45) 45%, transparent 72%), linear-gradient(180deg, #1d060b 0%, #150409 100%)',
+        }}
+      />
+      <div className="relative container-x w-full">
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={viewport} className="max-w-3xl mb-12">
           <motion.p variants={fadeUp} className="u-label text-[color:var(--color-bone)]/60 mb-5">Контакты</motion.p>
           <motion.h2 variants={fadeUp} className="u-hero">Давайте что-нибудь создадим.</motion.h2>
