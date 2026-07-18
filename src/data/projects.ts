@@ -1,3 +1,5 @@
+import { asset } from '@lib/asset'
+
 export type Aspect = '16:9' | '9:16'
 
 export interface Project {
@@ -19,7 +21,7 @@ export interface Project {
  *   poster → /videos/<slug>.jpg
  * Rename any title/category/description freely — nothing else depends on it.
  */
-export const projects: Project[] = [
+const rawProjects: Project[] = [
   {
     id: 'friendly-kizaru',
     title: 'Friendly Thug × Kizaru',
@@ -251,3 +253,10 @@ export const projects: Project[] = [
     description: 'Authorial AI study — no script, only atmosphere.',
   },
 ]
+
+/** paths resolved against BASE_URL so they work at root or under a subpath */
+export const projects: Project[] = rawProjects.map((p) => ({
+  ...p,
+  src: asset(p.src),
+  poster: asset(p.poster),
+}))

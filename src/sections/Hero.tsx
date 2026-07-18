@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
 import { maskReveal, fadeUp, stagger } from '@lib/motion'
+import { asset } from '@lib/asset'
 
 const HEAD = ['Cinematic.', 'Commercial.', 'Crafted.']
 const STATS = [
@@ -112,8 +113,8 @@ export default function Hero() {
           <div className="relative rounded-2xl overflow-hidden border border-[color:var(--color-line)] shadow-[0_40px_80px_-30px_rgba(0,0,0,0.55)]">
             <video
               className="w-full aspect-[4/5] object-cover"
-              src="/videos/main.mp4"
-              poster="/videos/main.jpg"
+              src={asset('/videos/main.mp4')}
+              poster={asset('/videos/main.jpg')}
               autoPlay
               muted
               loop
