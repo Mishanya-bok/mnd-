@@ -1,231 +1,253 @@
+export type Aspect = '16:9' | '9:16'
+
 export interface Project {
   id: string
   title: string
   category: string
   year: string
+  aspect: Aspect
+  /** compressed loop used in the carousel + lightbox */
+  src: string
+  /** poster / freeze-frame for inactive cards */
+  poster: string
   description: string
-  videoSrc: string
-  tags: string[]
-  featured?: boolean
 }
 
+/**
+ * To add a case: drop one object into this array.
+ *   src    → /videos/<slug>.mp4
+ *   poster → /videos/<slug>.jpg
+ * Rename any title/category/description freely — nothing else depends on it.
+ */
 export const projects: Project[] = [
-  // ── КОММЕРЦИЯ ──────────────────────────────────────
   {
-    id: 'basta',
-    title: 'Fresh x Basta',
-    category: 'Коммерция',
-    year: '2025',
-    description:
-      'Ролик об открытии автосалона Fresh в Ростове-на-Дону и анонсе Басты как официального амбассадора бренда. Кинематографический визуальный язык на стыке ивент-контента и личного бренда.',
-    videoSrc: '/videos/commercial-basta.webm',
-    tags: ['Коммерция', 'Авто', 'Fresh'],
-  },
-  {
-    id: 'rolf-banners',
-    title: 'Рольф — параллельный импорт',
-    category: 'Коммерция',
-    year: '2025',
-    description:
-      'Ролик в стиле живописи и реальности — показан на 10 крупнейших билбордах Москвы. Уникальный визуальный приём: художественное полотно оживает в движении.',
-    videoSrc: '/videos/commercial-rolf-banners.webm',
-    tags: ['Коммерция', 'OOH', 'Авто'],
-  },
-  {
-    id: 'rolf',
-    title: 'Рольф × Красная Машина',
-    category: 'Коммерция',
-    year: '2025',
-    description:
-      'Коллаборация автосалона Рольф со сборной России по хоккею Красная Машина. Динамика, движение и энергия — в одном кинематографическом ролике.',
-    videoSrc: '/videos/commercial-rolf.webm',
-    tags: ['Коммерция', 'Авто', 'Спорт'],
-  },
-  {
-    id: 'roman',
-    title: 'Роман Каграманов — «Мередит»',
-    category: 'Коммерция',
+    id: 'friendly-kizaru',
+    title: 'Friendly Thug × Kizaru',
+    category: 'Music Video',
     year: '2026',
-    description:
-      'Ролик снимался в сочетании с реальной съёмкой. Идея — визуализация героев книги «Мередит»: они вылетают из печатной машинки как призраки, оживая прямо на глазах.',
-    videoSrc: '/videos/commercial-roman.webm',
-    tags: ['Коммерция', 'Личный бренд', 'Книга'],
+    aspect: '16:9',
+    src: '/videos/friendly-kizaru.mp4',
+    poster: '/videos/friendly-kizaru.jpg',
+    description: 'Hip-hop animated music video — characters and rhythm moving as one.',
   },
-
   {
-    id: 'ntc',
-    title: 'НТЦ',
-    category: 'Коммерция',
+    id: 'rolf-red-machine',
+    title: 'Rolf × Red Machine',
+    category: 'AI Commercial',
     year: '2025',
-    description:
-      'НТЦ — Российский разработчик системного программного обеспечения. Ролик подчёркивает технологичность компании.',
-    videoSrc: '/videos/commercial-ntc.webm',
-    tags: ['Коммерция', 'Технологии', 'НТЦ'],
+    aspect: '16:9',
+    src: '/videos/rolf-red-machine.mp4',
+    poster: '/videos/rolf-red-machine.jpg',
+    description: 'Rolf x the Russian national hockey team — pure motion and energy.',
   },
   {
-    id: 'velos',
+    id: 'yandex-lavka',
+    title: 'Yandex Lavka',
+    category: 'AI Commercial',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/yandex-lavka.mp4',
+    poster: '/videos/yandex-lavka.jpg',
+    description: 'A spec spot: one small move for one big moment of joy.',
+  },
+  {
+    id: 'roman-meredith',
+    title: 'Roman Kagramanov — “Meredith”',
+    category: 'Branded Content',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/roman-meredith.mp4',
+    poster: '/videos/roman-meredith.jpg',
+    description: 'Book characters escaping the typewriter — live footage meets AI.',
+  },
+  {
+    id: 'ptx',
+    title: 'PTX',
+    category: 'AI Commercial',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/ptx.mp4',
+    poster: '/videos/ptx.jpg',
+    description: 'Commercial motion piece — precise, product-clean, cinematic.',
+  },
+  {
+    id: 'intro-showreel',
+    title: 'Intro',
+    category: 'AI Commercial',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/intro-showreel.mp4',
+    poster: '/videos/intro-showreel.jpg',
+    description: 'Opening title sequence built for a branded commercial.',
+  },
+  {
+    id: 'compound-1',
+    title: 'Compound / 01',
+    category: 'AI Commercial',
+    year: '2026',
+    aspect: '9:16',
+    src: '/videos/compound-1.mp4',
+    poster: '/videos/compound-1.jpg',
+    description: 'Vertical commercial cut engineered for social feeds.',
+  },
+  {
+    id: 'compound-2',
+    title: 'Compound / 02',
+    category: 'AI Commercial',
+    year: '2026',
+    aspect: '9:16',
+    src: '/videos/compound-2.mp4',
+    poster: '/videos/compound-2.jpg',
+    description: 'Vertical commercial cut engineered for social feeds.',
+  },
+  {
+    id: 'velos-reels',
     title: 'VELOS',
-    category: 'Коммерция',
+    category: 'AI Commercial',
     year: '2025',
-    description:
-      'Застройщик премиальной недвижимости в Дубае. Видео отражает этапы постройки проекта с нуля.',
-    videoSrc: '/videos/commercial-velos.webm',
-    tags: ['Коммерция', 'Недвижимость', 'Дубай'],
+    aspect: '9:16',
+    src: '/videos/velos-reels.mp4',
+    poster: '/videos/velos-reels.jpg',
+    description: 'Premium Dubai development — build stages rendered from the ground up.',
   },
   {
-    id: 'velos-graphics',
-    title: 'Velos Graphics',
-    category: 'Коммерция',
+    id: 'velos-building',
+    title: 'VELOS — Build',
+    category: 'AI Commercial',
     year: '2025',
-    description:
-      'В рамках полноценного ролика про объект недвижимости был сделан графический элемент постройки здания с нуля.',
-    videoSrc: '/videos/commercial-velos graphics.webm',
-    tags: ['Коммерция', 'Моушн', 'Недвижимость'],
-  },
-
-  // ── РЕАЛИЗМ ────────────────────────────────────────
-  {
-    id: 'alien',
-    title: 'Alien',
-    category: 'Реализм',
-    year: '2026',
-    description:
-      'Необычные цвета, атмосфера и визуальные эффекты делают это видео по-настоящему «инопланетным». Авторская AI-работа — без сценария, только ощущение.',
-    videoSrc: '/videos/realism-alien.webm',
-    tags: ['Реализм', 'AI-видео', 'Атмосфера'],
+    aspect: '16:9',
+    src: '/videos/velos-building.mp4',
+    poster: '/videos/velos-building.jpg',
+    description: 'Motion-graphic sequence: a tower assembling itself in real time.',
   },
   {
-    id: 'angel',
-    title: 'Ангел, возьми мой поцелуй',
-    category: 'Реализм',
+    id: 'nishevo',
+    title: 'Nishevo',
+    category: 'Music Video',
     year: '2026',
-    description:
-      'Клип о любовной паре: парень — обычный человек, девушка — ангел. Цвет, эффекты и звуковая дорожка создают ощущение другого измерения.',
-    videoSrc: '/videos/realism-angel.webm',
-    tags: ['Реализм', 'Клип', 'Романтика'],
+    aspect: '16:9',
+    src: '/videos/nishevo.mp4',
+    poster: '/videos/nishevo.jpg',
+    description: 'Music video — mood, colour and cut carrying the track.',
+  },
+  {
+    id: 'angel-kiss',
+    title: 'Angel, Take My Kiss',
+    category: 'Music Video',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/angel-kiss.mp4',
+    poster: '/videos/angel-kiss.jpg',
+    description: 'A couple across dimensions — a mortal and an angel, told in light.',
+  },
+  {
+    id: 'miyagi-8mile',
+    title: 'Miyagi & Endshpil — 8 Mile',
+    category: 'Music Video',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/miyagi-8mile.mp4',
+    poster: '/videos/miyagi-8mile.jpg',
+    description: 'Miyagi & Endshpil, TumaniYO, Onyx — a hard-cut visual for the track.',
+  },
+  {
+    id: 'izvne',
+    title: 'IZVNE × Agency of Violence',
+    category: 'Music Video',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/izvne.mp4',
+    poster: '/videos/izvne.jpg',
+    description: 'Two universes fused — paranoia and dread in every frame.',
+  },
+  {
+    id: 'fresh-halloween',
+    title: 'Fresh — Halloween',
+    category: 'Branded Content',
+    year: '2025',
+    aspect: '9:16',
+    src: '/videos/fresh-halloween.mp4',
+    poster: '/videos/fresh-halloween.jpg',
+    description: 'Seasonal animated spot for Russia’s largest car dealer, Fresh.',
+  },
+  {
+    id: 'fresh-migal',
+    title: 'Fresh — Denis Migal',
+    category: 'Branded Content',
+    year: '2025',
+    aspect: '9:16',
+    src: '/videos/fresh-migal.mp4',
+    poster: '/videos/fresh-migal.jpg',
+    description: 'An animated short on the origin story behind the Fresh brand.',
+  },
+  {
+    id: 'nu-pogodi',
+    title: 'Nu, Pogodi!',
+    category: 'Branded Content',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/nu-pogodi.mp4',
+    poster: '/videos/nu-pogodi.jpg',
+    description: 'A special edition honouring the Soyuzmultfilm classic.',
   },
   {
     id: 'soyuzmultfilm',
-    title: 'Юбилей Союзмультфильма',
-    category: 'Реализм',
+    title: 'Soyuzmultfilm Anniversary',
+    category: 'Cinematic',
     year: '2026',
-    description:
-      'Юбилейный ролик: сочетание реального 3D-мира и двухмерных персонажей легендарной студии. Технически сложная работа, где анимация и реальность существуют в одном пространстве.',
-    videoSrc: '/videos/realism-cooking.webm',
-    tags: ['Реализм', '3D', 'Союзмультфильм'],
-  },
-  {
-    id: 'from',
-    title: 'ИЗВНЕ × Агентство Насилия',
-    category: 'Реализм',
-    year: '2026',
-    description:
-      'Клип для Агентства Насилия с персонажами сериала «Извне» — идеальный синтез двух вселенных. Атмосфера паранойи и тревоги в каждом кадре.',
-    videoSrc: '/videos/realism-from.webm',
-    tags: ['Реализм', 'Клип', 'Сериал'],
-  },
-  {
-    id: 'serial',
-    title: 'Детективный сериал',
-    category: 'Реализм',
-    year: '2026',
-    description:
-      'Концептуальный трейлер сериала о загадочных убийствах XIX века и клубе любителей детективов. Тёмная эстетика и ощущение, что история уже началась.',
-    videoSrc: '/videos/realism-serial.webm',
-    tags: ['Реализм', 'Сериал', 'Детектив'],
-  },
-  {
-    id: 'yandex',
-    title: 'Яндекс Лавка',
-    category: 'Реализм',
-    year: '2026',
-    description:
-      'Спек-ролик для Яндекс Лавки: для большого счастья нужно одно маленькое действие. Бытовая история, рассказанная языком кино.',
-    videoSrc: '/videos/realism-yandex.webm',
-    tags: ['Реализм', 'Спек-реклама', 'Фудтех'],
-  },
-
-  // ── МУЛЬТФИЛЬМЫ ────────────────────────────────────
-  {
-    id: 'friendly',
-    title: 'Friendly Thug × Kizaru',
-    category: 'Мультфильмы',
-    year: '2026',
-    description:
-      'Клип в стиле хип-хоп анимации. Динамичные приключения героев органично сочетаются с музыкальным сопровождением артистов.',
-    videoSrc: '/videos/cartoon-friendly.webm',
-    tags: ['Мультфильм', 'Хип-хоп', 'Клип'],
-  },
-  {
-    id: 'halloween',
-    title: 'Fresh — Halloween',
-    category: 'Мультфильмы',
-    year: '2025',
-    description:
-      'Хэллоуинский ролик для крупнейшего автосалона России Fresh. Анимационный стиль, сезонная атмосфера и фирменный tone-of-voice бренда.',
-    videoSrc: '/videos/cartoon-halloween.webm',
-    tags: ['Мультфильм', 'Авто', 'Fresh'],
-  },
-  {
-    id: 'migal',
-    title: 'Fresh — Denis Migal',
-    category: 'Мультфильмы',
-    year: '2025',
-    description:
-      'Мультфильм ко дню рождения Дениса Мигаля — история становления создателя крупнейшего автосалона Fresh. Личная история в формате анимационного короткого метра.',
-    videoSrc: '/videos/cartoon-migal.webm',
-    tags: ['Мультфильм', 'Авто', 'Fresh'],
+    aspect: '16:9',
+    src: '/videos/soyuzmultfilm.mp4',
+    poster: '/videos/soyuzmultfilm.jpg',
+    description: 'Real 3D worlds and 2D legends sharing one frame — a technical feat.',
   },
   {
     id: 'mnd-movie',
     title: 'mnd. movie',
-    category: 'Мультфильмы',
+    category: 'Cinematic',
     year: '2026',
-    description:
-      'Авторский мультфильм студии mnd. — история о парочке, которая мечтала снять свой фильм. Творческий манифест команды в формате анимации.',
-    videoSrc: '/videos/cartoon-mnd.webm',
-    tags: ['Мультфильм', 'Студия', 'Авторское'],
+    aspect: '16:9',
+    src: '/videos/mnd-movie.mp4',
+    poster: '/videos/mnd-movie.jpg',
+    description: 'Our own short — a duo who dreamed of making their own film.',
   },
   {
-    id: 'ny-pogodi',
-    title: 'Ну, погоди!',
-    category: 'Мультфильмы',
-    year: '2026',
-    description:
-      'Спецвыпуск к юбилею Союзмультфильма в стиле легендарного «Ну, погоди!». Дань уважения классике советской анимации.',
-    videoSrc: '/videos/cartoon-ny-pogodi.webm',
-    tags: ['Мультфильм', 'Союзмультфильм', 'Спецвыпуск'],
-  },
-
-  // ── ПРОДУКТЫ ───────────────────────────────────────
-  {
-    id: 'feastables',
-    title: 'Feastables',
-    category: 'Продукты',
-    year: '2026',
-    description:
-      'Спек-реклама шоколада Feastables: состав, вкус и текстура передаются прямо через экран. Предметная съёмка как гастрономический опыт.',
-    videoSrc: '/videos/product-feastables.webm',
-    tags: ['Продукты', 'Спек-реклама', 'FMCG'],
-  },
-  {
-    id: 'go-champ',
-    title: 'Go Champ Energy',
-    category: 'Продукты',
-    year: '2026',
-    description:
-      'Спек-реклама для энергетика Go Champ — энергия, динамика и скорость в каждом кадре. Ролик был отмечен самим брендом.',
-    videoSrc: '/videos/product-go-champ.webm',
-    tags: ['Продукты', 'Спек-реклама', 'Энергетик'],
-  },
-  {
-    id: 'mozi',
+    id: 'mozi-jewelry',
     title: 'Mozi Jewelry',
-    category: 'Продукты',
+    category: 'Fashion Visual',
     year: '2026',
-    description:
-      'Украшение из баскетбольной коллекции Mozi на паркете: через свет и движение камеры раскрывается концепция и премиальность браслета.',
-    videoSrc: '/videos/product-mozi.webm',
-    tags: ['Продукты', 'Ювелирное', 'Баскетбол'],
+    aspect: '9:16',
+    src: '/videos/mozi-jewelry.mp4',
+    poster: '/videos/mozi-jewelry.jpg',
+    description: 'A basketball-collection piece on the court — light as concept.',
+  },
+  {
+    id: 'ai-clip-1',
+    title: 'Untitled — AI Visual / 01',
+    category: 'Cinematic',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/ai-clip-1.mp4',
+    poster: '/videos/ai-clip-1.jpg',
+    description: 'Authorial AI study — no script, only atmosphere.',
+  },
+  {
+    id: 'ai-clip-2',
+    title: 'Untitled — AI Visual / 02',
+    category: 'Cinematic',
+    year: '2026',
+    aspect: '16:9',
+    src: '/videos/ai-clip-2.mp4',
+    poster: '/videos/ai-clip-2.jpg',
+    description: 'Authorial AI study — no script, only atmosphere.',
+  },
+  {
+    id: 'ai-clip-3',
+    title: 'Untitled — AI Visual / 03',
+    category: 'Cinematic',
+    year: '2026',
+    aspect: '9:16',
+    src: '/videos/ai-clip-3.mp4',
+    poster: '/videos/ai-clip-3.jpg',
+    description: 'Authorial AI study — no script, only atmosphere.',
   },
 ]

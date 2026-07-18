@@ -1,114 +1,96 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { stagger, fadeUp } from '@lib/motion'
+import { fadeUp, stagger, viewport } from '@lib/motion'
+import { contacts } from '@data/site'
 
-const contacts = [
-  {
-    name: 'София',
-    role: 'AI-Креатор / Визуальный директор',
-    handle: '@alienlale',
-    href: 'https://t.me/alienlale',
-  },
-  {
-    name: 'Михаил',
-    role: 'Монтажёр / Руководитель продакшена',
-    handle: '@mishanya_bok',
-    href: 'https://t.me/mishanya_bok',
-  },
-]
-
-function ContactCard({ c }: { c: typeof contacts[0] }) {
-  const [hovered, setHovered] = useState(false)
-
-  return (
-    <motion.a
-      href={c.href}
-      target="_blank"
-      rel="noopener noreferrer"
-      variants={fadeUp}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      animate={{
-        y: hovered ? -6 : 0,
-        scale: hovered ? 1.02 : 1,
-        boxShadow: hovered
-          ? '0 20px 50px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,209,255,0.3)'
-          : '0 4px 24px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,255,255,0.06)',
-      }}
-      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-      className="group glass p-8 md:p-10 flex flex-col gap-4 relative overflow-hidden cursor-pointer"
-    >
-      {/* Gold accent bar */}
-      <motion.div
-        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-r-full"
-        animate={{ scaleY: hovered ? 1 : 0.15, opacity: hovered ? 1 : 0 }}
-        style={{ backgroundColor: '#00D1FF', transformOrigin: 'center' }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-      />
-
-      <p className="label text-[var(--color-accent)]">{c.role}</p>
-
-      <h3
-        className="font-display font-semibold leading-none transition-colors duration-300"
-        style={{
-          fontSize: 'clamp(2rem, 4vw, 3rem)',
-          color: hovered ? '#00D1FF' : 'var(--color-white)',
-        }}
-      >
-        {c.name}
-      </h3>
-
-      <div className="flex items-center gap-3 mt-1">
-        <span className="w-6 h-px bg-[var(--color-accent)]" />
-        <motion.span
-          className="label transition-colors duration-300"
-          style={{ color: hovered ? '#00D1FF' : 'rgba(255,255,255,0.6)' }}
-        >
-          {c.handle}
-        </motion.span>
-        <span
-          className="ml-auto text-xl transition-colors duration-300"
-          style={{ color: hovered ? '#00D1FF' : 'rgba(255,255,255,0.2)' }}
-        >
-          ↗
-        </span>
-      </div>
-    </motion.a>
-  )
-}
+const PEOPLE = [contacts.sofia, contacts.mikhail]
 
 export default function Contact() {
-  return (
-    <section id="contact" className="section-gap container-x">
-      <motion.div
-        variants={stagger}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-      >
-        <div className="mb-12 md:mb-16 max-w-2xl">
-          <motion.p variants={fadeUp} className="label mb-4">Начать проект</motion.p>
-          <div className="overflow-hidden mb-6">
-            <motion.h2
-              variants={{ hidden: { y: '105%' }, visible: { y: '0%', transition: { duration: 0.9, ease: [0.77, 0, 0.175, 1] } } }}
-              className="font-display text-display font-semibold leading-[1.05]"
-            >
-              Давайте создадим
-              <br />
-              что-то вместе.
-            </motion.h2>
-          </div>
-          <motion.p variants={fadeUp} className="text-sm text-[var(--color-muted)] font-light leading-relaxed max-w-sm">
-            Напишите нам напрямую в Telegram — расскажите о проекте, и мы ответим в течение дня.
-          </motion.p>
-        </div>
+  const [sent, setSent] = useState(false)
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {contacts.map((c) => (
-            <ContactCard key={c.href} c={c} />
+  const onSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    setSent(true)
+    window.open(`https://t.me/${contacts.mikhail.telegram.replace('@', '')}`, '_blank', 'noopener')
+  }
+
+  return (
+    <section id="contact" className="relative py-[var(--section-y)]">
+      <div className="container-x grid lg:grid-cols-2 gap-14 lg:gap-20">
+        {/* left */}
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}>
+          <motion.h2 variants={fadeUp} className="u-hero max-w-[14ch]">Let’s Build Something.</motion.h2>
+          <motion.p variants={fadeUp} className="u-lg text-[color:var(--color-bone)]/75 mt-6 max-w-md">
+            Tell us about the project. We reply within 24 hours.
+          </motion.p>
+
+          <motion.div variants={fadeUp} className="mt-12 flex flex-col">
+            {PEOPLE.map((p) => (
+              <a
+                key={p.telegram}
+                href={`https://t.me/${p.telegram.replace('@', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group py-6 border-t border-[color:var(--color-line)] last:border-b flex items-baseline justify-between gap-4"
+              >
+                <span className="u-display">{p.name}.</span>
+                <span className="text-right">
+                  <span className="block u-label-sm text-[color:var(--color-bone)]/55">{p.role}</span>
+                  <span className="relative inline-block font-medium mt-1">
+                    {p.telegram}
+                    <span className="absolute left-0 -bottom-0.5 h-px w-full origin-left scale-x-0 bg-[color:var(--color-bone)] transition-transform duration-300 group-hover:scale-x-100" />
+                  </span>
+                </span>
+              </a>
+            ))}
+          </motion.div>
+        </motion.div>
+
+        {/* right — form */}
+        <motion.form
+          onSubmit={onSubmit}
+          variants={stagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={viewport}
+          className="flex flex-col gap-8 lg:pt-4"
+        >
+          {[
+            { name: 'name', label: 'Name', type: 'text', ph: 'Your name' },
+            { name: 'contact', label: 'Email or Telegram', type: 'text', ph: '@handle or email' },
+          ].map((f) => (
+            <motion.label key={f.name} variants={fadeUp} className="block">
+              <span className="u-label-sm text-[color:var(--color-bone)]/55">{f.label}</span>
+              <input
+                required
+                type={f.type}
+                name={f.name}
+                placeholder={f.ph}
+                className="w-full mt-3 bg-transparent border-b border-[color:var(--color-line)] pb-3 text-[color:var(--color-bone)] placeholder:text-[color:var(--color-bone)]/35 focus:border-[color:var(--color-bone)] outline-none transition-colors"
+              />
+            </motion.label>
           ))}
-        </div>
-      </motion.div>
+
+          <motion.label variants={fadeUp} className="block">
+            <span className="u-label-sm text-[color:var(--color-bone)]/55">Project brief</span>
+            <textarea
+              required
+              name="brief"
+              rows={4}
+              placeholder="A few lines about what you want to make…"
+              className="w-full mt-3 bg-transparent border-b border-[color:var(--color-line)] pb-3 text-[color:var(--color-bone)] placeholder:text-[color:var(--color-bone)]/35 focus:border-[color:var(--color-bone)] outline-none transition-colors resize-none"
+            />
+          </motion.label>
+
+          <motion.button
+            variants={fadeUp}
+            type="submit"
+            className="w-full bg-[color:var(--color-ink)] text-[color:var(--color-bone)] u-label py-4 rounded-full hover:bg-black transition-colors"
+          >
+            {sent ? 'Opening Telegram…' : 'Send'}
+          </motion.button>
+        </motion.form>
+      </div>
     </section>
   )
 }

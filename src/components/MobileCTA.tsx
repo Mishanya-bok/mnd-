@@ -1,37 +1,19 @@
-import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { contacts } from '@data/site'
 
 export default function MobileCTA() {
-  const [visible, setVisible] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > window.innerHeight * 0.6)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.div
-          initial={{ y: 80, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 80, opacity: 0 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
-        >
-          <div className="m-3">
-            <a
-              href="https://t.me/alienlale"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block w-full bg-[var(--color-accent)] text-[var(--color-bg)] label py-4 text-center rounded-xl hover:bg-[var(--color-white)] transition-colors duration-300"
-            >
-              Написать в Telegram
-            </a>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 grid grid-cols-2 border-t border-[color:var(--color-line)] bg-[color:var(--color-crimson-2)]/95 backdrop-blur">
+      <a href="#contact" className="text-center u-label-sm py-4 border-r border-[color:var(--color-line)]">
+        Discuss a Project
+      </a>
+      <a
+        href={`https://t.me/${contacts.mikhail.telegram.replace('@', '')}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-center u-label-sm py-4"
+      >
+        Write on Telegram
+      </a>
+    </div>
   )
 }
