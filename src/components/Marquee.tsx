@@ -1,12 +1,15 @@
 import { brands } from '@data/site'
 
-/** Minimal monochrome ticker of brand wordmarks. Pure CSS loop. */
+/** Minimal monochrome ticker of brand wordmarks — seamless infinite loop.
+ *  Each half repeats the list enough times to exceed any viewport width,
+ *  so translateX(-50%) never reveals an edge. */
 export default function Marquee() {
-  const row = (
-    <div className="flex items-center gap-10 md:gap-16 pr-10 md:pr-16 shrink-0">
-      {brands.map((b) => (
+  const items = [...brands, ...brands, ...brands]
+  const half = (key: string) => (
+    <div key={key} className="flex items-center gap-10 md:gap-16 pr-10 md:pr-16 shrink-0">
+      {items.map((b, i) => (
         <span
-          key={b.text}
+          key={`${key}-${i}`}
           className="whitespace-nowrap text-[0.82rem] md:text-[0.9rem] text-[color:var(--color-bone)]/45 hover:text-[color:var(--color-bone)]/90 transition-colors"
           style={b.font}
         >
@@ -23,9 +26,9 @@ export default function Marquee() {
         <div className="relative flex-1 overflow-hidden">
           <div className="pointer-events-none absolute inset-y-0 left-0 w-12 z-10 bg-gradient-to-r from-black/50 to-transparent" />
           <div className="pointer-events-none absolute inset-y-0 right-0 w-12 z-10 bg-gradient-to-l from-black/50 to-transparent" />
-          <div className="mnd-ticker flex w-max animate-[ticker_28s_linear_infinite] hover:[animation-play-state:paused]">
-            {row}
-            {row}
+          <div className="mnd-ticker flex w-max animate-[ticker_45s_linear_infinite] hover:[animation-play-state:paused]">
+            {half('a')}
+            {half('b')}
           </div>
         </div>
       </div>

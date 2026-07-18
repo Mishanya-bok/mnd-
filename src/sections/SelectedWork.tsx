@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { animate, motion, useMotionValue, useMotionValueEvent } from 'framer-motion'
+import { animate, useMotionValue, useMotionValueEvent } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { fadeUp } from '@lib/motion'
 import { projects } from '@data/projects'
 import WorkCard from '@components/WorkCard'
@@ -24,15 +25,22 @@ export default function SelectedWork() {
   const pos = useMotionValue(0)
   const [active, setActive] = useState(0)
   const [muted, setMuted] = useState(true)
-  const [paused, setPaused] = useState(false)
   const [lightbox, setLightbox] = useState<number | null>(null)
 
-  // uniform card box for every clip (portrait 4:5), ~2x the old size
   const SPACING = 300
   const CARD_W = 356
   const CARD_H = 452
+  const SPEED = 0.26 // index units / second (right → left drift)
 
   const wrap = (i: number) => ((i % N) + N) % N
+
+  // refs the rAF loop reads without re-subscribing
+  const hoverRef = useRef(false)
+  const dragRef = useRef<{ x: number; start: number } | null>(null)
+  const movedRef = useRef(false)
+  const manualUntil = useRef(0)
+  const lightboxRef = useRef<number | null>(null)
+  lightboxRef.current = lightbox
 
   useMotionValueEvent(pos, 'change', (v) => {
     const i = wrap(Math.round(v))
@@ -42,42 +50,51 @@ export default function SelectedWork() {
     })
   })
 
-  const snapTo = (target: number) => animate(pos, target, { type: 'spring', stiffness: 190, damping: 30 })
-
+  // continuous smooth drift
   useEffect(() => {
-    if (!isDesktop || paused || lightbox != null) return
-    const t = setTimeout(() => snapTo(Math.round(pos.get()) + 1), 3800)
-    return () => clearTimeout(t)
-  }, [active, paused, lightbox, isDesktop])
+    if (!isDesktop) return
+    let raf = 0
+    let last = performance.now()
+    const tick = (t: number) => {
+      const dt = Math.min(0.05, (t - last) / 1000)
+      last = t
+      const blocked = hoverRef.current || dragRef.current || lightboxRef.current != null || t < manualUntil.current
+      if (!blocked) {
+        let v = pos.get() + SPEED * dt
+        if (v > N) v -= N
+        pos.set(v)
+      }
+      raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [isDesktop])
+
+  const nudge = (dir: number) => {
+    manualUntil.current = performance.now() + 650
+    animate(pos, Math.round(pos.get()) + dir, { duration: 0.55, ease: [0.22, 1, 0.36, 1] })
+  }
 
   // pointer drag + click guard
-  const drag = useRef<{ x: number; start: number } | null>(null)
-  const moved = useRef(false)
   const onPointerDown = (e: React.PointerEvent) => {
     if (!isDesktop) return
-    moved.current = false
-    setPaused(true)
-    drag.current = { x: e.clientX, start: pos.get() }
+    movedRef.current = false
+    dragRef.current = { x: e.clientX, start: pos.get() }
     ;(e.target as Element).setPointerCapture?.(e.pointerId)
   }
   const onPointerMove = (e: React.PointerEvent) => {
-    if (!drag.current) return
-    const dx = e.clientX - drag.current.x
-    if (Math.abs(dx) > 5) moved.current = true
-    pos.set(drag.current.start - dx / SPACING)
+    if (!dragRef.current) return
+    const dx = e.clientX - dragRef.current.x
+    if (Math.abs(dx) > 5) movedRef.current = true
+    pos.set(dragRef.current.start - dx / SPACING)
   }
   const onPointerUp = () => {
-    if (!drag.current) return
-    drag.current = null
-    snapTo(Math.round(pos.get()))
-    setTimeout(() => setPaused(false), 400)
+    if (!dragRef.current) return
+    dragRef.current = null
+    manualUntil.current = performance.now() + 300 // brief settle before drift resumes
   }
 
-  const openCard = (i: number) => {
-    if (moved.current) return          // was a drag, not a click
-    setLightbox(i)
-  }
-  const step = (dir: number) => { setPaused(true); snapTo(Math.round(pos.get()) + dir); setTimeout(() => setPaused(false), 600) }
+  const openCard = (i: number) => { if (!movedRef.current) setLightbox(i) }
 
   return (
     <section id="work" className="relative py-[var(--section-y)] overflow-hidden">
@@ -98,19 +115,19 @@ export default function SelectedWork() {
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
           className="u-lg text-[color:var(--color-bone)]/70 max-w-sm md:text-right"
         >
-          Лента крутится сама. Наведи, чтобы остановить, тяни или жми стрелки — клик по ролику открывает его полностью со звуком.
+          Лента движется сама. Наведи, чтобы остановить, тяни или жми стрелки — клик по ролику открывает его полностью со звуком.
         </motion.p>
       </div>
 
       {isDesktop ? (
-        <>
+        <div className="relative">
           <div
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerUp}
             onPointerLeave={onPointerUp}
-            onMouseEnter={() => setPaused(true)}
-            onMouseLeave={() => setPaused(false)}
+            onMouseEnter={() => (hoverRef.current = true)}
+            onMouseLeave={() => (hoverRef.current = false)}
             className="relative h-[560px] outline-none select-none"
             style={{ perspective: 2200, cursor: 'grab', touchAction: 'pan-y' }}
           >
@@ -132,14 +149,16 @@ export default function SelectedWork() {
             ))}
           </div>
 
-          <div className="container-x flex items-center justify-center gap-6 mt-10">
-            <button onClick={() => step(-1)} aria-label="Назад" className="w-11 h-11 grid place-items-center rounded-full border border-[color:var(--color-line)] hover:bg-[color:var(--color-ink)] transition-colors">←</button>
-            <span className="u-label-sm text-[color:var(--color-bone)]/55 tabular-nums">
-              {String(active + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
-            </span>
-            <button onClick={() => step(1)} aria-label="Вперёд" className="w-11 h-11 grid place-items-center rounded-full border border-[color:var(--color-line)] hover:bg-[color:var(--color-ink)] transition-colors">→</button>
-          </div>
-        </>
+          {/* side arrows */}
+          <button
+            onClick={() => nudge(-1)} aria-label="Назад"
+            className="absolute left-4 lg:left-10 top-1/2 -translate-y-1/2 z-[120] w-12 h-12 grid place-items-center rounded-full bg-[color:var(--color-ink)]/70 backdrop-blur border border-white/15 hover:bg-[color:var(--color-ink)] transition-colors"
+          >←</button>
+          <button
+            onClick={() => nudge(1)} aria-label="Вперёд"
+            className="absolute right-4 lg:right-10 top-1/2 -translate-y-1/2 z-[120] w-12 h-12 grid place-items-center rounded-full bg-[color:var(--color-ink)]/70 backdrop-blur border border-white/15 hover:bg-[color:var(--color-ink)] transition-colors"
+          >→</button>
+        </div>
       ) : (
         <div className="flex gap-4 overflow-x-auto no-scrollbar snap-x snap-mandatory px-[var(--container-x)] pb-2">
           {projects.map((p, i) => (

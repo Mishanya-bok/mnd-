@@ -40,8 +40,7 @@ export default function Contact() {
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
               className="group relative overflow-hidden rounded-3xl border border-[color:var(--color-line)] bg-[color:var(--color-ink)]/55 backdrop-blur p-8 lg:p-10 flex flex-col justify-between min-h-[340px] lg:min-h-[440px]"
             >
-              <div className="flex items-start justify-between">
-                <span className="u-label-sm text-[color:var(--color-bone)]/55">{p.role}</span>
+              <div className="flex items-start justify-end">
                 <span className="grid place-items-center w-12 h-12 rounded-full bg-[color:var(--color-bone)]/10 group-hover:bg-[color:var(--color-bone)] group-hover:text-[color:var(--color-ink)] transition-colors">
                   <TgIcon />
                 </span>

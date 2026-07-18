@@ -40,19 +40,15 @@ export default function Achievements() {
 
           <motion.div
             variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}
-            className="grid md:grid-cols-2 gap-6 lg:gap-10 mt-10 items-stretch"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-10 items-start"
           >
-            {/* two portrait stories */}
-            <div className="grid grid-cols-2 gap-4 md:gap-5">
-              {socialProof.stories.map((s) => (
-                <StoryCard key={s.who} src={s.src} who={s.who} />
-              ))}
-            </div>
+            {/* two portrait stories — full, uncropped, staggered */}
+            <StoryCard src={socialProof.stories[0].src} who={socialProof.stories[0].who} />
+            <StoryCard src={socialProof.stories[1].src} who={socialProof.stories[1].who} className="lg:mt-14" />
             {/* two wide "liked your reel" notifications */}
-            <div className="flex flex-col justify-center gap-4 md:gap-5">
-              {socialProof.likes.map((s) => (
-                <LikeCard key={s.who} src={s.src} who={s.who} />
-              ))}
+            <div className="col-span-2 flex flex-col gap-4 lg:gap-6 lg:pt-6">
+              <LikeCard src={socialProof.likes[0].src} who={socialProof.likes[0].who} />
+              <LikeCard src={socialProof.likes[1].src} who={socialProof.likes[1].who} className="lg:ml-10" />
             </div>
           </motion.div>
         </div>
@@ -79,41 +75,39 @@ export default function Achievements() {
   )
 }
 
-function StoryCard({ src, who }: { src: string; who: string }) {
+function StoryCard({ src, who, className = '' }: { src: string; who: string; className?: string }) {
   const [ok, setOk] = useState(true)
   return (
     <motion.figure
       variants={fadeUp}
-      whileHover={{ y: -6, scale: 1.015 }}
+      whileHover={{ y: -6, scale: 1.02 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="relative rounded-2xl overflow-hidden border border-[color:var(--color-line)] bg-[color:var(--color-ink-2)] select-none"
-      style={{ aspectRatio: '9 / 16' }}
+      className={`rounded-2xl overflow-hidden border border-[color:var(--color-line)] bg-[color:var(--color-ink-2)] select-none ${className}`}
     >
       {ok ? (
         <img src={src} alt={who} onError={() => setOk(false)} draggable={false}
-          className="w-full h-full object-cover pointer-events-none" />
+          className="block w-full h-auto pointer-events-none" />
       ) : (
-        <div className="w-full h-full grid place-items-center text-center px-3">
+        <div className="aspect-[9/16] grid place-items-center text-center px-3">
           <span className="u-label-sm text-[color:var(--color-bone)]/40">{who}<br /><span className="text-[color:var(--color-bone)]/25">скриншот скоро</span></span>
         </div>
       )}
-      <figcaption className="absolute left-3 bottom-3 u-label-sm text-[color:var(--color-bone)]/85 mix-blend-difference">{who}</figcaption>
     </motion.figure>
   )
 }
 
-function LikeCard({ src, who }: { src: string; who: string }) {
+function LikeCard({ src, who, className = '' }: { src: string; who: string; className?: string }) {
   const [ok, setOk] = useState(true)
   return (
     <motion.figure
       variants={fadeUp}
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-      className="relative rounded-2xl overflow-hidden border border-[color:var(--color-line)] bg-white/[0.04] select-none p-2"
+      className={`rounded-2xl overflow-hidden border border-[color:var(--color-line)] bg-white/[0.04] select-none p-2 ${className}`}
     >
       {ok ? (
         <img src={src} alt={who} onError={() => setOk(false)} draggable={false}
-          className="w-full h-auto rounded-lg pointer-events-none" />
+          className="block w-full h-auto rounded-lg pointer-events-none" />
       ) : (
         <div className="h-20 grid place-items-center text-center">
           <span className="u-label-sm text-[color:var(--color-bone)]/40">{who} · скриншот скоро</span>
