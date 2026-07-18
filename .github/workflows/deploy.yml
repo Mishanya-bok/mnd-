@@ -28,7 +28,9 @@ jobs:
       - run: npm ci
       - run: npm run build
         env:
-          VITE_BASE: /mnd-/
+          # base path always follows the repo name, so renaming the repo
+          # (e.g. to mnd.team-portfolio) auto-updates the URL with no code change
+          VITE_BASE: /${{ github.event.repository.name }}/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
