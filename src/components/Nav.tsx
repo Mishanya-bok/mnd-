@@ -4,7 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 const LINKS = [
   { label: 'Работы', href: '#work' },
   { label: 'Достижения', href: '#studio' },
-  { label: 'Услуги', href: '#studio' },
+  { label: 'Услуги', href: '#services' },
   { label: 'Контакты', href: '#contact' },
 ]
 

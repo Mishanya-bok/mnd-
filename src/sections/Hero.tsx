@@ -77,7 +77,6 @@ export default function Hero() {
             Смотреть работы
             <span aria-hidden>→</span>
           </a>
-          <span className="u-label-sm text-[color:var(--color-bone)]/60">ИИ + Продакшн</span>
         </motion.div>
       </div>
 

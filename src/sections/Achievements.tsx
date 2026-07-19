@@ -62,7 +62,7 @@ export default function Achievements() {
         </div>
 
         {/* What we make */}
-        <div className="mt-24 grid lg:grid-cols-[0.5fr_1fr] gap-8 lg:gap-14 border-t border-[color:var(--color-line)] pt-10">
+        <div id="services" className="scroll-mt-24 mt-24 grid lg:grid-cols-[0.5fr_1fr] gap-8 lg:gap-14 border-t border-[color:var(--color-line)] pt-10">
           <motion.p variants={fadeUp} initial="hidden" whileInView="visible" viewport={viewport} className="u-label text-[color:var(--color-bone)]/55">
             Что мы делаем
           </motion.p>

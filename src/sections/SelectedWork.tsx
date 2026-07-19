@@ -115,7 +115,7 @@ export default function SelectedWork() {
           variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
           className="u-lg text-[color:var(--color-bone)]/70 max-w-sm md:text-right"
         >
-          Лента движется сама. Наведи, чтобы остановить, тяни или жми стрелки — клик по ролику открывает его полностью со звуком.
+          Свайп для просмотра
         </motion.p>
       </div>
 
