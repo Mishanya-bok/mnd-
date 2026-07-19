@@ -7,10 +7,10 @@ import type { CSSProperties } from 'react'
 
 export const brands: { text: string; font: CSSProperties }[] = [
   { text: 'P&G',                   font: { fontFamily: 'Georgia, serif', fontWeight: 700, fontStyle: 'italic', letterSpacing: '-0.02em' } },
-  { text: 'РОЛЬФ',                 font: { fontFamily: '"Arial Narrow", Montserrat, sans-serif', fontWeight: 800, letterSpacing: '0.14em' } },
-  { text: 'Fresh Auto',            font: { fontFamily: 'Montserrat, sans-serif', fontWeight: 800, letterSpacing: '-0.04em' } },
+  { text: 'РОЛЬФ',                 font: { fontFamily: '"Arial Narrow", Inter, sans-serif', fontWeight: 800, letterSpacing: '0.14em' } },
+  { text: 'Fresh Auto',            font: { fontFamily: 'Inter, sans-serif', fontWeight: 800, letterSpacing: '-0.04em' } },
   { text: 'Positive Technologies', font: { fontFamily: '"Courier New", monospace', fontWeight: 700, letterSpacing: '-0.03em' } },
-  { text: 'Яндекс',                font: { fontFamily: 'Montserrat, sans-serif', fontWeight: 700, letterSpacing: '-0.02em' } },
+  { text: 'Яндекс',                font: { fontFamily: 'Inter, sans-serif', fontWeight: 700, letterSpacing: '-0.02em' } },
   { text: 'Т—Банк',               font: { fontFamily: 'Georgia, serif', fontWeight: 700, letterSpacing: '0.01em' } },
 ]
 

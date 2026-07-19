@@ -39,9 +39,9 @@ export default function Hero() {
           ИИ · Визуальная студия
         </motion.p>
 
-        <h1 className="font-black leading-[0.96] tracking-[-0.035em] text-[clamp(2.1rem,6.2vw,6rem)]">
+        <h1 className="font-display font-extrabold leading-[1.02] tracking-[-0.03em] text-[clamp(1.8rem,5.1vw,4.7rem)]">
           {HEAD.map((line, i) => (
-            <span key={line} className="block overflow-hidden pb-[0.14em] -mb-[0.1em]">
+            <span key={line} className="block overflow-hidden pb-[0.16em] -mb-[0.08em]">
               <motion.span
                 className="block"
                 variants={maskReveal}
