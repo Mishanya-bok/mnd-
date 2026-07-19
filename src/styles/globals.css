@@ -12,8 +12,8 @@
   --color-line:      rgba(245, 241, 234, 0.15);
 
   /* ── Fonts ───────────────────────────────────── */
-  --font-display: 'Inter', system-ui, sans-serif;
-  --font-body:    'Inter', system-ui, sans-serif;
+  --font-display: 'Montserrat', system-ui, sans-serif;
+  --font-body:    'Montserrat', system-ui, sans-serif;
 
   /* ── Type scale ──────────────────────────────── */
   --text-mega:    clamp(3.2rem, 11vw, 10rem);
