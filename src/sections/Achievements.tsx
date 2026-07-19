@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { fadeUp, stagger, viewport } from '@lib/motion'
-import { achievement, offerings, socialProof } from '@data/site'
+import { achievements, offerings, socialProof } from '@data/site'
 
 export default function Achievements() {
   return (
@@ -17,18 +17,26 @@ export default function Achievements() {
           Наши достижения
         </motion.p>
 
-        {/* Award highlight */}
+        {/* Award highlights */}
         <motion.div
           variants={stagger} initial="hidden" whileInView="visible" viewport={viewport}
-          className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-14 items-start border-t border-[color:var(--color-line)] pt-10"
+          className="flex flex-col"
         >
-          <motion.div variants={fadeUp}>
-            <span className="u-label-sm text-[color:var(--color-crimson)]">★ {achievement.label}</span>
-            <h3 className="u-display mt-4">{achievement.title}</h3>
-          </motion.div>
-          <motion.p variants={fadeUp} className="u-lg text-[color:var(--color-bone)]/75 leading-snug lg:pt-2">
-            {achievement.body}
-          </motion.p>
+          {achievements.map((a) => (
+            <motion.div
+              key={a.title}
+              variants={fadeUp}
+              className="grid lg:grid-cols-[0.9fr_1.1fr] gap-8 lg:gap-14 items-start border-t border-[color:var(--color-line)] py-10 last:border-b"
+            >
+              <div>
+                <span className="u-label-sm text-[color:var(--color-crimson)]">★ {a.label}</span>
+                <h3 className="u-display mt-4">{a.title}</h3>
+              </div>
+              <p className="u-lg text-[color:var(--color-bone)]/75 leading-snug lg:pt-2">
+                {a.body}
+              </p>
+            </motion.div>
+          ))}
         </motion.div>
 
         {/* Social proof gallery */}

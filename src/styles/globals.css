@@ -85,9 +85,9 @@
 }
 
 @layer utilities {
-  .u-mega    { font-size: var(--text-mega);    font-weight: 800; line-height: 0.9;  letter-spacing: -0.03em; }
-  .u-hero    { font-size: var(--text-hero);    font-weight: 800; line-height: 0.92; letter-spacing: -0.03em; }
-  .u-display { font-size: var(--text-display); font-weight: 800; line-height: 0.95; letter-spacing: -0.025em; }
+  .u-mega    { font-size: var(--text-mega);    font-weight: 900; line-height: 0.9;  letter-spacing: -0.035em; }
+  .u-hero    { font-size: var(--text-hero);    font-weight: 900; line-height: 0.92; letter-spacing: -0.035em; }
+  .u-display { font-size: var(--text-display); font-weight: 900; line-height: 0.95; letter-spacing: -0.03em; }
   .u-xl      { font-size: var(--text-xl);      font-weight: 700; line-height: 1.02; letter-spacing: -0.02em; }
   .u-lg      { font-size: var(--text-lg);      font-weight: 400; }
 
