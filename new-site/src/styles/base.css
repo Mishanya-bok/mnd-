@@ -10,7 +10,7 @@
   --sky-2: #6fa3dc;
   --line: rgba(169, 203, 240, 0.14);
   --glow: 90, 140, 210;
-  --rail-w: 0px;
+  --display: 'Unbounded', 'Manrope', system-ui, sans-serif;
   color-scheme: dark;
 }
 
@@ -30,7 +30,7 @@ body {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
@@ -90,9 +90,10 @@ button {
   gap: 14px;
 }
 .brand b {
-  font-size: 26px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-family: var(--display);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
 }
 .brand b i {
   font-style: normal;
@@ -221,10 +222,12 @@ button {
 
 .title {
   margin-top: 18px;
-  font-size: clamp(40px, 6.4vw, 96px);
-  line-height: 0.98;
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-family: var(--display);
+  font-size: clamp(34px, 5.4vw, 84px);
+  line-height: 1.02;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
   text-wrap: balance;
 }
 .title i {

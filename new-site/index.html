@@ -9,7 +9,7 @@
     <link rel="icon" type="image/svg+xml" href="/favicon-new.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/src/styles/base.css" />
     <link rel="stylesheet" href="/src/styles/flow.css" />
   </head>
@@ -17,7 +17,10 @@
     <div id="glow"></div>
     <div id="floor"></div>
 
-    <a class="brand" href="/" aria-label="mnd. — на главную"><b>mnd<i>.</i></b><span>студия ИИ-анимации</span></a>
+    <header id="hero">
+      <p class="hero-k"><span>mnd.</span><i></i><span>Коммерция</span><span>Клипы</span><span>Мультфильмы</span><span>Продукты</span></p>
+      <h1>Студия <em>ИИ-анимации</em></h1>
+    </header>
 
     <nav class="rail" aria-label="Страницы">
       <a href="/" aria-current="page"><em>01</em>Работы</a>
@@ -27,7 +30,6 @@
     </nav>
 
     <main>
-      <h1 class="sr-only">mnd. — работы студии ИИ-анимации</h1>
       <div id="flow" aria-label="Работы студии: листайте кассеты" role="listbox" tabindex="0"></div>
 
       <div id="letter" aria-hidden="true"></div>
@@ -45,11 +47,11 @@
       <div id="index" aria-label="Каталог работ"></div>
 
       <div id="tagline">
-        <p>mnd. — студия ИИ-анимации</p>
-        <strong>Кино, которое<br />снимает нейросеть.</strong>
+        <p>mnd. / работы</p>
+        <span>Рекламные ролики, клипы, мультфильмы и продуктовые видео, созданные с помощью нейросетей.</span>
       </div>
 
-      <div id="hint">Колесо, свайп или ← → — листать<br />Нажмите на кассету — о проекте</div>
+      <div id="hint">Колесо, свайп или ← → — листать<br />Нажмите на кассету — смотреть ролик</div>
     </main>
 
     <dialog id="player" aria-label="Просмотр ролика">

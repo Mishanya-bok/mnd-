@@ -4,7 +4,7 @@ import { projects } from './data/projects.js'
 const N = projects.length
 const ANG = 72
 const GAP = 0.62
-const STEP = 0.2
+const STEP = 0.25
 const DEPTH = 0.42
 const LIFT = 0.55
 const FLIP_MS = 620
@@ -52,7 +52,15 @@ const covers = projects.map((p, i) => {
   el.dataset.i = i
   el.setAttribute('role', 'option')
   el.setAttribute('aria-label', `${pad(i + 1)}. ${p.title} — ${p.client}`)
-  el.innerHTML = `<div class="f">${cassette(p, i)}</div><div class="r" aria-hidden="true">${cassette(p, i)}</div><div class="bk"></div>`
+  el.innerHTML = `
+    <div class="fc bt"></div>
+    <div class="fc tp"><b>mnd. · ${esc(p.title)}</b></div>
+    <div class="fc bm"></div>
+    <div class="fc sl"></div>
+    <div class="fc sr"></div>
+    <div class="f">${cassette(p, i)}</div>
+    <div class="r" aria-hidden="true">${cassette(p, i)}</div>
+    <div class="bk"></div>`
   flow.appendChild(el)
   return el
 })
@@ -115,7 +123,6 @@ function openFlip(i) {
   document.body.classList.add('flipped')
   buildBack(i)
   flipDir = 1
-  pauseLabel()
 }
 function closeFlip(instant = false) {
   if (flipped < 0) return
@@ -136,7 +143,6 @@ function finishClose() {
   flipK = 0
   flipDir = 0
   document.body.classList.remove('flipped')
-  scheduleLabel()
 }
 
 // ── размеры ──────────────────────────────────────────
@@ -145,10 +151,11 @@ function layout() {
   const iw = innerWidth
   const ih = innerHeight
   const narrow = iw <= 820
-  W = Math.round(Math.min(ih * 0.44, iw * (narrow ? 0.64 : 0.36), 520))
+  W = Math.round(Math.min(ih * 0.44, iw * (narrow ? 0.7 : 0.34), 520))
   H = Math.round(W * 0.58)
   root.style.setProperty('--w', W + 'px')
   root.style.setProperty('--h', H + 'px')
+  root.style.setProperty('--d', Math.round(W * 0.14) + 'px') // толщина кассеты
 
   const r = flow.getBoundingClientRect()
   const cy = r.top + r.height / 2
@@ -160,7 +167,7 @@ function layout() {
   const L = 3.4 / (3.4 - LIFT)
   // сверху — край экрана (на мобильном — подпись), снизу — полоса прогресса (на мобильном — меню)
   const npY = letterY + W * 0.15 + 14
-  const topLim = narrow ? 112 : 14
+  const topLim = narrow ? 150 : 14
   const botLim = narrow ? ih - 84 : npY + 50
   const maxH = (2 * Math.min(cy - topLim, botLim - cy)) / L
   root.style.setProperty('--np-y', npY + 'px')
@@ -260,60 +267,10 @@ function setCentre(c) {
   npA.textContent = `${p.client} — ${p.category}`
   if (glowColors[c]) root.style.setProperty('--glow', glowColors[c])
   updateIndex()
-  scheduleLabel()
 }
-
-// превью-видео на этикетке центральной кассеты (и в её отражении)
-const mkVid = () => {
-  const v = document.createElement('video')
-  v.muted = true
-  v.loop = true
-  v.playsInline = true
-  v.setAttribute('playsinline', '')
-  v.preload = 'auto'
-  v.addEventListener('playing', () => v.classList.add('ready'))
-  return v
-}
-const labelVid = mkVid()
-const reflVid = mkVid()
-let labelTimer = 0
-let labelFor = -1
-
-function pauseLabel() {
-  clearTimeout(labelTimer)
-  labelVid.pause()
-  reflVid.pause()
-}
-function scheduleLabel() {
-  clearTimeout(labelTimer)
-  labelTimer = setTimeout(startLabel, 260)
-}
-function startLabel() {
-  if (flipped >= 0 || dragging) return
-  if (Math.abs(target - pos) > 0.02) {
-    labelTimer = setTimeout(startLabel, 120)
-    return
-  }
-  const c = centre
-  if (labelFor !== c) {
-    labelFor = c
-    for (const [v, face] of [
-      [labelVid, '.f'],
-      [reflVid, '.r'],
-    ]) {
-      v.classList.remove('ready')
-      v.src = encodeURI(projects[c].video)
-      covers[c].querySelector(`${face} .vhs-img`).appendChild(v)
-    }
-  }
-  labelVid.play().catch(() => {})
-  reflVid.play().catch(() => {})
-}
-// держим отражение синхронным с основным превью
-labelVid.addEventListener('seeked', () => (reflVid.currentTime = labelVid.currentTime))
 
 function updateNP() {
-  const v = flipped >= 0 && backVid ? backVid : labelFor === centre ? labelVid : null
+  const v = flipped >= 0 ? backVid : null
   const dur = v && isFinite(v.duration) ? v.duration : 0
   const cur = v ? v.currentTime : 0
   const k = dur ? Math.min(1, cur / dur) : 0
@@ -395,7 +352,6 @@ flow.addEventListener('pointermove', (e) => {
     dragging = true
     flow.classList.add('drag')
     closeFlip()
-    pauseLabel()
   }
   if (!dragging) return
   const now = performance.now()
@@ -411,7 +367,6 @@ const endDrag = (e) => {
     target = Math.max(0, Math.min(N - 1, Math.round(pos + down.v * 0.18)))
     dragging = false
     flow.classList.remove('drag')
-    scheduleLabel()
   } else if (e.type === 'pointerup') {
     clickCover(down.cover)
   }
