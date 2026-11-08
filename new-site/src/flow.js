@@ -36,7 +36,7 @@ let last = performance.now()
 const cassette = (p, i) => `
   <div class="vhs">
     <div class="vhs-label">
-      <div class="vhs-img" data-cat="${esc(p.category)}" style="background-image:url('${encodeURI(p.thumb)}')"></div>
+      <div class="vhs-img"><img src="${encodeURI(p.thumb)}" alt="" decoding="async" draggable="false" /></div>
       <div class="vhs-strip"><b>mnd.</b><span>${esc(p.title)}</span><em>${pad(i + 1)}</em></div>
     </div>
     <div class="vhs-win">
@@ -73,7 +73,6 @@ function buildBack(i) {
   const rows = [
     ['Клиент', p.client],
     ['Год', p.year],
-    ['Категория', p.category],
     ['Формат', p.vertical ? 'Вертикальный 9:16' : 'Горизонтальный 16:9'],
     ...(p.facts || []),
   ].filter(([, v]) => v)
@@ -264,9 +263,8 @@ function setCentre(c) {
   const p = projects[c]
   letter.textContent = pad(c + 1)
   npT.textContent = p.title
-  npA.textContent = `${p.client} — ${p.category}`
+  npA.textContent = `${p.client} · ${p.year}`
   if (glowColors[c]) root.style.setProperty('--glow', glowColors[c])
-  updateIndex()
 }
 
 function updateNP() {
@@ -279,32 +277,6 @@ function updateNP() {
   npFill.style.width = k * 100 + '%'
   npKnob.style.left = k * 100 + '%'
 }
-
-// ── каталог (категории + номера) ─────────────────────
-const index = $('#index')
-const cats = [...new Set(projects.map((p) => p.category))]
-index.innerHTML = `
-  <div class="ix-cats">${cats.map((c) => `<button data-cat="${esc(c)}">${esc(c)}</button>`).join('')}</div>
-  <div class="ix-nums">${projects.map((p, i) => `<button data-i="${i}" title="${esc(p.title)}" aria-label="${pad(i + 1)}. ${esc(p.title)}">${pad(i + 1)}</button>`).join('')}</div>`
-index.querySelector('.ix-nums').style.gridTemplateColumns = `repeat(${Math.ceil(N / 2)}, var(--ix, 26px))`
-const catBtns = [...index.querySelectorAll('.ix-cats button')]
-const numBtns = [...index.querySelectorAll('.ix-nums button')]
-
-function updateIndex() {
-  const cat = projects[centre].category
-  catBtns.forEach((b) => b.classList.toggle('cur', b.dataset.cat === cat))
-  numBtns.forEach((b, i) => {
-    b.classList.toggle('cur', i === centre)
-    b.classList.toggle('dim', projects[i].category !== cat)
-  })
-}
-index.addEventListener('click', (e) => {
-  const b = e.target.closest('button')
-  if (!b) return
-  closeFlip(true)
-  if (b.dataset.cat) target = projects.findIndex((p) => p.category === b.dataset.cat)
-  else target = +b.dataset.i
-})
 
 function go(t) {
   target = Math.max(0, Math.min(N - 1, t))

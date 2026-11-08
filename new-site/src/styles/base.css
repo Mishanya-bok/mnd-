@@ -10,7 +10,7 @@
   --sky-2: #6fa3dc;
   --line: rgba(169, 203, 240, 0.14);
   --glow: 90, 140, 210;
-  --display: 'Unbounded', 'Manrope', system-ui, sans-serif;
+  --display: 'Cormorant Garamond', 'Times New Roman', serif;
   color-scheme: dark;
 }
 
@@ -22,6 +22,11 @@
   padding: 0;
 }
 
+html {
+  /* ровные (не «старостильные») цифры у Cormorant */
+  font-feature-settings: 'lnum' 1;
+}
+
 html,
 body {
   min-height: 100%;
@@ -30,7 +35,7 @@ body {
 }
 
 body {
-  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-family: 'Golos Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
@@ -91,9 +96,10 @@ button {
 }
 .brand b {
   font-family: var(--display);
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1;
 }
 .brand b i {
   font-style: normal;
@@ -104,79 +110,73 @@ button {
   color: var(--mute);
 }
 
-/* ── навигация по страницам: вертикальная рейка справа (без шапки) ─ */
-.rail {
+/* ── навигация по страницам: сверху справа ───────── */
+.brand {
+  align-items: center;
+}
+.topnav {
   position: fixed;
-  right: 2.4vw;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 3.2vw;
+  top: 3.6vh;
   z-index: 40;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px;
-  border-radius: 18px;
-  background: rgba(6, 16, 34, 0.82);
+  gap: 4px;
+  padding: 5px;
+  border-radius: 99px;
+  background: rgba(6, 16, 34, 0.7);
   border: 1px solid var(--line);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
-.rail a {
-  position: relative;
+.topnav a {
   display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  font-size: 13px;
+  align-items: baseline;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 14px;
   font-weight: 500;
   white-space: nowrap;
   color: var(--mute);
   transition: color 0.2s, background 0.2s;
 }
-.rail a em {
+.topnav a em {
   font-style: normal;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   color: var(--dim);
 }
-.rail a:hover {
+.topnav a:hover {
   color: var(--ink);
   background: rgba(169, 203, 240, 0.07);
 }
-.rail a[aria-current='page'] {
+.topnav a[aria-current='page'] {
   color: #06142a;
-  background: linear-gradient(#dcebfa, #b6d2f0 50%, #a3c5ea 51%, #bfd8f2);
+  background: linear-gradient(#e6f1fc, #bcd7f2 50%, #a9cbf0 51%, #c4dcf4);
 }
-.rail a[aria-current='page'] em {
+.topnav a[aria-current='page'] em {
   color: #36557c;
 }
-
 @media (max-width: 820px) {
-  .rail {
-    top: auto;
-    bottom: 12px;
-    right: 50%;
-    transform: translateX(50%);
-    flex-direction: row;
-    gap: 2px;
-    padding: 6px;
-    border-radius: 14px;
-  }
-  .rail a {
-    padding: 8px 10px;
-    font-size: 12px;
-  }
-  .rail a em {
-    display: none;
-  }
   .brand {
     left: 16px;
-    top: 16px;
+    top: 18px;
   }
   .brand span {
+    display: none;
+  }
+  .topnav {
+    right: 12px;
+    top: 14px;
+    gap: 0;
+    padding: 3px;
+  }
+  .topnav a {
+    padding: 7px 9px;
     font-size: 12px;
+  }
+  .topnav a em {
+    display: none;
   }
 }
 
@@ -186,12 +186,11 @@ button {
   z-index: 2;
   width: min(1160px, 100% - 2 * 16px);
   margin: 0 auto;
-  padding: 18vh 0 16vh;
-  padding-right: 120px;
+  padding: 18vh 0 12vh;
 }
 @media (max-width: 820px) {
   .page {
-    padding: 96px 0 120px;
+    padding: 110px 0 80px;
   }
 }
 
@@ -223,15 +222,14 @@ button {
 .title {
   margin-top: 18px;
   font-family: var(--display);
-  font-size: clamp(34px, 5.4vw, 84px);
-  line-height: 1.02;
-  font-weight: 400;
+  font-size: clamp(44px, 7vw, 112px);
+  line-height: 0.95;
+  font-weight: 500;
   letter-spacing: -0.01em;
-  text-transform: uppercase;
   text-wrap: balance;
 }
 .title i {
-  font-style: normal;
+  font-style: italic;
   color: var(--sky);
 }
 .lead {
