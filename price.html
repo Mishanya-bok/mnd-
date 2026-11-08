@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Прайс — mnd.</title>
+    <meta name="description" content="Стоимость ИИ-анимации в студии mnd.: от 15 000 ₽, 7 000 ₽ за готовый кадр." />
+    <meta name="theme-color" content="#050b16" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/styles/base.css" />
+    <link rel="stylesheet" href="/src/styles/pages.css" />
+  </head>
+  <body>
+    <div id="glow"></div>
+    <div class="grain"></div>
+    <a class="brand" href="/" aria-label="mnd. — на главную"><b>mnd<i>.</i></b><span>студия ИИ-анимации</span></a>
+    <nav class="rail" aria-label="Страницы">
+      <a href="/"><em>01</em>Работы</a>
+      <a href="/pipeline.html"><em>02</em>Пайплайн</a>
+      <a href="/price.html" aria-current="page"><em>03</em>Прайс</a>
+      <a href="/about.html"><em>04</em>О нас</a>
+    </nav>
+    <main class="page">
+      <p class="eyebrow reveal">Прайс</p>
+      <h1 class="title reveal">Прозрачно<br /><i>и честно</i></h1>
+      <p class="lead reveal">Мы считаем по кадрам — вы понимаете, за что платите на каждом шаге.</p>
+
+      <div class="tape-line reveal">PRICE LIST</div>
+
+      <div class="tiers">
+        <article class="tier reveal">
+          <span class="k">Старт</span>
+          <div class="price">от 15 000 ₽</div>
+          <p>Небольшие проекты, концептуальные визуалы, тестовые форматы — минимальный порог входа в работу со студией.</p>
+        </article>
+        <article class="tier feat reveal">
+          <span class="k">Основная единица</span>
+          <div class="price">7 000 ₽ <small>/ готовый кадр</small></div>
+          <p>Стоимость одного финального кадра. Именно так мы считаем объём работ.</p>
+          <ul>
+            <li>ИИ-генерация</li>
+            <li>Обработка и доработка</li>
+            <li>Анимация</li>
+          </ul>
+        </article>
+        <article class="tier reveal">
+          <span class="k">Финальный расчёт</span>
+          <div class="price">Индивидуально</div>
+          <p>Каждый проект уникален. Финальная стоимость рассчитывается вместе с вами — после обсуждения задачи, без скрытых условий.</p>
+        </article>
+      </div>
+
+      <section class="calc reveal" aria-label="Калькулятор стоимости">
+        <div>
+          <h2>Прикиньте бюджет</h2>
+          <p class="sub">Сколько готовых кадров будет в ролике?</p>
+          <label for="frames">Кадров <output id="frames-out">10</output></label>
+          <input id="frames" type="range" min="1" max="60" value="10" />
+          <div class="scale"><span>1</span><span>30</span><span>60</span></div>
+          <p class="hint">Ориентир, а не оферта: точную сумму назовём после брифа.</p>
+        </div>
+        <div class="total">
+          <div>
+            <p class="sub">Примерная стоимость</p>
+            <div class="sum" id="sum">70 000 ₽</div>
+            <p class="note" id="secs"></p>
+          </div>
+          <a class="btn" href="https://t.me/mishanya_bok" target="_blank" rel="noopener">Обсудить проект</a>
+        </div>
+      </section>
+
+      <section class="cta reveal">
+        <div>
+          <h2>Обсудим ваш ролик?</h2>
+          <p>Напишите в Telegram — ответим и предложим идею.</p>
+        </div>
+        <div class="acts">
+          <a class="btn" href="https://t.me/mishanya_bok" target="_blank" rel="noopener">Михаил — @mishanya_bok</a>
+          <a class="btn ghost" href="https://t.me/alienlale" target="_blank" rel="noopener">София — @alienlale</a>
+        </div>
+      </section>
+
+      <footer class="foot">
+        <span>© 2026 mnd. — студия ИИ-анимации</span>
+        <span><a href="https://t.me/mishanya_bok">Telegram</a> · <a href="https://www.behance.net/gallery/242981013/mndteam-portfolio">Behance</a></span>
+      </footer>
+    </main>
+    <script type="module" src="/src/pages.js"></script>
+  </body>
+</html>
