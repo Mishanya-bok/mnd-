@@ -1,63 +1,27 @@
 <!doctype html>
 <html lang="ru">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>mnd. — студия ИИ-анимации</title>
-    <meta name="description" content="mnd. — студия ИИ-анимации. Рекламные ролики, клипы, мультфильмы и продуктовые видео с помощью нейросетей." />
-    <meta name="theme-color" content="#050b16" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="mnd.team — AI видеопродакшен. Кинематографические визуалы для брендов, артистов и кампаний." />
+    <meta name="theme-color" content="#080808" />
+    <title>mnd.team — AI Video Production</title>
+
+    <!-- Google Fonts: Syne (display) + Space Grotesk (body) + Space Mono (labels) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/styles/base.css" />
-    <link rel="stylesheet" href="/src/styles/flow.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Hero video preload -->
+    <link rel="preload" as="video" href="/videos/hero-loop.webm" type="video/webm" />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
-  <body class="flow-page">
-    <div id="glow"></div>
-    <div id="floor"></div>
-
-    <a class="brand" href="/" aria-label="mnd. — на главную"><b>mnd<i>.</i></b><span>студия ИИ-анимации</span></a>
-
-    <nav class="rail" aria-label="Страницы">
-      <a href="/" aria-current="page"><em>01</em>Работы</a>
-      <a href="/pipeline.html"><em>02</em>Пайплайн</a>
-      <a href="/price.html"><em>03</em>Прайс</a>
-      <a href="/about.html"><em>04</em>О нас</a>
-    </nav>
-
-    <main>
-      <h1 class="sr-only">mnd. — работы студии ИИ-анимации</h1>
-      <div id="flow" aria-label="Работы студии: листайте кассеты" role="listbox" tabindex="0"></div>
-
-      <div id="letter" aria-hidden="true"></div>
-
-      <div id="np" aria-live="polite">
-        <div class="np-t"></div>
-        <div class="np-a"></div>
-        <div class="np-bar">
-          <span class="np-cur">0:00</span>
-          <div class="np-track"><div class="np-fill"></div><div class="np-knob"></div></div>
-          <span class="np-dur">0:00</span>
-        </div>
-      </div>
-
-      <div id="index" aria-label="Каталог работ"></div>
-
-      <div id="tagline">
-        <p>mnd. — студия ИИ-анимации</p>
-        <strong>Кино, которое<br />снимает нейросеть.</strong>
-      </div>
-
-      <div id="hint">Колесо, свайп или ← → — листать<br />Нажмите на кассету — о проекте</div>
-    </main>
-
-    <dialog id="player" aria-label="Просмотр ролика">
-      <button class="pl-close" aria-label="Закрыть">✕</button>
-      <video playsinline controls loop></video>
-      <p class="pl-cap"></p>
-    </dialog>
-
-    <script type="module" src="/src/flow.js"></script>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -1,5 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="7" fill="#0c2240"/>
-  <text x="5" y="22" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#e9f2fb">mnd</text>
-  <circle cx="27" cy="20.5" r="2" fill="#8fbaea"/>
+  <rect width="32" height="32" fill="#080808"/>
+  <text x="4" y="24" font-family="Georgia, serif" font-size="20" font-style="italic" fill="#f0ede6">m.</text>
 </svg>

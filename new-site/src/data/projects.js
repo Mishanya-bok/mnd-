@@ -130,7 +130,7 @@ export const projects = [
     client: 'VELOS',
     year: '2025',
     category: 'Коммерция',
-    video: '/videos/commercial-velos-graphics.webm',
+    video: '/videos/commercial-velos graphics.webm',
     thumb: '/thumbs/commercial-velos-graphics.jpg',
     about:
       'В рамках полноценного ролика про объект недвижимости был сделан графический элемент постройки здания с нуля.',

@@ -1,0 +1,4 @@
+# Для деплоя нового сайта на Netlify укажите Base directory = new-site
+[build]
+  command = "npm install && npm run build"
+  publish = "dist"

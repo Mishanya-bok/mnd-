@@ -3,6 +3,8 @@ import { resolve } from 'path'
 
 // Многостраничный сайт: каждая страница — отдельный html
 export default defineConfig({
+  // ролики и обложки берём из общей папки public/ старого сайта — без дублирования
+  publicDir: resolve(__dirname, '../public'),
   build: {
     rollupOptions: {
       input: {
