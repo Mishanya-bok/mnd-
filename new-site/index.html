@@ -5,60 +5,39 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>mnd. — студия ИИ-анимации</title>
     <meta name="description" content="mnd. — студия ИИ-анимации. Рекламные ролики, клипы, мультфильмы и продуктовые видео с помощью нейросетей." />
-    <meta name="theme-color" content="#050b16" />
+    <meta name="theme-color" content="#081428" />
     <link rel="icon" type="image/svg+xml" href="/favicon-new.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Golos+Text:wght@400;500;600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="/src/styles/base.css" />
-    <link rel="stylesheet" href="/src/styles/flow.css" />
+    <link rel="stylesheet" href="/src/styles/desktop.css" />
   </head>
-  <body class="flow-page">
-    <div id="glow"></div>
-    <div id="floor"></div>
+  <body>
+    <div id="wall"></div>
 
-    <a class="brand" href="/" aria-label="mnd. — на главную"><b>mnd<i>.</i></b></a>
-
-    <header id="hero">
+    <div id="title">
+      <p class="k">mnd.</p>
       <h1>Студия <em>ИИ-анимации</em></h1>
+      <p>Рекламные ролики, клипы, мультфильмы и продуктовые видео, созданные с помощью нейросетей. Откройте папку «Работы».</p>
+    </div>
+
+    <header id="menubar">
+      <nav class="l" aria-label="Разделы">
+        <b>mnd.</b>
+        <button data-open="works">Работы</button>
+        <button data-open="pipeline">Пайплайн</button>
+        <button data-open="price">Прайс</button>
+        <button data-open="about">О нас</button>
+      </nav>
+      <div class="r">
+        <a href="https://t.me/mishanya_bok" target="_blank" rel="noopener">Telegram</a>
+        <span id="clock"></span>
+      </div>
     </header>
 
-    <nav class="topnav" aria-label="Страницы">
-      <a href="/" aria-current="page"><em>01</em>Работы</a>
-      <a href="/pipeline.html"><em>02</em>Пайплайн</a>
-      <a href="/price.html"><em>03</em>Прайс</a>
-      <a href="/about.html"><em>04</em>О нас</a>
-    </nav>
+    <main id="desk" aria-label="Рабочий стол"></main>
+    <nav id="dock" aria-label="Док"></nav>
 
-    <main>
-      <div id="flow" aria-label="Работы студии: листайте кассеты" role="listbox" tabindex="0"></div>
-
-      <div id="letter" aria-hidden="true"></div>
-
-      <div id="np" aria-live="polite">
-        <div class="np-t"></div>
-        <div class="np-a"></div>
-        <div class="np-bar">
-          <span class="np-cur">0:00</span>
-          <div class="np-track"><div class="np-fill"></div><div class="np-knob"></div></div>
-          <span class="np-dur">0:00</span>
-        </div>
-      </div>
-
-      <div id="tagline">
-        <p>mnd. / работы</p>
-        <span>Рекламные ролики, клипы, мультфильмы и продуктовые видео, созданные с помощью нейросетей.</span>
-      </div>
-
-      <div id="hint">Колесо, свайп или ← → — листать<br />Нажмите на кассету — смотреть ролик</div>
-    </main>
-
-    <dialog id="player" aria-label="Просмотр ролика">
-      <button class="pl-close" aria-label="Закрыть">✕</button>
-      <video playsinline controls loop></video>
-      <p class="pl-cap"></p>
-    </dialog>
-
-    <script type="module" src="/src/flow.js"></script>
+    <script type="module" src="/src/desktop.js"></script>
   </body>
 </html>
