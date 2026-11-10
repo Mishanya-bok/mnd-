@@ -46,24 +46,25 @@ const APPS = {
 
 // ── рабочий стол ─────────────────────────────────────
 // позиции — доли ширины/высоты стола (иконки можно перетаскивать, раскладка запоминается)
-// pos — на компьютере, m — на телефоне (доли свободной области)
+// pos — на компьютере: [доля ширины, доля высоты полосы, 't' — над заголовком | 'b' — под плашкой]
+// m — на телефоне: доли свободной области под заголовком
 const ITEMS = [
-  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.33, 0.72], m: [0.02, 0.02] },
-  { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.11, 0.16], m: [0.42, 0] },
-  { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.87, 0.02], m: [0.8, 0.04] },
-  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.73, 0.12], m: [0.44, 0.33] },
-  { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.03, 0.5], m: [0.04, 0.36] },
-  { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.2, 0.87], m: [0.82, 0.38] },
-  { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.92, 0.45], m: [0, 0.72] },
-  { key: 'trash', open: 'trash', label: 'Корзина', icon: APPS.trash.icon(), pos: [0.95, 0.9], m: [0.84, 0.74] },
+  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.33, 0.1, 'b'], m: [0.02, 0.02] },
+  { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.27, 0.55, 't'], m: [0.42, 0] },
+  { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.66, 0.75, 't'], m: [0.8, 0.04] },
+  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.46, 0, 't'], m: [0.44, 0.33] },
+  { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.18, 0.6, 'b'], m: [0.04, 0.36] },
+  { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.63, 0.75, 'b'], m: [0.82, 0.38] },
+  { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.8, 0.2, 't'], m: [0, 0.72] },
+  { key: 'trash', open: 'trash', label: 'Корзина', icon: APPS.trash.icon(), pos: [0.77, 0, 'b'], m: [0.84, 0.74] },
   // из роликов на столе лежит только шоурил
   ...(showreel
-    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.74], m: [0.33, 0.66], big: true }]
+    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.35, 'b'], m: [0.33, 0.66], big: true }]
     : []),
 ]
 
 const desk = $('#desk')
-const STORE = 'mnd-desk-v5' // раскладка на компьютере и телефоне хранится отдельно
+const STORE = 'mnd-desk-v7' // раскладка на компьютере и телефоне хранится отдельно
 let saved = {}
 try {
   saved = JSON.parse(localStorage.getItem(STORE) || '{}')
@@ -97,13 +98,31 @@ function area() {
 }
 function placeItems() {
   const A = area()
+  // на компьютере иконки держатся у центра: полоса над заголовком и полоса между плашкой и доком
+  const t = $('#title').getBoundingClientRect()
+  const bands = {
+    t: [8, Math.max(8, t.top - A.d.top - 116)],
+    b: [t.bottom - A.d.top + 14, Math.max(t.bottom - A.d.top + 14, A.d.height - 92 - 120)],
+  }
   ITEMS.forEach((it, i) => {
-    const [fx, fy] = saved[A.mode + ':' + it.key] || it[A.mode]
-    const w = itemEls[i].offsetWidth || (it.big ? 150 : A.iw)
-    const x = Math.min(A.d.width - w - 2, Math.max(2, fx * A.W + A.left))
-    const y = Math.max(0, Math.min(A.top + A.H + 40, fy * A.H + A.top))
-    itemEls[i].style.left = Math.round(x) + 'px'
-    itemEls[i].style.top = Math.round(y) + 'px'
+    const el = itemEls[i]
+    const w = el.offsetWidth || A.iw
+    const s = saved[A.mode + ':' + it.key]
+    let x, y
+    if (s) {
+      x = s[0] * A.W + A.left
+      y = s[1] * A.H + A.top
+    } else if (A.mode === 'pos') {
+      const [fx, fy, band] = it.pos
+      const [y0, y1] = bands[band]
+      x = fx * A.W + A.left
+      y = y0 + fy * (y1 - y0)
+    } else {
+      x = it.m[0] * A.W + A.left
+      y = it.m[1] * A.H + A.top
+    }
+    el.style.left = Math.round(Math.min(A.d.width - w - 2, Math.max(2, x))) + 'px'
+    el.style.top = Math.round(Math.max(0, y)) + 'px'
   })
 }
 
