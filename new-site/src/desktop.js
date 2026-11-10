@@ -49,10 +49,10 @@ const APPS = {
 // pos — на компьютере: [доля ширины, доля высоты полосы, 't' — над заголовком | 'b' — под плашкой]
 // m — на телефоне: доли свободной области под заголовком
 const ITEMS = [
-  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.33, 0.1, 'b'], m: [0.44, 0.42] },
+  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.46, 0.35, 't'], m: [0.03, 0.04] },
   { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.27, 0.55, 't'], m: [0.42, 0] },
   { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.66, 0.75, 't'], m: [0.8, 0.1] },
-  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.46, 0, 't'], m: [0.03, 0.04] },
+  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.33, 0.1, 'b'], m: [0.44, 0.4] },
   { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.18, 0.6, 'b'], m: [0.08, 0.38] },
   { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.63, 0.75, 'b'], m: [0.82, 0.5] },
   { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.8, 0.2, 't'], m: [0.5, 0.82] },
@@ -64,7 +64,7 @@ const ITEMS = [
 ]
 
 const desk = $('#desk')
-const STORE = 'mnd-desk-v8' // раскладка на компьютере и телефоне хранится отдельно
+const STORE = 'mnd-desk-v9' // раскладка на компьютере и телефоне хранится отдельно
 let saved = {}
 try {
   saved = JSON.parse(localStorage.getItem(STORE) || '{}')
