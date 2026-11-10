@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 320" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <linearGradient id="back" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#86c944"/>
+      <stop offset="1" stop-color="#559f22"/>
+    </linearGradient>
+    <linearGradient id="front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a3dd45"/>
+      <stop offset="0.4" stop-color="#72bc2b"/>
+      <stop offset="1" stop-color="#3b8015"/>
+    </linearGradient>
+    <radialGradient id="shine" cx="0.38" cy="0.35" r="0.55">
+      <stop offset="0" stop-color="#e3ff8c" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#e3ff8c" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="grass">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9 0.06" numOctaves="2" seed="7"/>
+      <feColorMatrix values="0 0 0 0 0.08  0 0 0 0 0.22  0 0 0 0 0  0 0 0 0.16 0"/>
+      <feComposite in2="SourceGraphic" operator="in"/>
+    </filter>
+  </defs>
+  <path d="M0 150 C 260 70, 560 60, 800 110 S 1320 110, 1600 60 L1600 320 L0 320 Z" fill="url(#back)"/>
+  <path d="M0 200 C 320 90, 660 70, 920 110 C 1170 150, 1390 210, 1600 190 L1600 320 L0 320 Z" fill="url(#front)"/>
+  <path d="M0 200 C 320 90, 660 70, 920 110 C 1170 150, 1390 210, 1600 190 L1600 320 L0 320 Z" fill="url(#shine)"/>
+  <path d="M0 200 C 320 90, 660 70, 920 110 C 1170 150, 1390 210, 1600 190 L1600 320 L0 320 Z" fill="#000" filter="url(#grass)"/>
+</svg>

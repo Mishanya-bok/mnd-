@@ -104,11 +104,84 @@ svg {
   color: var(--black);
 }
 
-/* ── обои: зелёное поле и синее небо ─────────────── */
+/* ── обои: небо с плывущими облаками и поле ─────── */
 #wall {
   position: fixed;
   inset: 0;
-  background: #3f86e6 url('/wallpaper/field.svg') center bottom / cover no-repeat;
+  overflow: hidden;
+  background: linear-gradient(#0d4bcc 0%, #2a74e0 38%, #6faaf0 72%, #bfe0ff 100%);
+}
+/* солнце с медленно вращающимися лучами */
+.sun {
+  position: absolute;
+  right: 6%;
+  top: -14vmin;
+  width: 70vmin;
+  height: 70vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 236, 0.95) 0 5%, rgba(255, 250, 210, 0.45) 12%, rgba(255, 250, 210, 0.12) 30%, transparent 62%);
+}
+.sun::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: repeating-conic-gradient(rgba(255, 255, 240, 0.16) 0 6deg, transparent 6deg 20deg);
+  mask: radial-gradient(circle, #000 8%, transparent 62%);
+  -webkit-mask: radial-gradient(circle, #000 8%, transparent 62%);
+  animation: spin 120s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* облака плывут слева направо по кругу */
+.cloud {
+  position: absolute;
+  left: 0;
+  top: var(--y);
+  width: var(--w);
+  aspect-ratio: 260 / 110;
+  background: url('/wallpaper/cloud.svg') center / contain no-repeat;
+  opacity: var(--o);
+  animation: drift var(--t) linear var(--d) infinite;
+  will-change: transform;
+}
+@keyframes drift {
+  from {
+    transform: translateX(-40vw);
+  }
+  to {
+    transform: translateX(110vw);
+  }
+}
+/* поле — только нижняя часть экрана */
+.hills {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 30vh;
+  background: url('/wallpaper/hills.svg') center bottom / cover no-repeat;
+}
+.hills::after {
+  /* по траве пробегает мягкий блик, как от ветра */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 35%, rgba(230, 255, 150, 0.28) 50%, transparent 65%) 0 0 / 300% 100%;
+  animation: wind 14s ease-in-out infinite;
+  mask: url('/wallpaper/hills.svg') center bottom / cover no-repeat;
+  -webkit-mask: url('/wallpaper/hills.svg') center bottom / cover no-repeat;
+}
+@keyframes wind {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: 0 0;
+  }
 }
 
 #title {
@@ -139,8 +212,8 @@ svg {
   line-height: 1;
   letter-spacing: -0.01em;
   text-transform: uppercase;
-  color: var(--white);
-  text-shadow: 0 4px 24px rgba(10, 40, 110, 0.35);
+  color: var(--black);
+  text-shadow: 0 0 28px rgba(255, 255, 255, 0.55);
   white-space: nowrap;
 }
 #title h1 em {
@@ -152,10 +225,14 @@ svg {
 }
 #title p {
   margin: 20px auto 0;
-  max-width: 46ch;
-  font-size: clamp(14px, 1.2vw, 17px);
-  color: rgba(255, 255, 255, 0.92);
-  text-shadow: 0 1px 8px rgba(10, 40, 110, 0.45);
+  max-width: 44ch;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: clamp(14px, 1.15vw, 16px);
+  color: var(--black);
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 /* ── строка меню ──────────────────────────────────── */
@@ -1300,5 +1377,10 @@ svg {
   .win,
   .item {
     transition: none;
+  }
+  .cloud,
+  .sun::after,
+  .hills::after {
+    animation: none;
   }
 }
