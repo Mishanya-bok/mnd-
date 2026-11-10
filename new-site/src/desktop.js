@@ -15,7 +15,7 @@ const GLYPH = {
   works: svg('<path d="M8 6l10 6-10 6z" fill="currentColor" stroke="none"/>'),
   pipeline: svg('<path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="18" r="2"/>'),
   about: svg('<circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.2c2.6-.4 4.6 1.2 5 4.3"/>'),
-  plane: svg('<path d="M21 4L3 11l6.5 2.2L12 20l3-5.5L21 4z" fill="currentColor" stroke="none"/><path d="M9.5 13.2L21 4" stroke="#3d7fd6" stroke-width="1.5"/>'),
+  plane: svg('<path d="M21 4L3 11l6.5 2.2L12 20l3-5.5L21 4z" fill="currentColor" stroke="none"/><path d="M9.5 13.2L21 4" stroke="#0c0d0b" stroke-width="1.5"/>'),
   price: svg('<path d="M8 20V4h6a4 4 0 010 8H6M6 16h8"/>'),
   user: svg('<circle cx="12" cy="8" r="3.5"/><path d="M5 20c.8-3.8 3.6-6 7-6s6.2 2.2 7 6"/>'),
 }
