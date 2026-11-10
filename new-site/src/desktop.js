@@ -49,22 +49,22 @@ const APPS = {
 // pos — на компьютере: [доля ширины, доля высоты полосы, 't' — над заголовком | 'b' — под плашкой]
 // m — на телефоне: доли свободной области под заголовком
 const ITEMS = [
-  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.33, 0.1, 'b'], m: [0.02, 0.02] },
+  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.33, 0.1, 'b'], m: [0.44, 0.42] },
   { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.27, 0.55, 't'], m: [0.42, 0] },
-  { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.66, 0.75, 't'], m: [0.8, 0.04] },
-  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.46, 0, 't'], m: [0.44, 0.33] },
-  { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.18, 0.6, 'b'], m: [0.04, 0.36] },
-  { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.63, 0.75, 'b'], m: [0.82, 0.38] },
-  { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.8, 0.2, 't'], m: [0, 0.72] },
-  { key: 'trash', open: 'trash', label: 'Корзина', icon: APPS.trash.icon(), pos: [0.77, 0, 'b'], m: [0.84, 0.74] },
+  { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.66, 0.75, 't'], m: [0.8, 0.1] },
+  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.46, 0, 't'], m: [0.03, 0.04] },
+  { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.18, 0.6, 'b'], m: [0.08, 0.38] },
+  { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.63, 0.75, 'b'], m: [0.82, 0.5] },
+  { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.8, 0.2, 't'], m: [0.5, 0.82] },
+  { key: 'trash', open: 'trash', label: 'Корзина', icon: APPS.trash.icon(), pos: [0.77, 0, 'b'], m: [0.82, 0.9] },
   // из роликов на столе лежит только шоурил
   ...(showreel
-    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.35, 'b'], m: [0.33, 0.66], big: true }]
+    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.35, 'b'], m: [0.1, 0.74], big: true }]
     : []),
 ]
 
 const desk = $('#desk')
-const STORE = 'mnd-desk-v7' // раскладка на компьютере и телефоне хранится отдельно
+const STORE = 'mnd-desk-v8' // раскладка на компьютере и телефоне хранится отдельно
 let saved = {}
 try {
   saved = JSON.parse(localStorage.getItem(STORE) || '{}')
@@ -92,7 +92,8 @@ function area() {
   if (mobile()) {
     const h1 = $('#title h1').getBoundingClientRect()
     const top = Math.max(0, h1.bottom - d.top + 16)
-    return { d, iw, left: 4, top, W: d.width - iw - 8, H: d.height - top - 92 - 112, mode: 'm' }
+    // снизу оставляем место под плашку Netlify — дока на телефоне нет
+    return { d, iw, left: 4, top, W: d.width - iw - 8, H: d.height - top - 110 - 112, mode: 'm' }
   }
   return { d, iw, left: 4, top: 8, W: d.width - 110, H: d.height - 230, mode: 'pos' }
 }

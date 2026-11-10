@@ -1453,16 +1453,26 @@ svg {
     padding: 4px 2px;
   }
   .item.big {
-    width: 150px;
+    width: 116px;
   }
   .item .ic {
     height: 62px;
   }
+  /* шоурил на телефоне — чуть крупнее папок, но не выбивается */
   .item.big .ic {
-    height: 96px;
+    height: 72px;
   }
   .item.big .ic > span {
     transform: none;
+  }
+  .item.big .film {
+    width: 104px;
+    height: 66px;
+    padding: 0 8px;
+  }
+  /* док на телефоне не нужен: всё есть на столе, а внизу Netlify ставит свою плашку */
+  #dock {
+    display: none;
   }
   .rz {
     display: none;
@@ -1532,13 +1542,14 @@ svg {
     transform: scale(0.7);
   }
   .item.big {
-    width: 128px;
+    width: 104px;
   }
   .item.big .ic {
-    height: 80px;
+    height: 60px;
   }
-  .item.big .ic > span {
-    transform: scale(0.86);
+  .item.big .film {
+    width: 92px;
+    height: 58px;
   }
 }
 
