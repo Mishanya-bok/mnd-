@@ -22,7 +22,7 @@ const GLYPH = {
 const ICON = {
   folder: (g) => `<span class="folder"><i></i>${GLYPH[g] || ''}</span>`,
   doc: () => `<span class="doc"><b>₽</b><s></s></span>`,
-  film: (p) => `<span class="film"><img src="${encodeURI(p.thumb)}" alt="" draggable="false" decoding="async" /><em>MOV</em></span>`,
+  film: (p) => `<span class="film"><img src="${encodeURI(p.thumb)}" alt="" draggable="false" decoding="async" /><em>MP4</em></span>`,
   app: () => `<span class="app">${GLYPH.plane}</span>`,
 }
 
@@ -36,7 +36,11 @@ const APPS = {
 
 // ── рабочий стол ─────────────────────────────────────
 // позиции — доли ширины/высоты стола (иконки можно перетаскивать, раскладка запоминается)
-const FEATURED = ['mnd-movie', 'basta', 'alien', 'feastables', 'ny-pogodi'].filter((id) => byId[id])
+// файлы прямо на рабочем столе: отмеченные featured: true, иначе — первые подходящие из списка
+const FEATURED = (projects.some((p) => p.featured)
+  ? projects.filter((p) => p.featured).map((p) => p.id)
+  : ['mnd-movie', 'fresh-rostov', 'alien', 'rolf-red-machine', 'angel-kiss', 'basta', 'feastables', 'ny-pogodi'].filter((id) => byId[id])
+).slice(0, 5)
 const FEAT_POS = [
   [0.24, 0.04],
   [0.68, 0.07],
@@ -53,7 +57,7 @@ const ITEMS = [
   ...FEATURED.map((id, n) => ({
     key: 'v-' + id,
     open: 'work/' + id,
-    label: byId[id].title + '.mov',
+    label: byId[id].title + '.mp4',
     icon: ICON.film(byId[id]),
     pos: FEAT_POS[n],
   })),
@@ -182,7 +186,7 @@ function appFor(key) {
     const p = byId[key.slice(5)]
     if (!p) return null
     return {
-      title: p.title + '.mov',
+      title: p.title + '.mp4',
       size: p.vertical ? [860, 680] : [1060, 620],
       render: () => renderPlayer(p),
       mount: (el) => mountPlayer(el, p),
@@ -370,12 +374,17 @@ function plural(n) {
 }
 
 // ── содержимое: плеер ────────────────────────────────
+const fmtDur = (s) => {
+  const t = Math.round(s)
+  return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`
+}
 function renderPlayer(p) {
   const sec = (h, t) => (t ? `<h3>${h}</h3><p>${esc(t)}</p>` : '')
   const rows = [
     ['Клиент', p.client],
     ['Год', p.year],
     ['Формат', p.vertical ? '9:16' : '16:9'],
+    ['Хронометраж', p.duration ? fmtDur(p.duration) : ''],
     ...(p.facts || []),
   ].filter(([, v]) => v)
   return `
@@ -419,7 +428,7 @@ function mountPlayer(el, p) {
       close(wins.get(rec.key))
     }
     wins.set(rec.key, rec)
-    el.querySelector('.tt').textContent = next.title + '.mov'
+    el.querySelector('.tt').textContent = next.title + '.mp4'
     el.setAttribute('aria-label', next.title)
     el.querySelector('.wb').innerHTML = renderPlayer(next)
     mountPlayer(el, next)
