@@ -19,5 +19,82 @@
   "height": 1920,
   "duration": 44.8,
   "mb": 10.4
+ },
+ "fresh-rostov": {
+  "source": "/коммерция/Fresh Ростов_r1.mp4",
+  "width": 1080,
+  "height": 1920,
+  "duration": 12.1,
+  "mb": 3.3
+ },
+ "meredith": {
+  "source": "/коммерция/Рома_Мередит_r2.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 40.0,
+  "mb": 5.2
+ },
+ "rolf-red-machine": {
+  "source": "/коммерция/Рольф x Красная машина_promo_prob3.mp4",
+  "width": 3840,
+  "height": 2160,
+  "duration": 14.1,
+  "mb": 2.9
+ },
+ "rolf-dibrain": {
+  "source": "/коммерция/Рольф х dibrain (16х9).MP4",
+  "width": 3840,
+  "height": 2160,
+  "duration": 12.7,
+  "mb": 3.5
+ },
+ "mini-ceo": {
+  "source": "/коммерция/МИНИ СЕО х dibrain_v2.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 54.5,
+  "mb": 14.8
+ },
+ "nizhpharm": {
+  "source": "/коммерция/Нижфарм_Роскошный максиму_fin3.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 135.0,
+  "mb": 28.8
+ },
+ "ptx": {
+  "source": "/коммерция/PTX_150626.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 134.2,
+  "mb": 29.7
+ },
+ "tenet-plus": {
+  "source": "/коммерция/Tenet Plus_prefinal (22_09).mp4",
+  "width": 2944,
+  "height": 1280,
+  "duration": 162.7,
+  "mb": 23.1
+ },
+ "hf-0302": {
+  "source": "/коммерция/hf_20260302_185838_2d5c0a92-fae5-40f6-8bfa-dce25a7db794 (1)_prob3.mp4",
+  "width": 3856,
+  "height": 2144,
+  "duration": 10.1,
+  "mb": 2.3
+ },
+ "intro": {
+  "source": "/коммерция/INTRO (master).mp4",
+  "width": 4424,
+  "height": 1872,
+  "duration": 143.3,
+  "mb": 26.9
+ },
+ "alien": {
+  "source": "/не коммерческие проекты/Alien clear2.mp4",
+  "width": 1080,
+  "height": 1920,
+  "duration": 43.7,
+  "mb": 7.7
  }
 }
