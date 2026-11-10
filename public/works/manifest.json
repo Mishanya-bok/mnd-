@@ -1,0 +1,23 @@
+{
+ "from": {
+  "source": "/не коммерческие проекты/извне (2).mp4",
+  "width": 1280,
+  "height": 720,
+  "duration": 14.2,
+  "mb": 3.3
+ },
+ "fresh-halloween": {
+  "source": "/коммерция/Fresh Helloween AI x dibrain_r6.mov.mp4",
+  "width": 1080,
+  "height": 1920,
+  "duration": 38.2,
+  "mb": 8.5
+ },
+ "fresh-migal": {
+  "source": "/коммерция/Fresh x dibrain_Денис Мигаль .mov",
+  "width": 1080,
+  "height": 1920,
+  "duration": 44.8,
+  "mb": 10.4
+ }
+}
