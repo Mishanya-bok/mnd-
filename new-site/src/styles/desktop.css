@@ -1,39 +1,36 @@
 /* ── mnd. — рабочий стол ──────────────────────────────
    Палитра: белый ~70 %, лаймовый ~20 %, чёрный ~10 %.
-   Шрифты: Widock Trial — крупный основной, Involve — текст.
-   Файлы шрифтов лежат в public/fonts/ (см. README.txt там же).
-   Пока файлов нет, браузер берёт запасные шрифты из списка. */
+   Шрифты: Widock Trial — крупный основной, Involve — текст (public/fonts/).
+   Обои: зелёное поле и синее небо (public/wallpaper/field.svg). */
 
 @font-face {
   font-family: 'Widock';
-  src:
-    local('Widock Trial'),
-    local('Widock'),
-    url('/fonts/widock.woff2') format('woff2'),
-    url('/fonts/widock.otf') format('opentype'),
-    url('/fonts/widock.ttf') format('truetype');
+  font-weight: 400 900;
+  src: url('/fonts/widock.woff2') format('woff2');
   font-display: swap;
 }
 @font-face {
   font-family: 'Involve';
   font-weight: 400;
-  src:
-    local('Involve'),
-    local('Involve Regular'),
-    url('/fonts/involve-regular.woff2') format('woff2'),
-    url('/fonts/involve-regular.otf') format('opentype'),
-    url('/fonts/involve-regular.ttf') format('truetype');
+  src: url('/fonts/involve-regular.woff2') format('woff2');
   font-display: swap;
 }
 @font-face {
   font-family: 'Involve';
-  font-weight: 500 700;
-  src:
-    local('Involve Medium'),
-    local('Involve SemiBold'),
-    url('/fonts/involve-medium.woff2') format('woff2'),
-    url('/fonts/involve-medium.otf') format('opentype'),
-    url('/fonts/involve-medium.ttf') format('truetype');
+  font-weight: 500;
+  src: url('/fonts/involve-medium.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Involve';
+  font-weight: 600;
+  src: url('/fonts/involve-semibold.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Involve';
+  font-weight: 700;
+  src: url('/fonts/involve-bold.woff2') format('woff2');
   font-display: swap;
 }
 
@@ -53,8 +50,8 @@
   --dim: #8d9187;
   --line: rgba(12, 13, 11, 0.1);
   --mb: 30px;
-  --display: 'Widock', 'Unbounded', 'Arial Black', sans-serif;
-  --sans: 'Involve', 'Golos Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display: 'Widock', 'Arial Black', sans-serif;
+  --sans: 'Involve', system-ui, -apple-system, 'Segoe UI', sans-serif;
   color-scheme: light;
 }
 
@@ -107,31 +104,17 @@ svg {
   color: var(--black);
 }
 
-/* ── обои: белая бумага, сетка и лаймовые пятна ───── */
+/* ── обои: зелёное поле и синее небо ─────────────── */
 #wall {
   position: fixed;
   inset: 0;
-  background:
-    radial-gradient(38% 46% at 88% 92%, rgba(198, 244, 50, 0.85), rgba(198, 244, 50, 0.25) 55%, transparent 75%),
-    radial-gradient(30% 34% at 6% 8%, rgba(198, 244, 50, 0.55), transparent 70%),
-    radial-gradient(circle at 50% 45%, var(--white), var(--paper) 80%);
-}
-#wall::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(12, 13, 11, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(12, 13, 11, 0.045) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask: radial-gradient(circle at 50% 45%, #000 30%, transparent 85%);
-  -webkit-mask: radial-gradient(circle at 50% 45%, #000 30%, transparent 85%);
+  background: #3f86e6 url('/wallpaper/field.svg') center bottom / cover no-repeat;
 }
 
 #title {
   position: fixed;
   left: 50%;
-  top: 45%;
+  top: 38%;
   transform: translate(-50%, -50%);
   width: min(1200px, 92vw);
   text-align: center;
@@ -156,11 +139,14 @@ svg {
   line-height: 1;
   letter-spacing: -0.01em;
   text-transform: uppercase;
-  color: var(--black);
+  color: var(--white);
+  text-shadow: 0 4px 24px rgba(10, 40, 110, 0.35);
   white-space: nowrap;
 }
 #title h1 em {
   font-style: normal;
+  color: var(--black);
+  text-shadow: none;
   padding: 0 0.12em;
   background: linear-gradient(transparent 12%, var(--lime) 12%, var(--lime) 92%, transparent 92%);
 }
@@ -168,7 +154,8 @@ svg {
   margin: 20px auto 0;
   max-width: 46ch;
   font-size: clamp(14px, 1.2vw, 17px);
-  color: var(--mute);
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 8px rgba(10, 40, 110, 0.45);
 }
 
 /* ── строка меню ──────────────────────────────────── */
@@ -250,7 +237,7 @@ svg {
   display: grid;
   place-items: center;
   border-radius: 6px;
-  filter: drop-shadow(0 8px 12px rgba(12, 13, 11, 0.16));
+  filter: drop-shadow(0 8px 12px rgba(0, 20, 60, 0.3));
 }
 .item .lb {
   max-width: 100%;
@@ -260,16 +247,21 @@ svg {
   font-weight: 500;
   line-height: 1.3;
   text-align: center;
-  color: var(--ink);
+  color: var(--white);
+  background: rgba(8, 28, 70, 0.42);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   overflow-wrap: anywhere;
 }
 .item.sel .ic {
-  background: rgba(12, 13, 11, 0.07);
-  box-shadow: 0 0 0 4px rgba(12, 13, 11, 0.07);
+  background: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.22);
 }
 .item.sel .lb {
   background: var(--black);
   color: var(--white);
+  text-shadow: none;
 }
 
 /* папка — лаймовая */
