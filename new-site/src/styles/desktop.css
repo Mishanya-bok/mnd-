@@ -1470,10 +1470,7 @@ svg {
     height: 66px;
     padding: 0 8px;
   }
-  /* док на телефоне не нужен: всё есть на столе, а внизу Netlify ставит свою плашку */
-  #dock {
-    display: none;
-  }
+
   .rz {
     display: none;
   }

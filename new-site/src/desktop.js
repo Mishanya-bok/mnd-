@@ -92,8 +92,8 @@ function area() {
   if (mobile()) {
     const h1 = $('#title h1').getBoundingClientRect()
     const top = Math.max(0, h1.bottom - d.top + 16)
-    // снизу оставляем место под плашку Netlify — дока на телефоне нет
-    return { d, iw, left: 4, top, W: d.width - iw - 8, H: d.height - top - 110 - 112, mode: 'm' }
+    // снизу оставляем место под док
+    return { d, iw, left: 4, top, W: d.width - iw - 8, H: d.height - top - 96 - 112, mode: 'm' }
   }
   return { d, iw, left: 4, top: 8, W: d.width - 110, H: d.height - 230, mode: 'pos' }
 }
