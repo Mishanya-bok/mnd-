@@ -46,7 +46,7 @@ const ITEMS = [
   { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.03, 0.52] },
   // на столе лежит только шоурил
   ...(showreel
-    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.455, 0.74], big: true }]
+    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.74], big: true }]
     : []),
 ]
 

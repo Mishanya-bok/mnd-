@@ -525,4 +525,19 @@ export const projects = [
   },
 ]
 
-export const showreel = null
+export const showreel = {
+  id: 'showreel',
+  title: 'Showreel',
+  client: '',
+  commercial: true,
+  video: '/works/showreel.mp4',
+  thumb: '/works/showreel.jpg',
+  vertical: false,
+  duration: 77.7,
+  about: 'Лучшие моменты наших работ в одном ролике.',
+  task: '',
+  solution: '',
+  result: '',
+  facts: [],
+  tags: [],
+}
