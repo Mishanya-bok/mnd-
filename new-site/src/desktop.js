@@ -46,24 +46,24 @@ const APPS = {
 
 // ── рабочий стол ─────────────────────────────────────
 // позиции — доли ширины/высоты стола (иконки можно перетаскивать, раскладка запоминается)
-// pos — на компьютере, m — на телефоне (доли свободной области), rot — лёгкий наклон
+// pos — на компьютере, m — на телефоне (доли свободной области)
 const ITEMS = [
-  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.05, 0.04], m: [0.02, 0.02], rot: -4 },
-  { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.11, 0.16], m: [0.42, 0], rot: 3 },
-  { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.87, 0.02], m: [0.8, 0.04], rot: 4 },
-  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.73, 0.12], m: [0.44, 0.33], rot: -3 },
-  { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.03, 0.5], m: [0.04, 0.36], rot: 5 },
-  { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.2, 0.87], m: [0.82, 0.38], rot: -5 },
-  { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.92, 0.45], m: [0, 0.72], rot: 3 },
-  { key: 'trash', open: 'trash', label: 'Корзина', icon: APPS.trash.icon(), pos: [0.95, 0.9], m: [0.84, 0.74], rot: 0 },
+  { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.33, 0.72], m: [0.02, 0.02] },
+  { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.11, 0.16], m: [0.42, 0] },
+  { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.87, 0.02], m: [0.8, 0.04] },
+  { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.73, 0.12], m: [0.44, 0.33] },
+  { key: 'calc', open: 'calc', label: 'Калькулятор', icon: APPS.calc.icon(), pos: [0.03, 0.5], m: [0.04, 0.36] },
+  { key: 'brief', open: 'brief', label: 'Бриф.txt', icon: APPS.brief.icon(), pos: [0.2, 0.87], m: [0.82, 0.38] },
+  { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.92, 0.45], m: [0, 0.72] },
+  { key: 'trash', open: 'trash', label: 'Корзина', icon: APPS.trash.icon(), pos: [0.95, 0.9], m: [0.84, 0.74] },
   // из роликов на столе лежит только шоурил
   ...(showreel
-    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.74], m: [0.33, 0.66], rot: -2, big: true }]
+    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.482, 0.74], m: [0.33, 0.66], big: true }]
     : []),
 ]
 
 const desk = $('#desk')
-const STORE = 'mnd-desk-v4' // раскладка на компьютере и телефоне хранится отдельно
+const STORE = 'mnd-desk-v5' // раскладка на компьютере и телефоне хранится отдельно
 let saved = {}
 try {
   saved = JSON.parse(localStorage.getItem(STORE) || '{}')
@@ -73,7 +73,6 @@ const itemEls = ITEMS.map((it, n) => {
   const el = document.createElement(it.href ? 'a' : 'button')
   el.className = 'item' + (it.big ? ' big' : '')
   el.dataset.key = it.key
-  el.style.setProperty('--rot', (it.rot || 0) + 'deg')
   if (it.href) {
     el.href = it.href
     el.target = '_blank'

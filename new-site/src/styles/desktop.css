@@ -308,21 +308,21 @@ svg {
   border-radius: 8px;
   touch-action: none;
   opacity: 0;
-  transform: translateY(8px) rotate(var(--rot, 0deg));
+  transform: translateY(8px);
   transition: opacity 0.5s, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .item.in {
   opacity: 1;
-  transform: rotate(var(--rot, 0deg));
+  transform: none;
 }
 .item.in:hover {
-  transform: rotate(0deg) scale(1.04);
+  transform: scale(1.04);
 }
 .item.drag {
   transition: none;
   z-index: 5;
   cursor: grabbing;
-  transform: rotate(0deg) scale(1.06);
+  transform: scale(1.06);
 }
 .item .ic {
   height: 70px;
