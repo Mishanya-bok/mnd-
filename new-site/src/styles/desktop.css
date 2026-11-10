@@ -223,16 +223,23 @@ svg {
   padding: 0 0.12em;
   background: linear-gradient(transparent 12%, var(--lime) 12%, var(--lime) 92%, transparent 92%);
 }
+/* стеклянная полупрозрачная плашка */
 #title p {
   margin: 20px auto 0;
   max-width: 44ch;
-  padding: 10px 18px;
-  border-radius: 14px;
+  padding: 12px 20px;
+  border-radius: 18px;
   font-size: clamp(14px, 1.15vw, 16px);
+  font-weight: 500;
   color: var(--black);
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0.14));
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.15),
+    0 12px 32px rgba(10, 50, 120, 0.18);
+  backdrop-filter: blur(18px) saturate(1.6);
+  -webkit-backdrop-filter: blur(18px) saturate(1.6);
 }
 
 /* ── строка меню ──────────────────────────────────── */
@@ -384,6 +391,29 @@ svg {
   height: 22px;
   transform: translate(-50%, -50%);
   color: rgba(12, 13, 11, 0.72);
+}
+
+/* шоурил на столе — крупнее остальных файлов */
+.item.big {
+  width: 150px;
+}
+.item.big .ic {
+  height: 100px;
+}
+.item.big .film {
+  width: 140px;
+  height: 88px;
+  padding: 0 11px;
+}
+.item.big .film em {
+  font-size: 10px;
+  right: 14px;
+}
+@media (max-width: 720px) {
+  .item.big {
+    grid-column: span 2;
+    width: auto;
+  }
 }
 
 /* документ — белый */

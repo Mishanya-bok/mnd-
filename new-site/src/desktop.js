@@ -1,12 +1,12 @@
 // mnd. — главный экран в виде рабочего стола: папки, файлы, окна и док
-import { projects } from './data/projects.js'
+import { projects, showreel } from './data/projects.js'
 
 const $ = (s, r = document) => r.querySelector(s)
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
 // подпись под работой: у коммерческих — клиент (если указан), у некоммерческих — «Авторский ролик mnd.»
 const meta = (p) => (p.commercial === false ? 'Авторский ролик mnd.' : p.client || '')
-const byId = Object.fromEntries(projects.map((p) => [p.id, p]))
+const byId = Object.fromEntries([...projects, ...(showreel ? [showreel] : [])].map((p) => [p.id, p]))
 const mobile = () => matchMedia('(max-width: 720px)').matches
 const TG = { misha: 'https://t.me/mishanya_bok', sofia: 'https://t.me/alienlale' }
 
@@ -38,35 +38,20 @@ const APPS = {
 
 // ── рабочий стол ─────────────────────────────────────
 // позиции — доли ширины/высоты стола (иконки можно перетаскивать, раскладка запоминается)
-// файлы прямо на рабочем столе: отмеченные featured: true, иначе — первые подходящие из списка
-const FEATURED = (projects.some((p) => p.featured)
-  ? projects.filter((p) => p.featured).map((p) => p.id)
-  : ['mnd-movie', 'fresh-rostov', 'alien', 'rolf-red-machine', 'angel-kiss', 'basta', 'feastables', 'ny-pogodi'].filter((id) => byId[id])
-).slice(0, 5)
-const FEAT_POS = [
-  [0.24, 0.04],
-  [0.68, 0.07],
-  [0.17, 0.86],
-  [0.64, 0.92],
-  [0.8, 0.7],
-]
 const ITEMS = [
   { key: 'works', open: 'works', label: 'Работы', icon: APPS.works.icon(), pos: [0.03, 0.03] },
   { key: 'pipeline', open: 'pipeline', label: 'Пайплайн', icon: APPS.pipeline.icon(), pos: [0.03, 0.27] },
   { key: 'price', open: 'price', label: 'Прайс.pdf', icon: APPS.price.icon(), pos: [0.93, 0.05] },
   { key: 'about', open: 'about', label: 'О нас', icon: APPS.about.icon(), pos: [0.93, 0.3] },
   { key: 'tg', href: TG.misha, label: 'Написать нам', icon: ICON.app(), pos: [0.03, 0.52] },
-  ...FEATURED.map((id, n) => ({
-    key: 'v-' + id,
-    open: 'work/' + id,
-    label: byId[id].title + '.mp4',
-    icon: ICON.film(byId[id]),
-    pos: FEAT_POS[n],
-  })),
+  // на столе лежит только шоурил
+  ...(showreel
+    ? [{ key: 'showreel', open: 'work/' + showreel.id, label: 'Showreel.mp4', icon: ICON.film(showreel), pos: [0.455, 0.74], big: true }]
+    : []),
 ]
 
 const desk = $('#desk')
-const STORE = 'mnd-desk-v2'
+const STORE = 'mnd-desk-v3'
 let saved = {}
 try {
   saved = JSON.parse(localStorage.getItem(STORE) || '{}')
@@ -74,7 +59,7 @@ try {
 
 const itemEls = ITEMS.map((it, n) => {
   const el = document.createElement(it.href ? 'a' : 'button')
-  el.className = 'item'
+  el.className = 'item' + (it.big ? ' big' : '')
   el.dataset.key = it.key
   if (it.href) {
     el.href = it.href
