@@ -4,6 +4,7 @@ import { projects } from './data/projects.js'
 const $ = (s, r = document) => r.querySelector(s)
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
+const meta = (p) => [p.client, p.year].filter(Boolean).join(' · ')
 const byId = Object.fromEntries(projects.map((p) => [p.id, p]))
 const mobile = () => matchMedia('(max-width: 720px)').matches
 const TG = { misha: 'https://t.me/mishanya_bok', sofia: 'https://t.me/alienlale' }
@@ -337,7 +338,7 @@ const fileTile = (p) => `
   <button class="file" data-open="work/${p.id}" data-q="${esc((p.title + ' ' + p.client + ' ' + (p.tags || []).join(' ')).toLowerCase())}">
     <span class="th"><img src="${encodeURI(p.thumb)}" alt="" loading="lazy" decoding="async" /></span>
     <b>${esc(p.title)}</b>
-    <span>${esc(p.client)} · ${esc(p.year)}</span>
+    ${meta(p) ? `<span>${esc(meta(p))}</span>` : ''}
   </button>`
 function renderWorks() {
   return `
@@ -393,7 +394,7 @@ function renderPlayer(p) {
       <aside class="pl-i">
         <div class="in">
           <h2>${esc(p.title)}</h2>
-          <p class="who">${esc(p.client)} · ${esc(p.year)}</p>
+          ${meta(p) ? `<p class="who">${esc(meta(p))}</p>` : ''}
           ${sec('О проекте', p.about)}
           ${sec('Задача', p.task)}
           ${sec('Решение', p.solution)}
