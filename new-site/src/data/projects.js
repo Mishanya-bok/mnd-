@@ -3,11 +3,11 @@
  * Ролики и обложки лежат в public/works/ (сжаты для сайта: H.264, до 720p).
  *
  * Как расписать ролик: заполните поля ниже. Пустые поля ('' или []) на сайте не показываются.
- *   title    — название        client  — клиент / артист     year — год
+ *   title    — название        client  — клиент (у авторских роликов не нужен)
  *   about    — о проекте       task    — задача               solution — что сделали
  *   result   — результат       facts   — доп. строки: [['Сроки', '3 недели']]
  *   tags     — теги            featured — true, чтобы файл лежал прямо на рабочем столе
- *   commercial — коммерческий проект (true) или авторский (false)
+ *   commercial — true: коммерческий (без подписи); false: подписывается «Авторский ролик mnd.»
  */
 
 export const projects = [
@@ -15,7 +15,6 @@ export const projects = [
     id: "fresh-rostov",
     title: "Fresh x Баста",
     client: "Fresh",
-    year: "2025",
     commercial: true,
     video: '/works/fresh-rostov.mp4',
     thumb: '/works/fresh-rostov.jpg',
@@ -32,7 +31,6 @@ export const projects = [
     id: "fresh-halloween",
     title: "Fresh — Halloween",
     client: "Fresh",
-    year: "2025",
     commercial: true,
     video: '/works/fresh-halloween.mp4',
     thumb: '/works/fresh-halloween.jpg',
@@ -49,7 +47,6 @@ export const projects = [
     id: "fresh-migal",
     title: "Fresh — Денис Мигаль",
     client: "Fresh",
-    year: "2025",
     commercial: true,
     video: '/works/fresh-migal.mp4',
     thumb: '/works/fresh-migal.jpg',
@@ -66,7 +63,6 @@ export const projects = [
     id: "rolf-red-machine",
     title: "Рольф × Красная Машина",
     client: "Рольф",
-    year: "2025",
     commercial: true,
     video: '/works/rolf-red-machine.mp4',
     thumb: '/works/rolf-red-machine.jpg',
@@ -83,7 +79,6 @@ export const projects = [
     id: "rolf-dibrain",
     title: "Рольф",
     client: "Рольф",
-    year: "",
     commercial: true,
     video: '/works/rolf-dibrain.mp4',
     thumb: '/works/rolf-dibrain.jpg',
@@ -100,7 +95,6 @@ export const projects = [
     id: "meredith",
     title: "Мередит",
     client: "Роман Каграманов",
-    year: "2026",
     commercial: true,
     video: '/works/meredith.mp4',
     thumb: '/works/meredith.jpg',
@@ -117,7 +111,6 @@ export const projects = [
     id: "mini-ceo",
     title: "МИНИ СЕО",
     client: "",
-    year: "",
     commercial: true,
     video: '/works/mini-ceo.mp4',
     thumb: '/works/mini-ceo.jpg',
@@ -134,7 +127,6 @@ export const projects = [
     id: "nizhpharm",
     title: "Нижфарм",
     client: "Нижфарм",
-    year: "",
     commercial: true,
     video: '/works/nizhpharm.mp4',
     thumb: '/works/nizhpharm.jpg',
@@ -151,7 +143,6 @@ export const projects = [
     id: "ptx",
     title: "PTX",
     client: "",
-    year: "",
     commercial: true,
     video: '/works/ptx.mp4',
     thumb: '/works/ptx.jpg',
@@ -168,7 +159,6 @@ export const projects = [
     id: "tenet-plus",
     title: "Tenet Plus",
     client: "Tenet Plus",
-    year: "",
     commercial: true,
     video: '/works/tenet-plus.mp4',
     thumb: '/works/tenet-plus.jpg',
@@ -185,7 +175,6 @@ export const projects = [
     id: "intro",
     title: "Intro",
     client: "",
-    year: "",
     commercial: true,
     video: '/works/intro.mp4',
     thumb: '/works/intro.jpg',
@@ -202,7 +191,6 @@ export const projects = [
     id: "hf-0302",
     title: "Проект 02.03",
     client: "",
-    year: "2026",
     commercial: true,
     video: '/works/hf-0302.mp4',
     thumb: '/works/hf-0302.jpg',
@@ -218,8 +206,7 @@ export const projects = [
   {
     id: "mnd-movie",
     title: "mnd. movie",
-    client: "Авторский проект mnd.",
-    year: "2026",
+    client: "",
     commercial: false,
     video: '/works/mnd-movie.mp4',
     thumb: '/works/mnd-movie.jpg',
@@ -235,8 +222,7 @@ export const projects = [
   {
     id: "alien",
     title: "Alien",
-    client: "Авторский проект mnd.",
-    year: "2026",
+    client: "",
     commercial: false,
     video: '/works/alien.mp4',
     thumb: '/works/alien.jpg',
@@ -253,7 +239,6 @@ export const projects = [
     id: "friendly-kizaru",
     title: "Friendly Thug × Kizaru",
     client: "",
-    year: "2026",
     commercial: false,
     video: '/works/friendly-kizaru.mp4',
     thumb: '/works/friendly-kizaru.jpg',
@@ -270,7 +255,6 @@ export const projects = [
     id: "miyagi-8-mile",
     title: "Miyagi & Эндшпиль — 8 Mile",
     client: "",
-    year: "",
     commercial: false,
     video: '/works/miyagi-8-mile.mp4',
     thumb: '/works/miyagi-8-mile.jpg',
@@ -287,7 +271,6 @@ export const projects = [
     id: "instasamka",
     title: "Клип Instasamka",
     client: "",
-    year: "",
     commercial: false,
     video: '/works/instasamka.mp4',
     thumb: '/works/instasamka.jpg',
@@ -303,8 +286,7 @@ export const projects = [
   {
     id: "from",
     title: "ИЗВНЕ × Агентство Насилия",
-    client: "Агентство Насилия",
-    year: "2026",
+    client: "",
     commercial: false,
     video: '/works/from.mp4',
     thumb: '/works/from.jpg',
@@ -320,8 +302,7 @@ export const projects = [
   {
     id: "jubilee",
     title: "Юбилей Союзмультфильма",
-    client: "Союзмультфильм",
-    year: "2026",
+    client: "",
     commercial: false,
     video: '/works/jubilee.mp4',
     thumb: '/works/jubilee.jpg',
@@ -337,8 +318,7 @@ export const projects = [
   {
     id: "yandex-lavka",
     title: "Яндекс Лавка",
-    client: "Спек-реклама",
-    year: "2026",
+    client: "",
     commercial: false,
     video: '/works/yandex-lavka.mp4',
     thumb: '/works/yandex-lavka.jpg',
@@ -354,8 +334,7 @@ export const projects = [
   {
     id: "mozi",
     title: "Mozi Jewelry",
-    client: "Mozi",
-    year: "2026",
+    client: "",
     commercial: false,
     video: '/works/mozi.mp4',
     thumb: '/works/mozi.jpg',
@@ -372,7 +351,6 @@ export const projects = [
     id: "rusal",
     title: "Русал",
     client: "",
-    year: "",
     commercial: false,
     video: '/works/rusal.mp4',
     thumb: '/works/rusal.jpg',
@@ -388,8 +366,7 @@ export const projects = [
   {
     id: "gladiator-kraken",
     title: "Гладиатор и Кракен",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/gladiator-kraken.mp4',
     thumb: '/works/gladiator-kraken.jpg',
@@ -405,8 +382,7 @@ export const projects = [
   {
     id: "gladiator-cyclops",
     title: "Гладиатор и Циклоп",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/gladiator-cyclops.mp4',
     thumb: '/works/gladiator-cyclops.jpg',
@@ -422,8 +398,7 @@ export const projects = [
   {
     id: "gladiator-pyramid",
     title: "Гладиатор: пирамида",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/gladiator-pyramid.mp4',
     thumb: '/works/gladiator-pyramid.jpg',
@@ -439,8 +414,7 @@ export const projects = [
   {
     id: "dorian-gray",
     title: "Дориан Грей",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/dorian-gray.mp4',
     thumb: '/works/dorian-gray.jpg',
@@ -456,8 +430,7 @@ export const projects = [
   {
     id: "santa",
     title: "Мультфильм «Санта»",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/santa.mp4',
     thumb: '/works/santa.jpg',
@@ -473,8 +446,7 @@ export const projects = [
   {
     id: "netflix-intro",
     title: "Заставка стримингового сервиса",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/netflix-intro.mp4',
     thumb: '/works/netflix-intro.jpg',
@@ -490,8 +462,7 @@ export const projects = [
   {
     id: "gpt",
     title: "ГПТ",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/gpt.mp4',
     thumb: '/works/gpt.jpg',
@@ -507,8 +478,7 @@ export const projects = [
   {
     id: "iphone",
     title: "Креатив для iPhone",
-    client: "Авторский проект mnd.",
-    year: "",
+    client: "",
     commercial: false,
     video: '/works/iphone.mp4',
     thumb: '/works/iphone.jpg',
