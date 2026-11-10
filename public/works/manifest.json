@@ -96,5 +96,110 @@
   "height": 1920,
   "duration": 43.7,
   "mb": 7.7
+ },
+ "instasamka": {
+  "source": "/не коммерческие проекты/Clip Instasamka.mp4",
+  "width": 1080,
+  "height": 1920,
+  "duration": 16.5,
+  "mb": 5.7
+ },
+ "friendly-kizaru": {
+  "source": "/не коммерческие проекты/Friendly x kizaru.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 55.6,
+  "mb": 12.5
+ },
+ "miyagi-8-mile": {
+  "source": "/не коммерческие проекты/Miyagi & Эндшпиль, TumaniYO, Onyx - 8 mile_fin ver.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 38.4,
+  "mb": 10.1
+ },
+ "iphone": {
+  "source": "/не коммерческие проекты/iphone креатив.mov",
+  "width": 1080,
+  "height": 1920,
+  "duration": 8.0,
+  "mb": 1.5
+ },
+ "mnd-movie": {
+  "source": "/не коммерческие проекты/mnd movie draft 0.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 48.6,
+  "mb": 8.3
+ },
+ "mozi": {
+  "source": "/не коммерческие проекты/mozi j basketball upsc.mov",
+  "width": 1080,
+  "height": 1920,
+  "duration": 10.0,
+  "mb": 2.0
+ },
+ "gpt": {
+  "source": "/не коммерческие проекты/ГПТ.mov",
+  "width": 1920,
+  "height": 1080,
+  "duration": 40.9,
+  "mb": 8.3
+ },
+ "gladiator-kraken": {
+  "source": "/не коммерческие проекты/Гладиатор и Кракен фул хд.mov",
+  "width": 1080,
+  "height": 1920,
+  "duration": 40.0,
+  "mb": 6.5
+ },
+ "gladiator-cyclops": {
+  "source": "/не коммерческие проекты/Гладиатор и циклоп_prob3.mov",
+  "width": 2160,
+  "height": 3840,
+  "duration": 31.7,
+  "mb": 4.1
+ },
+ "gladiator-pyramid": {
+  "source": "/не коммерческие проекты/Гладиатор пирамида_хд.mov",
+  "width": 1080,
+  "height": 1920,
+  "duration": 47.8,
+  "mb": 8.4
+ },
+ "dorian-gray": {
+  "source": "/не коммерческие проекты/Дориан Грей 2.mov",
+  "width": 1920,
+  "height": 1080,
+  "duration": 51.6,
+  "mb": 10.2
+ },
+ "santa": {
+  "source": "/не коммерческие проекты/Мультик Санта.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 69.7,
+  "mb": 18.7
+ },
+ "netflix-intro": {
+  "source": "/не коммерческие проекты/Нетфликс заставка.mov",
+  "width": 1920,
+  "height": 1080,
+  "duration": 13.9,
+  "mb": 1.8
+ },
+ "yandex-lavka": {
+  "source": "/не коммерческие проекты/Реклама Яндекс Лавка_2.mp4",
+  "width": 1920,
+  "height": 1080,
+  "duration": 40.5,
+  "mb": 4.6
+ },
+ "rusal": {
+  "source": "/не коммерческие проекты/Русал_ТТ_GoodDo_prob3.mp4",
+  "width": 3840,
+  "height": 2160,
+  "duration": 22.0,
+  "mb": 4.8
  }
 }
