@@ -1884,7 +1884,13 @@ svg {
 
 /* ── пайплайн: Blender или карта глубины ──────────── */
 .pcases {
-  margin-top: 26px;
+  margin-top: 22px;
+}
+.steps-h {
+  margin-top: 30px;
+}
+.steps-h + .w-lead {
+  margin-top: 8px;
 }
 .pc-h {
   font-family: var(--display);
@@ -1894,7 +1900,7 @@ svg {
   text-transform: uppercase;
 }
 .pc-lead {
-  margin-top: 8px;
+  margin-top: 12px;
   max-width: 60ch;
   font-size: 14px;
   color: var(--mute);
@@ -1913,6 +1919,7 @@ svg {
 }
 .pc h4 {
   display: inline-block;
+  margin-top: 14px;
   padding: 3px 10px;
   border-radius: 99px;
   font-size: 12px;
@@ -1927,12 +1934,14 @@ svg {
   color: #2a2c27;
 }
 .pc-media {
-  margin-top: 12px;
+  margin: 0;
 }
 .pc-media video {
   display: block;
   width: 100%;
   height: auto;
+  aspect-ratio: 960 / 412;
+  object-fit: cover;
   border-radius: 10px;
   background: var(--black);
 }

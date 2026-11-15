@@ -36,7 +36,7 @@ const ICON = {
 // ── «приложения» (окна) ──────────────────────────────
 const APPS = {
   works: { title: 'Работы', icon: () => ICON.folder('works'), size: [900, 600], render: renderWorks, mount: mountWorks },
-  pipeline: { title: 'Пайплайн', icon: () => ICON.folder('pipeline'), size: [700, 660], render: renderPipeline },
+  pipeline: { title: 'Пайплайн', icon: () => ICON.folder('pipeline'), size: [760, 680], render: renderPipeline, mount: mountPipeline },
   price: { title: 'Прайс', icon: () => ICON.doc(), size: [800, 680], render: renderPrice },
   about: { title: 'О нас', icon: () => ICON.folder('about'), size: [800, 680], render: renderAbout },
   calc: { title: 'Калькулятор', icon: () => ICON.calc(), size: [360, 600], render: renderCalc, mount: mountCalc },
@@ -529,12 +529,6 @@ const STEPS = [
   ['Монтаж, звук и цвет', 'Собираем ролик, делаем цветокоррекцию, саунд-дизайн, подбираем музыку, добавляем озвучку и титры. Показываем черновую версию и вносим правки.', 'Финальный монтаж'],
   ['Сдача', 'Экспортируем ролик во всех нужных форматах для площадок: 16:9, 9:16, 1:1, с субтитрами и без.', 'Готовые файлы'],
 ]
-// кадры для вкладки «Пайплайн» — id работ из projects.js
-const PIPE_FRAMES = [
-  ['meredith', 'ИИ-анимация поверх живой съёмки'],
-  ['mnd-movie', 'Персонажи держат образ от кадра к кадру'],
-  ['alien', 'Свет, цвет и эффекты — на этапе анимации'],
-].filter(([id]) => byId[id])
 // «Blender или карта глубины»: для каждого случая — исходник (сцена / карта) и готовое видео под ним.
 // Файлы лежат в public/pipeline/ (кадры из ролика TENET). Если путь пустой, карточка показывает только текст.
 const PIPE_CASES = [
@@ -551,26 +545,25 @@ const PIPE_CASES = [
     after: '/pipeline/depth-result.mp4',
   },
 ]
+// обложка показывается сразу, само видео грузится и играет, только когда видно на экране
 const clip = (src, label) =>
-  `<figure class="pc-media"><video src="${encodeURI(src)}" muted loop playsinline autoplay preload="metadata"></video><figcaption>${esc(label)}</figcaption></figure>`
+  `<figure class="pc-media"><video data-src="${encodeURI(src)}" poster="${encodeURI(src.replace(/\.mp4$/, '.jpg'))}" muted loop playsinline preload="none"></video><figcaption>${esc(label)}</figcaption></figure>`
 // подпись к готовому видео
 const PIPE_RESULT_NOTE = 'Готовый кадр — TENET'
 function renderCases() {
   return `
     <section class="pcases">
-      <h3 class="pc-h">Blender или карта глубины</h3>
-      <p class="pc-lead">В зависимости от задачи мы задаём нейросети основу одним из двух способов. Так кадры получаются стабильными и управляемыми, а не случайными.</p>
       <div class="pc-grid">
         ${PIPE_CASES.map(
           (c) => `
           <article class="pc">
-            <h4>${esc(c.title)}</h4>
-            <p>${esc(c.text)}</p>
             ${
               c.before && c.after
                 ? `${clip(c.before, c.title === 'Карта глубины' ? 'Карта глубины' : 'Сцена в 3D')}<span class="pc-arrow">↓</span>${clip(c.after, PIPE_RESULT_NOTE)}`
                 : ''
             }
+            <h4>${esc(c.title)}</h4>
+            <p>${esc(c.text)}</p>
           </article>`,
         ).join('')}
       </div>
@@ -590,22 +583,33 @@ function renderPipeline() {
     <div class="doc-pad">
       <p class="w-k">Пайплайн</p>
       <h2 class="w-h">Как мы делаем <i>ИИ-анимацию</i></h2>
-      <p class="w-lead">Нейросети — это инструмент, а не кнопка «сделать красиво». За каждым роликом стоит режиссура: идея, сценарий, раскадровка, сотни генераций и ручная доводка. Вот как проходит работа — от первого сообщения до готового файла. Вы видите результат на каждом этапе и согласуете его, прежде чем мы двинемся дальше.</p>
-      ${
-        PIPE_FRAMES.length
-          ? `<div class="frames">${PIPE_FRAMES.map(
-              ([id, cap]) => `<button class="frame" data-open="work/${id}"><img src="${encodeURI(byId[id].thumb)}" alt="${esc(byId[id].title)}" loading="lazy" /><span>${esc(cap)}</span></button>`,
-            ).join('')}</div>`
-          : ''
-      }
+      <p class="pc-lead">В зависимости от задачи мы задаём нейросети основу: собираем сцену в Blender или строим карту глубины. Так кадры получаются стабильными и управляемыми, а не случайными.</p>
+      ${renderCases()}
+      <h3 class="pc-h steps-h">Как проходит работа</h3>
+      <p class="w-lead">Нейросети — это инструмент, а не кнопка «сделать красиво». За каждым роликом стоит режиссура: идея, сценарий, раскадровка, сотни генераций и ручная доводка. Вы видите результат на каждом этапе и согласуете его, прежде чем мы двинемся дальше.</p>
       <ol class="steps">
         ${STEPS.map(
           ([t, d, o], i) => `<li><span class="n">0${i + 1}</span><div><h3>${t}</h3><p>${d}</p><span class="out">На выходе: ${o}</span></div></li>`,
         ).join('')}
       </ol>
-      ${renderCases()}
       ${CTA}
     </div>`
+}
+
+function mountPipeline(el) {
+  const root = el.querySelector('.wb')
+  const io = new IntersectionObserver(
+    (entries) =>
+      entries.forEach((e) => {
+        const v = e.target
+        if (e.isIntersecting) {
+          if (!v.src) v.src = v.dataset.src
+          v.play().catch(() => {})
+        } else v.pause()
+      }),
+    { root, threshold: 0.25 },
+  )
+  el.querySelectorAll('video[data-src]').forEach((v) => io.observe(v))
 }
 
 // ── содержимое: Прайс ────────────────────────────────
