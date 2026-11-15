@@ -547,7 +547,7 @@ const PIPE_CASES = [
 ]
 // обложка показывается сразу, само видео грузится и играет, только когда видно на экране
 const clip = (src, label) =>
-  `<figure class="pc-media"><video data-src="${encodeURI(src)}" poster="${encodeURI(src.replace(/\.mp4$/, '.jpg'))}" muted loop playsinline preload="none"></video><figcaption>${esc(label)}</figcaption></figure>`
+  `<figure class="pc-media"><video data-src="${encodeURI(src)}" poster="${encodeURI(src.replace(/\.mp4$/, '.jpg'))}" muted playsinline preload="none"></video><figcaption>${esc(label)}</figcaption></figure>`
 // подпись к готовому видео
 const PIPE_RESULT_NOTE = 'Готовый кадр — TENET'
 function renderCases() {
@@ -596,20 +596,57 @@ function renderPipeline() {
     </div>`
 }
 
+// пары «до / после» играют строго синхронно: стартуют вместе, когда оба ролика готовы,
+// вместе перезапускаются по кругу, а отстающий подтягивается к первому
+function syncPair(a, b) {
+  let ready = 0
+  let want = false
+  const start = () => {
+    a.currentTime = 0
+    b.currentTime = 0
+    Promise.all([a.play(), b.play()]).catch(() => {})
+  }
+  const onReady = () => {
+    ready++
+    if (ready === 2 && want) start()
+  }
+  a.addEventListener('canplaythrough', onReady, { once: true })
+  b.addEventListener('canplaythrough', onReady, { once: true })
+  // ролики одинаковой длины: когда первый закончился — оба с начала
+  a.addEventListener('ended', start)
+  b.addEventListener('ended', () => {
+    if (!a.ended && a.currentTime < a.duration - 0.05) b.currentTime = a.currentTime
+  })
+  a.addEventListener('timeupdate', () => {
+    if (!b.paused && Math.abs(b.currentTime - a.currentTime) > 0.06) b.currentTime = a.currentTime
+  })
+  return {
+    show() {
+      want = true
+      if (!a.src) {
+        a.preload = b.preload = 'auto'
+        a.src = a.dataset.src
+        b.src = b.dataset.src
+      } else if (ready >= 2) Promise.all([a.play(), b.play()]).catch(() => {})
+    },
+    hide() {
+      want = false
+      a.pause()
+      b.pause()
+    },
+  }
+}
 function mountPipeline(el) {
   const root = el.querySelector('.wb')
-  const io = new IntersectionObserver(
-    (entries) =>
-      entries.forEach((e) => {
-        const v = e.target
-        if (e.isIntersecting) {
-          if (!v.src) v.src = v.dataset.src
-          v.play().catch(() => {})
-        } else v.pause()
-      }),
-    { root, threshold: 0.25 },
-  )
-  el.querySelectorAll('video[data-src]').forEach((v) => io.observe(v))
+  el.querySelectorAll('.pc').forEach((card) => {
+    const [a, b] = card.querySelectorAll('video[data-src]')
+    if (!a || !b) return
+    const pair = syncPair(a, b)
+    new IntersectionObserver((es) => es.forEach((e) => (e.isIntersecting ? pair.show() : pair.hide())), {
+      root,
+      threshold: 0.15,
+    }).observe(card)
+  })
 }
 
 // ── содержимое: Прайс ────────────────────────────────
