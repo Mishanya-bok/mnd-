@@ -4,8 +4,6 @@ import { projects, showreel } from './data/projects.js'
 const $ = (s, r = document) => r.querySelector(s)
 const esc = (s = '') =>
   String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c])
-// подпись под работой: у коммерческих — клиент (если указан), у некоммерческих — «Авторский ролик mnd.»
-const meta = (p) => (p.commercial === false ? 'Авторский ролик mnd.' : p.client || '')
 const byId = Object.fromEntries([...projects, ...(showreel ? [showreel] : [])].map((p) => [p.id, p]))
 const mobile = () => matchMedia('(max-width: 720px)').matches
 const TG = { misha: 'https://t.me/mishanya_bok', sofia: 'https://t.me/alienlale' }
@@ -406,7 +404,6 @@ const fileTile = (p) => `
   <button class="file" data-open="work/${p.id}" data-cat="${esc(p.category || '')}" data-q="${esc((p.title + ' ' + p.client + ' ' + (p.tags || []).join(' ')).toLowerCase())}">
     <span class="th"><img src="${encodeURI(p.thumb)}" alt="" loading="lazy" decoding="async" /></span>
     <b>${esc(p.title)}</b>
-    ${meta(p) ? `<span>${esc(meta(p))}</span>` : ''}
   </button>`
 // разделы папки «Работы» — значения поля category в projects.js
 const CATS = ['Коммерция', 'Для соцсетей', 'Творческие', 'Артисты']
@@ -477,7 +474,6 @@ function renderPlayer(p) {
       <aside class="pl-i">
         <div class="in">
           <h2>${esc(p.title)}</h2>
-          ${meta(p) ? `<p class="who">${esc(meta(p))}</p>` : ''}
           ${sec('О проекте', p.about)}
           ${sec('Задача', p.task)}
           ${sec('Решение', p.solution)}
