@@ -535,6 +535,45 @@ const PIPE_FRAMES = [
   ['mnd-movie', 'Персонажи держат образ от кадра к кадру'],
   ['alien', 'Свет, цвет и эффекты — на этапе анимации'],
 ].filter(([id]) => byId[id])
+// «Blender или карта глубины»: для каждого случая — исходник (сцена / карта) и готовое видео под ним.
+// Файлы кладём в public/pipeline/. Пока пути пустые, блок показывает только текст.
+const PIPE_CASES = [
+  {
+    title: 'Сцена в Blender',
+    text: 'Когда важны точная геометрия, движение камеры и постоянство объектов — архитектура, продукт, автомобиль, — мы собираем сцену в Blender: расставляем объекты, свет и камеру. Нейросеть получает готовое пространство и «одевает» его в нужный стиль.',
+    before: '',
+    after: '',
+  },
+  {
+    title: 'Карта глубины',
+    text: 'Когда нужно сохранить композицию и объём живого кадра или референса, мы строим карту глубины. Она задаёт пространство и планы, а ИИ дорисовывает фактуру, свет и детали.',
+    before: '',
+    after: '',
+  },
+]
+const clip = (src, label) =>
+  `<figure class="pc-media"><video src="${encodeURI(src)}" muted loop playsinline autoplay preload="metadata"></video><figcaption>${esc(label)}</figcaption></figure>`
+function renderCases() {
+  return `
+    <section class="pcases">
+      <h3 class="pc-h">Blender или карта глубины</h3>
+      <p class="pc-lead">В зависимости от задачи мы задаём нейросети основу одним из двух способов. Так кадры получаются стабильными и управляемыми, а не случайными.</p>
+      <div class="pc-grid">
+        ${PIPE_CASES.map(
+          (c) => `
+          <article class="pc">
+            <h4>${esc(c.title)}</h4>
+            <p>${esc(c.text)}</p>
+            ${
+              c.before && c.after
+                ? `${clip(c.before, c.title === 'Карта глубины' ? 'Карта глубины' : 'Сцена в 3D')}<span class="pc-arrow">↓</span>${clip(c.after, 'Готовое видео')}`
+                : ''
+            }
+          </article>`,
+        ).join('')}
+      </div>
+    </section>`
+}
 const CTA = `
   <div class="cta">
     <h3>Обсудим ваш ролик?</h3>
@@ -562,6 +601,7 @@ function renderPipeline() {
           ([t, d, o], i) => `<li><span class="n">0${i + 1}</span><div><h3>${t}</h3><p>${d}</p><span class="out">На выходе: ${o}</span></div></li>`,
         ).join('')}
       </ol>
+      ${renderCases()}
       ${CTA}
     </div>`
 }
