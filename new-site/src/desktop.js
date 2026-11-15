@@ -536,23 +536,25 @@ const PIPE_FRAMES = [
   ['alien', 'Свет, цвет и эффекты — на этапе анимации'],
 ].filter(([id]) => byId[id])
 // «Blender или карта глубины»: для каждого случая — исходник (сцена / карта) и готовое видео под ним.
-// Файлы кладём в public/pipeline/. Пока пути пустые, блок показывает только текст.
+// Файлы лежат в public/pipeline/ (кадры из ролика TENET). Если путь пустой, карточка показывает только текст.
 const PIPE_CASES = [
   {
     title: 'Сцена в Blender',
     text: 'Когда важны точная геометрия, движение камеры и постоянство объектов — архитектура, продукт, автомобиль, — мы собираем сцену в Blender: расставляем объекты, свет и камеру. Нейросеть получает готовое пространство и «одевает» его в нужный стиль.',
-    before: '',
-    after: '',
+    before: '/pipeline/blender-scene.mp4',
+    after: '/pipeline/blender-result.mp4',
   },
   {
     title: 'Карта глубины',
     text: 'Когда нужно сохранить композицию и объём живого кадра или референса, мы строим карту глубины. Она задаёт пространство и планы, а ИИ дорисовывает фактуру, свет и детали.',
-    before: '',
-    after: '',
+    before: '/pipeline/depth-map.mp4',
+    after: '/pipeline/depth-result.mp4',
   },
 ]
 const clip = (src, label) =>
   `<figure class="pc-media"><video src="${encodeURI(src)}" muted loop playsinline autoplay preload="metadata"></video><figcaption>${esc(label)}</figcaption></figure>`
+// подпись к готовому видео
+const PIPE_RESULT_NOTE = 'Готовый кадр — TENET'
 function renderCases() {
   return `
     <section class="pcases">
@@ -566,7 +568,7 @@ function renderCases() {
             <p>${esc(c.text)}</p>
             ${
               c.before && c.after
-                ? `${clip(c.before, c.title === 'Карта глубины' ? 'Карта глубины' : 'Сцена в 3D')}<span class="pc-arrow">↓</span>${clip(c.after, 'Готовое видео')}`
+                ? `${clip(c.before, c.title === 'Карта глубины' ? 'Карта глубины' : 'Сцена в 3D')}<span class="pc-arrow">↓</span>${clip(c.after, PIPE_RESULT_NOTE)}`
                 : ''
             }
           </article>`,

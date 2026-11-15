@@ -1932,8 +1932,7 @@ svg {
 .pc-media video {
   display: block;
   width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+  height: auto;
   border-radius: 10px;
   background: var(--black);
 }
