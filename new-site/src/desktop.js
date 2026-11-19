@@ -95,7 +95,21 @@ function area() {
   }
   return { d, iw, left: 4, top: 8, W: d.width - 110, H: d.height - 230, mode: 'pos' }
 }
+// на телефоне — ровная сетка 3 × 3 в этом порядке, одинаковая на всех устройствах
+const MOBILE_ORDER = ['works', 'about', 'pipeline', 'price', 'showreel', 'calc', 'brief', 'tg', 'trash']
+function placeGrid() {
+  const h1 = $('#title h1').getBoundingClientRect()
+  desk.style.setProperty('--desk-top', Math.round(h1.bottom - desk.getBoundingClientRect().top + 20) + 'px')
+  itemEls.forEach((el, i) => {
+    el.style.left = el.style.top = ''
+    const n = MOBILE_ORDER.indexOf(ITEMS[i].key)
+    el.style.order = n < 0 ? 99 : n
+  })
+}
 function placeItems() {
+  if (mobile()) return placeGrid()
+  desk.style.removeProperty('--desk-top')
+  itemEls.forEach((el) => (el.style.order = ''))
   const A = area()
   // на компьютере иконки держатся у центра: полоса над заголовком и полоса между плашкой и доком
   const t = $('#title').getBoundingClientRect()
@@ -135,7 +149,7 @@ function select(el) {
 desk.addEventListener('pointerdown', (e) => {
   const el = e.target.closest('.item')
   select(el)
-  if (!el || e.button !== 0) return
+  if (!el || e.button !== 0 || mobile()) return
   const r0 = el.getBoundingClientRect()
   const d = desk.getBoundingClientRect()
   const st = { x: e.clientX, y: e.clientY, l: r0.left - d.left, t: r0.top - d.top, moved: false }
@@ -909,4 +923,6 @@ function openFromHash() {
 addEventListener('hashchange', openFromHash)
 addEventListener('resize', placeItems)
 placeItems()
+// после загрузки шрифтов высота заголовка меняется — пересчитываем
+document.fonts?.ready.then(placeItems)
 openFromHash()
