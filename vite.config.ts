@@ -17,6 +17,10 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        course: path.resolve(__dirname, 'course.html'),
+      },
       output: {
         manualChunks(id) {
           if (id.includes('framer-motion')) return 'framer-motion'
